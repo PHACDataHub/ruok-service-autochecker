@@ -16,7 +16,6 @@
     "@apollo/client": "^3.8.0",
     "@graphql-tools/schema": "^10.0.0",
     "arangojs": "^8.4.0",
-    "dotenv-safe": "^8.2.0",
     "graphql": "^16.7.1",
     "graphql-yoga": "^4.0.4",
     "nats": "^2.15.1"

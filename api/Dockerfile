@@ -1,0 +1,17 @@
+FROM node:18-alpine
+
+ENV NODE_ENV production
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci
+# COPY ./.env ./.env.example ./
+COPY . . 
+# COPY ./src ./src
+# COPY ./index.js .
+
+USER node
+
+CMD npm --no-update-notifier start

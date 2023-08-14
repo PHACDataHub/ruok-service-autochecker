@@ -1,0 +1,36 @@
+version: '1'
+
+services:
+
+  database:
+    image: arangodb
+    restart: always
+    ports:
+      - 8529:8529
+    environment:
+      - ARANGO_ROOT_PASSWORD=yourpassword
+    # volumes:
+    #   - arangodb_data_container:/var/lib/arangodb
+      - ./database/db-init.sh:/docker-entrypoint-initdb.d/db-init.sh
+
+  nats:
+    image: nats:latest
+    ports: 
+      - 4222:4222
+
+  api:
+    build: ./api
+    ports:
+      - 4000:4000
+    depends_on:
+      - database
+      - nats
+
+volumes:
+  arangodb_data_container:
+
+networks:
+  default:
+    name: ruok
+    external: false
+

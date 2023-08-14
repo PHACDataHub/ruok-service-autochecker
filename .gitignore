@@ -3,3 +3,4 @@
 **/coverage
 deploy
 **/nats.creds
+**/.DS_Store

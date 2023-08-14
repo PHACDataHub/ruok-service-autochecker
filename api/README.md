@@ -27,7 +27,12 @@ $ npm install
 ```
 
 ## Running it
-
+Start up nats server [nats.io](https://docs.nats.io/running-a-nats-service/introduction/installation) for cli or use docker [image](https://hub.docker.com/_/nats) with 
+``` 
+docker pull nats:latest
+docker run -p 4222:4222 -ti nats:latest
+```
+Start API
 ```bash
 $ npm start
 ```
@@ -44,9 +49,14 @@ mutation {
 ```
 Log into the ArangoDB UI @ http://localhost:8529 root, yourpassword - choose _system db and view the records 
 
-## To stop and remove container
+## To stop and remove container(s)
 ```
 docker stop arangodb
+docker stop nats
 docker rm arangodb
+docker rm nats
 ```
+
+## TODO
+Docker compose with set up
 
