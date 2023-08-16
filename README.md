@@ -4,9 +4,19 @@ Automatically scans existing PHAC (GCP) services to provide visibility on endpoi
 
 *TODO - change name to TBD - Data Observatory?*
 
-### *Please note - still flushing out ideas here - this is work in progress!*
+### *Please note - this is work in progress!*
 
-This uses [node-microservices-demo](https://github.com/PHACDataHub/node-microservices-demo) and [Tracker](https://github.com/canada-ca/tracker) as a starting point.
+This uses [Safe Inputs](https://github.com/PHACDataHub/safe-inputs) and [Tracker](https://github.com/canada-ca/tracker) as a starting point.
+
+## To Run 
+```
+docker compose up -d && ./database/db-init.sh
+```
+
+## To Tear down 
+```
+docker compose down -v
+```
 
 #### Rough scope (to be converted to GitHub issues):
 * Get list of data services/products 

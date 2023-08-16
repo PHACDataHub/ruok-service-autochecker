@@ -1,4 +1,4 @@
-// import 'dotenv-safe/config.js'
+import 'dotenv-safe/config.js'
 import { schema } from "./src/schema.js";
 import { Server } from "./src/server.js";
 import { Database, aql } from "arangojs";
@@ -9,25 +9,23 @@ const {
     PORT = 4000,
     HOST = '0.0.0.0',
     DB_NAME = "dataServices",
-    DB_URL = "http://localhost:8529",
+    DB_URL = "http://database:8529",
     DB_USER = "root",
     DB_PASS = 'yourpassword',
     // lifted from Tracker project
-    NAME =  "repo-discovery",
+    NATS_CHANNEL =  "repo-discovery",
     SUBSCRIBE_TO = "repos.*.discovery",
     PUBLISH_TO = "repos",
     QUEUE_GROUP = "repo-discovery",
-    // SERVERLIST =  "nats://localhost:4222",
     // NATS_URL = "demo.nats.io:4222", 
-    NATS_URL = "nats://0.0.0.0:4222"
-  } = {};
-  // } = process.env;
+    NATS_URL = "nats://nats:4222"
+  } = process.env;
 
 // DB connection
 const dbConfig = {
-    url: "http://database:8529", 
-    database: "dataServices", 
-    auth: { username: "root", password: "yourpassword" },
+    url: DB_URL, 
+    databaseName: DB_NAME, 
+    auth: { username: DB_USER, password: DB_PASS },
     createCollection: true, 
   };
   
@@ -42,17 +40,15 @@ const query = async function query(strings, ...vars) {
 // NATS connection 
 const nc = await connect({ 
     servers: NATS_URL, 
-    // authenticator: jwtAuthenticator(jwt), // needed if connected to ngs
   });
 
 const jc = JSONCodec(); // for encoding NAT's messages
 
 function publish(payload) {
-  ns.publish(NAME, jc.encode(payload)) 
-  console.log("publishing: ", payload)
+  ns.publish(NATS_CHANNEL, jc.encode(payload)) 
+  // console.log("publishing: ", payload)
 }
   
-    
 // const transaction = async function transaction(collections) {
 // return db.beginTransaction(collections)
 // }

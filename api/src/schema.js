@@ -48,8 +48,9 @@ const resolvers = {
             try {
                 const insertResult = await context.db.query(insertQuery);
                 console.log("Inserted new service:", insertResult);
+                // insertNewServiceDB(serviceName, domain)
 
-                // retrieve back doc
+                // retrieve back doc - to ensure insert success (won't need in future - use tests instead! )
                 const fetchQuery = aql`
                     FOR doc IN dataServicesCollection
                     FILTER doc.serviceName == ${serviceName}

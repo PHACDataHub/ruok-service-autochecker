@@ -1,5 +1,7 @@
 ## API
 
+Now start up with docker compose up 
+
 Start up ArangoDB
 ```
 docker run -e ARANGO_ROOT_PASSWORD=yourpassword -p 8529:8529 -d --name arangodb arangodb
