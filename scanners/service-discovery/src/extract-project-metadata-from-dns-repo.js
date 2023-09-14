@@ -8,6 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function extractAnnotationsFromDnsRecords(clonedRepoPath='./temp-cloned-repo/dns/dns-records') {
+    //TODO pull out domains as well! 
     // clonedRepoPath = 'temp-cloned-repo/dns/dns-records'
     // const dir = path.join(__dirname, 'temp-cloned-repo', 'dns', 'dns-records');
     const dir = path.join(__dirname, clonedRepoPath);
@@ -87,19 +88,6 @@ export async function consolidateProjectAnnotations(results) {
                     ...uniqueResults[key],
                     ...newResult,
                 };
-            // if (!uniqueResults[key]) {
-            //     // If the key doesn't exist, create it with the newResult
-            //     uniqueResults[key] = {
-            //         projectName,
-            //         sourceCodeRepository,
-            //         ...rest, // Include other fields from 'rest'
-            //     };
-            // } else {
-            //     // If the key already exists, merge the fields
-            //     uniqueResults[key] = {
-            //         ...uniqueResults[key],
-            //         ...rest, // Merge other fields from 'rest'
-            //     };
             }
         }
     }
