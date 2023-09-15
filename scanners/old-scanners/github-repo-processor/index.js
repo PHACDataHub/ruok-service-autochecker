@@ -1,6 +1,6 @@
 // github-repo-processor/index.js
 
-import 'dotenv/config'
+import 'dotenv/config.js'
 import { connect, JSONCodec, createInbox, AckPolicy, consumerOpts, headers, nuid, jwtAuthenticator } from 'nats';
 import { insertIntoDatabase } from './src/upsert-into-database.js'
 import { Database, aql } from "arangojs";
