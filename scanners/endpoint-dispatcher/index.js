@@ -45,6 +45,7 @@ process.on('SIGINT', () => process.exit(0))
 
     // const {serviceName} = payloadFromServiceDiscovery
     const serviceName = message.subject.split(".").reverse()[0]
+    console.log(serviceName)
     
     const repo = await getPhacDataHubGitHubRepo(payloadFromServiceDiscovery)
     if (repo) {

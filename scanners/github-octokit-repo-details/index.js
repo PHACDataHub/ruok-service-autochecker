@@ -60,8 +60,8 @@ process.on('SIGINT', () => process.exit(0))
         
         const payloadFromGitHubInitiate  = await jc.decode(message.data)
         console.log(payloadFromGitHubInitiate)
-        
-        const { serviceName, sourceCodeRepository } = payloadFromGitHubInitiate
+        const serviceName = message.subject.split(".").reverse()[0]
+        const { sourceCodeRepository } = payloadFromGitHubInitiate
         const repo = sourceCodeRepository.split('/').pop();
 
         const repoDetails = await getRepoDetails(OWNER, repo, octokit)

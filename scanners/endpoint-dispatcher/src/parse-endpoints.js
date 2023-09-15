@@ -5,7 +5,7 @@ export async function getPhacDataHubGitHubRepo(payloadFromServiceDiscovery){
         payloadFromServiceDiscovery.sourceCodeRepository.startsWith('https://github.com/PHACDataHub/')
         ) {
         return {
-            serviceName: payloadFromServiceDiscovery.serviceName, 
+            // serviceName: payloadFromServiceDiscovery.serviceName, 
             sourceCodeRepository: payloadFromServiceDiscovery.sourceCodeRepository}
     } else {
         return false
