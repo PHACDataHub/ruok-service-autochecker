@@ -22,7 +22,7 @@ const typeDefinitions = /* GraphQL */ `
 
     type Mutation {
         createDataService(serviceName: String!, domain: String!): DataService
-        upsertProjectFromGitHubScan(payload: JSON): JSON
+        upsertService(payload: JSON): JSON
 
     }
 
@@ -39,9 +39,6 @@ const typeDefinitions = /* GraphQL */ `
         serviceName: String
         domain: String
     }
-
-     
-
     `;
     // upsertProjectWithGitHubRepoScan(project_name: String!, project_scan)
 const resolvers = {
@@ -153,32 +150,31 @@ const resolvers = {
         //       domain
         //     }
         //   }
-        upsertProjectFromGitHubScan: async (_, args, context) => {
+        upsertService: async (_, args, context) => {
             const { db } = context;
             const { payload } = args;
-            // get project id 
-            // use to insert data (but using just a ball of json so just going to insert for now)
-            const insertQuery = aql ` 
-                INSERT {
-                    "payload": ${payload},
-                    } INTO dataServicesCollection
+            const {_key} = payload;
+            const upsertQuery = aql `
+                INSERT { _key: ${_key}, payload: ${payload} }
+                IN services 
+                OPTIONS { overwriteMode: "update" }
                 `;
-            // OPTIONS { exclusive: true }
+    
             try {
-                const insertResult = await context.db.query(insertQuery);
-                console.log("Inserted new service:", insertResult);
+                const upsertResult = await context.db.query(upsertQuery);
+                console.log("Inserted new service:", upsertResult);
                 // insertNewServiceDB(serviceName, domain)
             } catch (error) {
                 console.error("Error creating service:", error);
                 console.log(error);
                 throw new Error("Failed to create service.");
               }
-            return { payload }
+            return { _key }
         }
         // example
         // mutation {
-            // upsertProjectFromGitHubScan(payload: {stuff: "things"})
-        // }       
+        //     upsertService(payload: {stuff: "things", _key:"356"})
+        //   }    
       
     }
 }

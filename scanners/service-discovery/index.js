@@ -2,22 +2,21 @@
 
 // ** set up to run on a periodic timeframe 
 
-// clone dns repo, 
-// extract annotations
+// clone dns repo, extract annotations
 // TODO - get domains as well! 
 // upsert into database / send off to endpoint dispatcher
 
-// (from there it will be scanned and added (upserteed into db) and simutaniously services 
 // Something to consider is tracking those repos/ services not captured in dns repo
 
-// TODO - use env file
+// TODO - use env file & dotenv safe, 
+// TODO - tests! 
 
 // import { tempGetProjects } from "./src/get-projects.js"
 import { cloneDnsRepository, removeClonedDnsRepository} from "./src/clone-dns-repo.js"
-import { replaceNonJetstreamCompatibleCharacters, upsertIntoDatabase} from "./src/database-functions.js";
+import { upsertIntoDatabase} from "./src/database-functions.js";
 import { consolidateProjectAnnotations, extractAnnotationsFromDnsRecords } from "./src/extract-project-metadata-from-dns-repo.js";
-import { connect, JSONCodec, jwtAuthenticator } from 'nats'
-import { Database, aql } from "arangojs";
+import { connect, JSONCodec} from 'nats'
+import { Database } from "arangojs";
 import { request, gql, GraphQLClient } from 'graphql-request'
 
 import dotenv from 'dotenv'
@@ -38,14 +37,13 @@ const {
 
   //   NATS_URL = "nats://nats:4222"
   NATS_URL = "nats://0.0.0.0:4222",
-  NATS_PUB_STREAM = 'servicesFromDnsRepo',
+  NATS_PUB_STREAM = 'discoveredServices',
   
   API_URL = "http://0.0.0.0:4000/graphql"
 } = process.env;
 
 // API connection 
 const graphQLClient = new GraphQLClient(API_URL);
-
 
 // Database connection 
 const db = new Database({
@@ -65,9 +63,7 @@ async function publish( subject, payload) {
   nc.publish(subject, jc.encode(payload)) 
 }
 
-// const projects = tempGetProjects();
-// This is a temporary work around - get the project list from service-discovery/known-service-list.json
-// TODO - pull list from from DB, or nats (from DNS repo)
+// TODO - maybe compare with list from DB - find not longer used services? - also compare with last updated github etc... 
 
 async function getProjects() {
     await cloneDnsRepository() //TODO if exisits remove and clone again?
@@ -82,11 +78,11 @@ async function processProjects(projects) {
     for (const project of projects){
         // TODO Determine what to do with ones in db, but not in this scan
         const upsertService = await upsertIntoDatabase(project, graphQLClient)
-        const serviceKey = upsertService.upsertService._key
+        const serviceName = upsertService.upsertService._key // serviceName is the database key for services collection
         //TODO check if not undefined
-        await publish(`${NATS_PUB_STREAM}.${serviceKey}`, project)
+        await publish(`${NATS_PUB_STREAM}.${serviceName}`, project)
 
-        console.log(`🚀 Sending to scanners... on ${NATS_PUB_STREAM}.${serviceKey}`)
+        console.log(`🚀 Sending message to scanners... on ${NATS_PUB_STREAM}.${serviceName}`)
         console.log(project)
     }  
 } 
@@ -107,10 +103,6 @@ process.on('SIGINT', () => process.exit(0))
     });
   
     await processProjects(projects);
-  
-    // console.log("Published payload!");
-    // timeout
-    // process.exit(0)
   })();
 
 await nc.closed();
