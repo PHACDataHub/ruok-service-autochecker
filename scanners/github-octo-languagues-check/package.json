@@ -1,5 +1,5 @@
 {
-  "name": "github-licence-check",
+  "name": "github-octo-languagues-check",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,7 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv-safe": "^8.2.0",
-    "nats": "^2.16.0"
+    "dotenv-safe": "^8.2.0"
   }
 }

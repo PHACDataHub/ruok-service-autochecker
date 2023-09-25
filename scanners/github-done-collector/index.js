@@ -1,11 +1,7 @@
 // github-done/index.js
 
 import { connect, JSONCodec} from 'nats'
-import { parseSubject } from './src/parse-subject.js'
-
-import dotenv from 'dotenv'
-// import 'dotenv-safe/config.js'
-dotenv.config()
+import 'dotenv-safe/config.js'
 
 const { 
   NATS_URL = "nats://0.0.0.0:4222",

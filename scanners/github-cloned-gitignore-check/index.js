@@ -2,10 +2,7 @@
 
 import { connect, JSONCodec} from 'nats'
 import { searchIgnoreFile } from './src/get-dotignore-details.js'
-
-import dotenv from 'dotenv'
-// import 'dotenv-safe/config.js'
-dotenv.config()
+import 'dotenv-safe/config.js'
 
 const { 
 //   owner = 'PHACDataHub',

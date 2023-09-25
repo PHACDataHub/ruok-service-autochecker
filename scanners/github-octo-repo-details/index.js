@@ -2,10 +2,7 @@
 
 import { connect, JSONCodec} from 'nats'
 import { Octokit, App,  RequestError } from "octokit";
-
-import dotenv from 'dotenv'
-// import 'dotenv-safe/config.js'
-dotenv.config()
+import 'dotenv-safe/config.js'
 
 const { 
   OWNER = 'PHACDataHub',

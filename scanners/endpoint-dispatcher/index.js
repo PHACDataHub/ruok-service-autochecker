@@ -3,14 +3,11 @@
 
 import { connect, JSONCodec } from 'nats'
 import { getPhacDataHubGitHubRepo, getArtifactContainerRegistries, getDockerHub, getDomains, getServiceUrls } from './src/parse-endpoints.js'
-import dotenv from 'dotenv'
-// import 'dotenv-safe/config.js'
-dotenv.config()
+import 'dotenv-safe/config.js'
 
 const { 
   NATS_URL = "nats://0.0.0.0:4222",
   NATS_SUB_STREAM = "discoveredServices.>",
-//   NATS_PUB_STREAM = "githubRepoScan" 
 } = process.env;
 
 // NATs connection 

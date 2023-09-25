@@ -18,27 +18,18 @@ import { consolidateProjectAnnotations, extractAnnotationsFromDnsRecords } from 
 import { connect, JSONCodec} from 'nats'
 import { Database } from "arangojs";
 import { request, gql, GraphQLClient } from 'graphql-request'
-
-import dotenv from 'dotenv'
-// import 'dotenv-safe/config.js'
-dotenv.config()
+import 'dotenv-safe/config.js'
 
 const { 
-  owner = 'PHACDataHub',
-  token,
   PORT = 3000,
   HOST = '0.0.0.0',
-  
   DB_NAME = "dataServices",
   // DB_URL = "http://database:8529",
   DB_URL = "http://0.0.0.0:8529",
   DB_USER = "root",
   DB_PASS = 'yourpassword',
-
-  //   NATS_URL = "nats://nats:4222"
   NATS_URL = "nats://0.0.0.0:4222",
   NATS_PUB_STREAM = 'discoveredServices',
-  
   API_URL = "http://0.0.0.0:4000/graphql"
 } = process.env;
 

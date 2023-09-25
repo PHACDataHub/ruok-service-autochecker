@@ -2,10 +2,7 @@
 
 import { connect, JSONCodec} from 'nats'
 import { extractUrlParts, cloneRepository } from "./src/clone-repo-functions.js"
-
-import dotenv from 'dotenv'
-// import 'dotenv-safe/config.js'
-dotenv.config()
+import 'dotenv-safe/config.js'
 
 const { 
   NATS_URL = "nats://0.0.0.0:4222",
