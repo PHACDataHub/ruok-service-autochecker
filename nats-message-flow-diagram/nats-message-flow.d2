@@ -1,0 +1,68 @@
+
+arrangoDB.shape: queue
+
+GitHub DNS repo.shape: cloud
+PHACDataHub GitHub Repo.shape: cloud
+
+Domain Scaning Service (TBD).style.stroke-dash: 5
+DockerHub Scanning Service (TBD).style.stroke-dash: 5
+Service URL Scanning Service (TBD).style.stroke-dash: 5
+Google Artifact Registry Service (TBD).style.stroke-dash: 5
+Default Branch.style.stroke-dash: 5
+
+cron job?.shape: person
+
+cron job? -> Service Discovery: entrypoint
+Service Discovery -> GitHub DNS repo: 1) Initiates scan 
+GitHub DNS repo -> Service Discovery: 2) clones repo and extracts metadata 
+Service Discovery -> API
+API -> arrangoDB: Upsert service information
+
+Service Discovery -> Endpoint Dispatcher: discoveredServices
+Endpoint Dispatcher --> GitHub clone repo: gitHub.initiate.<sN>
+Endpoint Dispatcher --> GitHub get repo details with octokit: gitHub.initiate.<sN>
+Endpoint Dispatcher -> Get all programming languagues: gitHub.initiate.<sN>
+Endpoint Dispatcher -> vunerability scanning: gitHub.initiate.<sN>
+
+Endpoint Dispatcher --> Domain Scaning Service (TBD): domains.<sN> {style: {stroke-dash: 3}}
+Endpoint Dispatcher --> Service URL Scanning Service (TBD): serviceUrl.<sN> {style: {stroke-dash: 3}}
+Endpoint Dispatcher --> DockerHub Scanning Service (TBD): dockerHub.<sN> {style: {stroke-dash: 3}}
+Endpoint Dispatcher --> Google Artifact Registry Service (TBD): artifactRegistry.<sN> {style: {stroke-dash: 3}}
+
+GitHub clone repo -> gitignore check: gitHub.cloned.<sN>
+GitHub clone repo -> dockerignore check: gitHub.cloned.<sN>
+GitHub clone repo -> Has Tests: gitHub.cloned.<sN>
+GitHub clone repo -> Has API: gitHub.cloned.<sN>
+
+GitHub get repo details with octokit <-> PHACDataHub GitHub Repo: Octokit API
+GitHub get repo details with octokit -> Main Programming Languague: gitHub.octokit.repoDetails.<sN>
+GitHub get repo details with octokit -> License Details: gitHub.octokit.repoDetails.<sN>
+GitHub get repo details with octokit-> Default Branch: gitHub.octokit.repoDetails.<sN>
+
+
+Default Branch-> Main Branch Protection Enabled
+
+Get all programming languagues -> GitHub Done Collector {style: {stroke-dash: 3}}
+Get all programming languagues <-> PHACDataHub GitHub Repo: Octokit API
+vunerability scanning -> GitHub Done Collector {style: {stroke-dash: 3}}
+vunerability scanning <-> PHACDataHub GitHub Repo: Octokit API {style: {stroke-dash: 3}}
+Main Branch Protection Enabled -> GitHub Done Collector {style: {stroke-dash: 3}}
+Main Branch Protection Enabled <-> PHACDataHub GitHub Repo: Octokit API {style: {stroke-dash: 3}}
+
+
+Get all programming languagues.style.stroke-dash: 5
+vunerability scanning.style.stroke-dash: 5
+Main Branch Protection Enabled.style.stroke-dash: 5
+Has API.style.stroke-dash: 5
+Has Tests.style.stroke-dash: 5
+
+Main Programming Languague -> GitHub Done Collector {style: {stroke-dash: 3}}
+Has API -> GitHub Done Collector {style: {stroke-dash: 3}}
+Has Tests -> GitHub Done Collector {style: {stroke-dash: 3}}
+
+License Details -> GitHub Done Collector: gitHub.checked.license.<sN>
+gitignore check -> GitHub Done Collector: gitHub.checked.gitignore.<sN>
+dockerignore check -> GitHub Done Collector: gitHub.checked.dockerignore.<sN>
+
+GitHub Done Collector -> API: gitHub.saveToDatabase
+
