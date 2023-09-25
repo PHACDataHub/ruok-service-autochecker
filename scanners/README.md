@@ -5,7 +5,7 @@ Highly based on https://github.com/canada-ca/tracker
 Currently working on the functionality for the different pieces that will be passed via NATs payload.  (Right now just started on the GitHub piece - pulling out details with the octokit API.)
 
 Initial diagram (see [nats-message-flow-diagram](../diagram-nats-message-flow/))
-![image info](nats-message-flow.png)
+![image info](../diagram-nats-message-flow/nats-message-flow.png)
 ### In the process of changing this! 
 *Service discovery* pulls in metadata from the DNS GitHub repo to determine which services (defined by endpoints) will be scanned, and their associated GitHub or code repos. (TODO - add in container registries too). *NOTE: currently adding annotations to dns metadata - was causing failures, so working from json for now.  These are save in the database 'projects' collection, and kicks off service dispatch.
 
