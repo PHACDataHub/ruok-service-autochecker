@@ -9,6 +9,11 @@ DockerHub Scanning Service (TBD).style.stroke-dash: 5
 Service URL Scanning Service (TBD).style.stroke-dash: 5
 Google Artifact Registry Service (TBD).style.stroke-dash: 5
 Default Branch.style.stroke-dash: 5
+Get all programming languagues.style.stroke-dash: 5
+vunerability scanning.style.stroke-dash: 5
+Main Branch Protection Enabled.style.stroke-dash: 5
+Has API Directory.style.stroke-dash: 5
+Has Tests Directory.style.stroke-dash: 5
 
 cron job?.shape: person
 
@@ -31,14 +36,29 @@ Endpoint Dispatcher --> Google Artifact Registry Service (TBD): artifactRegistry
 
 GitHub clone repo -> gitignore check: gitHub.cloned.<sN>
 GitHub clone repo -> dockerignore check: gitHub.cloned.<sN>
-GitHub clone repo -> Has Tests: gitHub.cloned.<sN>
-GitHub clone repo -> Has API: gitHub.cloned.<sN>
+GitHub clone repo -> Has Tests Directory: gitHub.cloned.<sN>
+GitHub clone repo -> Has API Directory: gitHub.cloned.<sN>
 
-GitHub get repo details with octokit <-> PHACDataHub GitHub Repo: Octokit API
+GitHub clone repo -> Has SECURITYmd {style: {stroke-dash: 3}}
+GitHub clone repo -> Has Dependabotyml {style: {stroke-dash: 3}}
+
+Has SECURITYmd -> GitHub Done Collector {style: {stroke-dash: 3}}
+Has Dependabotyml -> GitHub Done Collector {style: {stroke-dash: 3}}
+
 GitHub get repo details with octokit -> Main Programming Languague: gitHub.octokit.repoDetails.<sN>
 GitHub get repo details with octokit -> License Details: gitHub.octokit.repoDetails.<sN>
 GitHub get repo details with octokit-> Default Branch: gitHub.octokit.repoDetails.<sN>
+GitHub get repo details with octokit <-> PHACDataHub GitHub Repo: Octokit API
 
+GitHub get repo details with octokit-> Repo Visibility {style: {stroke-dash: 3}}
+GitHub get repo details with octokit-> description {style: {stroke-dash: 3}}
+GitHub get repo details with octokit-> Last Updated {style: {stroke-dash: 3}}
+GitHub get repo details with octokit-> Has GitHub Pages {style: {stroke-dash: 3}}
+
+Repo Visibility -> GitHub Done Collector {style: {stroke-dash: 3}}
+description -> GitHub Done Collector {style: {stroke-dash: 3}}
+Last Updated -> GitHub Done Collector {style: {stroke-dash: 3}}
+Has GitHub Pages -> GitHub Done Collector  {style: {stroke-dash: 3}}
 
 Default Branch-> Main Branch Protection Enabled
 
@@ -50,15 +70,9 @@ Main Branch Protection Enabled -> GitHub Done Collector {style: {stroke-dash: 3}
 Main Branch Protection Enabled <-> PHACDataHub GitHub Repo: Octokit API {style: {stroke-dash: 3}}
 
 
-Get all programming languagues.style.stroke-dash: 5
-vunerability scanning.style.stroke-dash: 5
-Main Branch Protection Enabled.style.stroke-dash: 5
-Has API.style.stroke-dash: 5
-Has Tests.style.stroke-dash: 5
-
-Main Programming Languague -> GitHub Done Collector {style: {stroke-dash: 3}}
-Has API -> GitHub Done Collector {style: {stroke-dash: 3}}
-Has Tests -> GitHub Done Collector {style: {stroke-dash: 3}}
+Main Programming Languague -> GitHub Done Collector 
+Has API Directory-> GitHub Done Collector {style: {stroke-dash: 3}}
+Has Tests Directory -> GitHub Done Collector {style: {stroke-dash: 3}}
 
 License Details -> GitHub Done Collector: gitHub.checked.license.<sN>
 gitignore check -> GitHub Done Collector: gitHub.checked.gitignore.<sN>
@@ -66,3 +80,21 @@ dockerignore check -> GitHub Done Collector: gitHub.checked.dockerignore.<sN>
 
 GitHub Done Collector -> API: gitHub.saveToDatabase
 
+Main Programming Languague -> Find Langauge Specific Tests and coverage {style: {stroke-dash: 3}}
+Get all programming languagues -> Find Langauge Specific Tests and coverage {style: {stroke-dash: 3}}
+Find Langauge Specific Tests and coverage -> GitHub Done Collector {style: {stroke-dash: 3}}
+
+Main Programming Languague -> Find Langauge Specific API libraries{style: {stroke-dash: 3}}
+Get all programming languagues -> Find Langauge Specific API libraries {style: {stroke-dash: 3}}
+Has API Directory -> Find Langauge Specific API libraries {style: {stroke-dash: 3}}
+Find Langauge Specific API libraries -> GitHub Done Collector {style: {stroke-dash: 3}}
+
+Main Programming Languague.style.stroke-dash: 5
+Find Langauge Specific API libraries.style.stroke-dash: 5
+Find Langauge Specific Tests and coverage.style.stroke-dash: 5
+Repo Visibility.style.stroke-dash: 5
+description.style.stroke-dash: 5
+Last Updated.style.stroke-dash: 5
+Has GitHub Pages.style.stroke-dash: 5
+Has SECURITYmd.style.stroke-dash: 5 
+Has Dependabotyml.style.stroke-dash: 5 
