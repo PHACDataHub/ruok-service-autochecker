@@ -23,8 +23,7 @@ async function publish(subject, payload) {
   nc.publish(subject, jc.encode(payload)) 
 }
 
-const requiredChecks = new Set(['license','gitignore'])
-// const completedChecks = new Set()
+const requiredChecks = new Set(['license','gitignore', 'hasTestsDirectory'])
 const completedChecksMap = new Map();
 let githubCheckResults = {}
 
