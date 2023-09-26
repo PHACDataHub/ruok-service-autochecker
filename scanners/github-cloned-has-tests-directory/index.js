@@ -1,7 +1,7 @@
 // github-cloned-has-test-directory/index.js
 
 import { connect, JSONCodec} from 'nats'
-import { searchIgnoreFile } from './src/get-dotignore-details.js'
+import { searchTests, formTestsDirectoryPayload } from './src/has-tests-directory.js'
 import 'dotenv-safe/config.js'
 
 const { 
@@ -24,28 +24,25 @@ async function publish(subject, payload) {
   nc.publish(subject, jc.encode(payload)) 
 }
 
-async function 
 
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
 ;(async () => {
- 
     for await (const message of sub) {
         console.log('\n**************************************************************')
         console.log(`Recieved from ... ${message.subject} \n`)
         
         const payloadFromCloneRepo  = await jc.decode(message.data)
-        console.log(payloadFromCloneRepo)
-        
-        const serviceName = message.subject.split(".").reverse()[0]
-
         const { repoName } = payloadFromCloneRepo
-        // const gitignoreDetails = await searchIgnoreFile(repoName, '.gitignore')
-        // const dockerignoreDetails = await searchIgnoreFile(repoName, '.dockerignore')    
- 
-        // console.log(gitignoreDetails, dockerignoreDetails)
+        const clonedRepoPath =  `../../temp-cloned-repo/${repoName}`
+        const serviceName = message.subject.split(".").reverse()[0]
+  
+        const testDirectories = await searchTests(clonedRepoPath)
+        const testsDirectoryDetails = await formTestsDirectoryPayload(testDirectories)
+    
+        console.log(JSON.stringify(testsDirectoryDetails))
 
-        // await publish(`${NATS_PUB_STREAM}.${serviceName}`, {gitignoreDetails, dockerignoreDetails}) //To clone repo and octokit details 
+        await publish(`${NATS_PUB_STREAM}.${serviceName}`, testsDirectoryDetails) 
         console.log(`Sent to ... ${NATS_PUB_STREAM}.${serviceName}: `,)
     }
 })();

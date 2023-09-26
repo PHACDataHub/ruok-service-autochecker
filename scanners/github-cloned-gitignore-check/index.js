@@ -45,8 +45,8 @@ process.on('SIGINT', () => process.exit(0))
  
         console.log(gitignoreDetails, dockerignoreDetails)
 
-        await publish(`${NATS_PUB_STREAM}.${serviceName}`, {gitignoreDetails, dockerignoreDetails}) //To clone repo and octokit details 
-        console.log(`Sent to ... ${NATS_PUB_STREAM}.${serviceName}: `, )
+        await publish(`${NATS_PUB_STREAM}.${serviceName}`, {gitignoreDetails, dockerignoreDetails}) 
+        console.log(`Sent to ... ${NATS_PUB_STREAM}.${serviceName}: ` )
     }
 })();
 

@@ -40,7 +40,6 @@ process.on('SIGINT', () => process.exit(0))
     const payloadFromServiceDiscovery  = await jc.decode(message.data)
     console.log(payloadFromServiceDiscovery)
 
-    // const {serviceName} = payloadFromServiceDiscovery
     const serviceName = message.subject.split(".").reverse()[0]
     console.log(serviceName)
     
@@ -61,21 +60,21 @@ process.on('SIGINT', () => process.exit(0))
     const dockerHubs = await getDockerHub(payloadFromServiceDiscovery)
     if (dockerHubs) {
         for (const dockerHub of dockerHubs) {
-            await publish(dockerHub, `dockerHub.${serviceName}`) //To clone repo and octokit details 
+            await publish(dockerHub, `dockerHub.${serviceName}`) 
         }
     }
 
     const domains = await getDomains(payloadFromServiceDiscovery)
     if (domains) {
         for (const domain of domains) {
-            await publish(domain, `domains.${serviceName}`) //To clone repo and octokit details 
+            await publish(domain, `domains.${serviceName}`) 
         }
     }
 
     const serviceUrls = await getServiceUrls(payloadFromServiceDiscovery)
     if (serviceUrls) {
         for (const serviceUrl of serviceUrls) {
-            await publish(serviceUrl, `serviceUrl.${serviceName}`) //To clone repo and octokit details 
+            await publish(serviceUrl, `serviceUrl.${serviceName}`) 
             console.log(`Sent to ... serviceUrl.${serviceName}: `, serviceUrl)
         }
     }
