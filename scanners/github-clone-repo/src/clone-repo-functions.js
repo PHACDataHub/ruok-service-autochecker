@@ -2,12 +2,12 @@ import * as fse from 'fs-extra'
 import { simpleGit } from "simple-git";
 
 export async function extractUrlParts(sourceCodeRepository) {
-    const parts = sourceCodeRepository.split('/');
-    const repoName = parts[parts.length - 1];
-    const cloneUrl = `git@github.com:${parts[parts.length - 2]}/${repoName}.git`;
-  
-    return { repoName, cloneUrl };
-  }
+  const parts = sourceCodeRepository.split('/');
+  const repoName = parts[parts.length - 1];
+  const cloneUrl = `git@github.com:${parts[parts.length - 2]}/${repoName}.git`;
+
+  return { repoName, cloneUrl };
+}
 
 export async function cloneRepository(clone_url, repo) {
     const repoPath = `../../temp-cloned-repo/${repo}`;
