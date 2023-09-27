@@ -60,6 +60,7 @@ async function getProjects() {
     await cloneDnsRepository() //TODO if exisits remove and clone again?
     const dnsRecordsAnnotations = await extractAnnotationsFromDnsRecords();
     const projects = await consolidateProjectAnnotations(dnsRecordsAnnotations);
+
     // TODO get projects from known-services list, compare as well... concat in
     await removeClonedDnsRepository()
     return(projects)

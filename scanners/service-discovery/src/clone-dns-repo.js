@@ -3,46 +3,38 @@ import { simpleGit } from "simple-git";
 import * as fse from 'fs-extra'
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-// import dotenv from 'dotenv'
-// // import 'dotenv-safe/config.js'
-// dotenv.config()
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export async function cloneDnsRepository() { 
-  //  Clones repository using simple-git
-  //  TODO - add error handing if repo already exists 
+export async function cloneDnsRepository() {
+  // const repoPath = `../../temp-cloned-repo/${repo}`;
+  const repoPath = path.join(__dirname, 'temp-cloned-repo', "dns");
+  const clone_url = "git@github.com:PHACDataHub/dns.git"
+  try {
+    const clonedRepoExists = await fse.pathExists(repoPath);
+    if (clonedRepoExists) {
+      // remove repo
+      await removeClonedDnsRepository(repoPath);
+    }
 
-    // const repoPath = `.src/temp-cloned-repo/dns`;
-    const repoPath = path.join(__dirname, 'temp-cloned-repo', 'dns');
-    const clone_url = "git@github.com:PHACDataHub/dns.git"
-    console.log(repoPath)
-    
-    return new Promise((resolve, reject) => {
-      simpleGit().clone(clone_url, repoPath, (error) => {
-        if (error) {
-          console.error('Error cloning dns repository:', error);
-          reject(error); 
-        } else {
-          console.log('dns Repository cloned successfully.');
-          resolve(repoPath); 
-        }
-      });
-    });
+    // Clone repo
+    await simpleGit().clone(clone_url, repoPath);
+    console.log('Repository cloned successfully.');
+    return repoPath;
+  } catch (error) {
+    console.error('Error cloning repository:', error);
+    throw error; 
   }
-  // cloneDnsRepository()
-// const clone_url = "git@github.com:PHACDataHub/dns.git"
-// const repoPath = await cloneRepository(clone_url, repo);
-
+}
 
 export async function removeClonedDnsRepository() {
-  // const clonedRepoPath = `./temp-cloned-repo/dns`;
   const clonedRepoPath = path.join(__dirname, 'temp-cloned-repo', 'dns');
-  fse.remove(clonedRepoPath)
-    .then(() => {
-      console.log('DNS cloned directory removed successfully.');
-    })
-    .catch((err) => {
-      console.error('Error removing directory:', err);
-    });
+  try {
+    await fse.remove(clonedRepoPath);
+    console.log('Previously cloned repository removed successfully.');
+  } catch (err) {
+    console.error('Error removing directory:', err);
+    throw err; 
   }
+}

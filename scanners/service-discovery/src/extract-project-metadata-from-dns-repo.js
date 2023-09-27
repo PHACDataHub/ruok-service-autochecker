@@ -8,11 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function extractAnnotationsFromDnsRecords(clonedRepoPath='./temp-cloned-repo/dns/dns-records') {
-    //TODO pull out domains as well! 
-    // clonedRepoPath = 'temp-cloned-repo/dns/dns-records'
-    // const dir = path.join(__dirname, 'temp-cloned-repo', 'dns', 'dns-records');
     const dir = path.join(__dirname, clonedRepoPath);
-    // const dir = clonedRepoPath
     const files = fs.readdirSync(dir);
     const results = [];
 
@@ -37,13 +33,15 @@ export async function extractAnnotationsFromDnsRecords(clonedRepoPath='./temp-cl
                     const serviceEndpointUrls = annotations?.serviceEndpointUrls;
                     const containerRegistries = annotations?.containerRegistries;
                     const apmId = annotations?.apmId;
+                    const domain = yamlData.spec?.name;
 
                     results.push({
                         projectName,
                         sourceCodeRepository,
                         serviceEndpointUrls,
                         containerRegistries,
-                        apmId
+                        apmId,
+                        domain
                     });
                 }
             }
@@ -54,50 +52,59 @@ export async function extractAnnotationsFromDnsRecords(clonedRepoPath='./temp-cl
     return results;
 }
 
-// const dnsRecordsAnnotations = await extractAnnotationsFromDnsRecords();
-// console.log(dnsRecordsAnnotations)
-
-
 export async function consolidateProjectAnnotations(results) {
-    // consolidates project and github results, removes undefined results
-    const uniqueResults = {};
-    
+    // Collect domains by project (one dnsRecord/ domain, one to many projects to domain)
+    const domainsByProject = {};
     for (const result of results) {
-        const { projectName, sourceCodeRepository, ...rest } = result;
+        const { projectName, domain } = result;
+        if (projectName !== undefined && domain !== undefined) {
+            if (!domainsByProject[projectName]) {
+                domainsByProject[projectName] = [domain];
+            } else {
+                domainsByProject[projectName].push(domain);
+            }
+        }
+    }
+
+    const consolidatedResults = [];
+    for (const result of results) {
+        // included domain here to be able to exclude it from rest later
+        // projectName and sourceCodeRepository are the key 
+        const { projectName, sourceCodeRepository, domain, ...rest } = result;
 
         if (projectName !== undefined && sourceCodeRepository !== undefined) {
-            const key = `${projectName}:${sourceCodeRepository}`;
-
+            // using projectName:sourceCodeRepository as assuming this is unique *** does this assumption hold??
+            // Also assuming these are both defined - TODO force manadatory fields for dns repo
+            const key = `${projectName}:${sourceCodeRepository}`
             const newResult = {
                 projectName,
                 sourceCodeRepository,
             };
 
-            // Include non-undefined fields from the rest of the object
+            // Include non-undefined fields
             for (const field in rest) {
                 if (rest[field] !== undefined) {
                     newResult[field] = rest[field];
                 }
             }
+            // Add domains collected earlier for project
+            if (domainsByProject[projectName]) {
+                newResult.domains = domainsByProject[projectName];
+            }
+
             // Add only new keys
-            if (!uniqueResults[key]) {
-                uniqueResults[key] = newResult;
+            if (!consolidatedResults.find((item) => item.projectName === projectName)) {
+                consolidatedResults.push(newResult);
             } else {
                 // Merge additional fields if the key already exists
-                uniqueResults[key] = {
-                    ...uniqueResults[key],
-                    ...newResult,
-                };
+                const existingResult = consolidatedResults.find((item) => item.projectName === projectName);
+                Object.assign(existingResult, newResult);
             }
         }
     }
-return Object.values(uniqueResults);
+
+    return consolidatedResults;
 }
-
-
-// const projects = extractUniqueAnnotations(dnsRecordsAnnotations)
-// console.log(projects)
-
 
 
 
