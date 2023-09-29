@@ -12,6 +12,8 @@ npm start
 npm t
 ```
 
+docker-compose -f docker-compose-scanners.yaml up --build
+
 Currently splitting out the functions from the monolithic function created in the old-scanners/github-scanner into smaller, self contained functions. These all communicate using [NATs.io](https://nats.io/) which is a lightweight, cloud-native messaging system designed for distributed systems. 
 
 The following diagram shows the inital nats message flow through these services ( [nats-message-flow-diagram](../diagram-nats-message-flow/))

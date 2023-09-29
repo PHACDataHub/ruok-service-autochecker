@@ -13,14 +13,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@apollo/client": "^3.8.0",
     "@graphql-tools/schema": "^10.0.0",
     "arangojs": "^8.4.0",
-    "dot-env": "^0.0.1",
-    "dotenv": "^16.3.1",
     "graphql": "^16.7.1",
     "graphql-type-json": "^0.3.2",
     "graphql-yoga": "^4.0.4",
     "nats": "^2.15.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }

@@ -13,12 +13,17 @@ This uses [Safe Inputs](https://github.com/PHACDataHub/safe-inputs) and [Tracker
 
 ## To build and run 
 (Only the API, ArangoDB and the NATs server, but *not* the scanners - for the moment.) 
+1. Set up api .env file 
+```
+./scripts/create-api-dotenv.sh
+```
+2. Run containers for database, Nats server and API
 ```
 docker compose up --build -d && ./database/db-init.sh
 ```
-db-init.sh populates the database with 'projects' and 'services' collections, as well as some fabricated data in order to enable UI development concurrently.
+(db-init.sh populates the database with 'projects' and 'services' collections, as well as some fabricated data in order to enable UI development concurrently.
 
-If there's an error in the creation of these, run it a second time and it should work. TODO - add longer timeout or healthcheck on dockercompose file. 
+If there's an error in the creation of this fabricated data, run it a second time and then it should work. TODO - add longer timeout or healthcheck on dockercompose file. 
 
 ## To tear down 
 ```
