@@ -26,6 +26,13 @@ export const schema = createSchema({
                 serviceEndpointUrls: String = ""
                 domains: [String] = ""
               ): JSON
+
+              upsertGitHubScan(
+                _key: String! 
+                serviceName: String!
+                scanResults: JSON
+                timestamp: Int 
+                ): JSON
         }
 
         type Project {
@@ -154,9 +161,6 @@ export const schema = createSchema({
             //   }
 
 
-            // INSERT { _key: ${_key}, data: ${data} }
-            // IN services 
-            // OPTIONS { overwriteMode: "update" }
             upsertService: async (_, args, context) => {
                 const { db } = context;
                 const {_key, projectName, sourceCodeRepository, containerRegistries, serviceEndpointUrls, domains } = args;
@@ -181,8 +185,8 @@ export const schema = createSchema({
                     console.log(error);
                     throw new Error("Failed to create service.");
                 }
-                return { _key }
-            }
+                return _key
+            },
             // example
             // mutation {
             //     upsertService(
@@ -192,6 +196,50 @@ export const schema = createSchema({
             //       containerRegistries: "registry.example.com",
             //       serviceEndpointUrls: "https://example.com/service",
             //       domains: ["example.com", "sub.example.com"]
+            //     ) {
+            //       _key
+            //     }
+            //   }
+
+            upsertGitHubScan: async (_, args, context) => {
+                const { db } = context;
+                const { gitHubRepository, serviceName, scanResults } = args;
+                
+                // const timestamp = new Date.now()
+                const timestamp = new Date().toISOString();
+                
+                const upsertQuery = aql`
+                    INSERT { _key: ${gitHubRepository},
+                        serviceName: ${serviceName},
+                        scanResults: ${scanResults},
+                        timestamp: ${timestamp}  
+                    }
+                    IN gitHubScan
+                    OPTIONS { overwriteMode: "update" }
+                    `;
+                
+                try {
+                    const upsertResult = await context.db.query(upsertQuery);
+                    console.log("Inserted/updated GitHub Scan results:", upsertResult);
+                } catch (error) {
+                    console.error("Error creating/updating GitHub Scan record:", error);
+                    throw new Error("Failed to create/update service.");
+                }
+                return {
+                    _key: gitHubRepository,
+                    serviceName,
+                    scanResults,
+                    timestamp: timestamp.toISOString(), // Convert timestamp to ISO string
+                  };
+            }
+            // example: 
+            // mutation {
+            //     upsertGitHubScan(
+            //       _key: "https://github.com/example/repo",
+            //       serviceName: "example-service",
+            //       scanResults: {
+            //         hasAPI : true,
+            //       }
             //     ) {
             //       _key
             //     }

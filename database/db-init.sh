@@ -15,7 +15,7 @@ fi
 
 echo "Waiting for ArangoDB to be ready..."
 attempts=0
-while [[ $attempts -lt 20 ]]; do
+while [[ $attempts -lt 25 ]]; do
     if curl -u root:yourpassword -s http://0.0.0.0:8529/_admin/echo; then
     #   if curl -u root:yourpassword -s http://localhost:8529/_admin/echo; then
         echo "ArangoDB is ready."
@@ -72,8 +72,18 @@ curl -u root:yourpassword -X POST --header 'accept: application/json' \
      --data '{"name": "services"}' \
      --dump - http://0.0.0.0:8529/_db/dataServices/_api/collection
 
+echo ""
+echo "Creating a 'gitHubScan' collection in a 'dataServices' database"
+echo ""
 
-# ---- Create documents
+curl -u root:yourpassword -X POST --header 'accept: application/json' \
+     --data '{"name": "gitHubScan"}' \
+     --dump - http://0.0.0.0:8529/_db/dataServices/_api/collection
+
+
+
+
+# ---- Create documents (for dataServicesCollection)
 echo ""
 echo "Creating sample projects - note records not confirmed - just using as an example!"
 echo ""
