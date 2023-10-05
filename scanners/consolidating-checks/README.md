@@ -1,0 +1,1 @@
+Once these services are triggered by workflow orchestrator, the flow will be flipped on its head and will be able to implement the stragegy pattern. In here, we're just consolidating with the existing nats message in preparation. 
