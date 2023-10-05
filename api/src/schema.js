@@ -14,6 +14,7 @@ export const schema = createSchema({
             getProjectByName(projectName: String!): Project
             getProjectIDByName(projectName: String!): String
             getAllProjects: [Project]
+            getSourceCodeRepositoryByServiceName(serviceName: String!): String
         }
 
         type Mutation {
@@ -73,7 +74,7 @@ export const schema = createSchema({
                 } catch (err) {
                     console.error(err.message);
                 }
-                },
+            },
                 // // example
                 // query {
                 //     getProjectByName(projectName: "epicenter") {
@@ -110,6 +111,26 @@ export const schema = createSchema({
             //       gitHubRepository
             //       internalTool
             //     }
+            //   }
+            
+            getSourceCodeRepositoryByServiceName: async (_, args, context) => {
+                const { db } = context;
+                const { serviceName } = args;
+                try {
+                    const cursor = await context.db.query(aql`
+                        FOR doc IN services
+                        FILTER doc._key == ${serviceName}
+                        RETURN doc.sourceCodeRepository
+                    `);
+                    return await cursor.next()
+
+                } catch (err) {
+                    console.error(err.message);
+                }
+            },
+            // example
+            // query {
+            //     getSourceCodeRepositoryByServiceName(serviceName: "epicenter")
             //   }
         },
     

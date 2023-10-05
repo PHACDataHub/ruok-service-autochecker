@@ -1,6 +1,6 @@
 // github-save-to-database/index.js
 
-import { upsertGitHubScanIntoDatabase } from "./src/database-functions.js";
+import { upsertGitHubScanIntoDatabase, getGitHubRepositoryFromServicesCollection } from "./src/database-functions.js";
 import { connect, JSONCodec} from 'nats'
 import { Database } from "arangojs";
 import { request, gql, GraphQLClient } from 'graphql-request'
@@ -39,26 +39,29 @@ async function publish( subject, payload) {
   nc.publish(subject, jc.encode(payload)) 
 }
 
-await upsertGitHubScanIntoDatabase('serviceName', 'repoName', {'five': 5}, graphQLClient)
+// await upsertGitHubScanIntoDatabase('epicenter', 'repoName', {'five': 5}, graphQLClient)
 
-// process.on('SIGTERM', () => process.exit(0))
-// process.on('SIGINT', () => process.exit(0))
-// ;(async () => {
+process.on('SIGTERM', () => process.exit(0))
+process.on('SIGINT', () => process.exit(0))
+;(async () => {
  
-//     for await (const message of sub) {
-//         console.log('\n**************************************************************')
-//         console.log(`Recieved from ... ${message.subject} \n`)
+    for await (const message of sub) {
+        console.log('\n**************************************************************')
+        console.log(`Recieved from ... ${message.subject} \n`)
         
-//         const payloadFromDoneCollector  = await jc.decode(message.data)
-//         console.log(payloadFromDoneCollector)
-        
-//         const serviceName = message.subject.split(".").reverse()[0]
+        const payloadFromDoneCollector  = await jc.decode(message.data)
+        console.log(payloadFromDoneCollector)
+
+        const serviceName = message.subject.split(".").reverse()[0]
+
+        // get gitHubRepository from services collection for that serviceName
+        const gitHubRepository = await getSourceCodeRepositoryByServiceName(serviceName, GraphQLClient)
   
-//         const upsertService = await upsertGitHubScanIntoDatabase(serviceName, payloadFromDoneCollector, graphQLClient)
+        const upsertService = await upsertGitHubScanIntoDatabase(serviceName, gitHubRepository, payloadFromDoneCollector, graphQLClient)
  
-//         console.log(`Saved ${serviceName} scan results to database - services collection`)
-//     }
-// })();
+        console.log(`Saved ${serviceName} scan results to database - services collection`)
+    }
+})();
 
 await nc.closed();
 
