@@ -70,7 +70,10 @@ async function processProjects(projects) {
     for (const project of projects){
         // TODO Determine what to do with ones in db, but not in this scan (ie not in DNS repo)
         const upsertService = await upsertIntoDatabase(project, graphQLClient)
+        
+        // TODO fix return to be _key or serviceName instead (or more human understandable)
         const serviceName = upsertService.upsertService // serviceName is the database key for services collection
+    
         //TODO check if not undefined
         await publish(`${NATS_PUB_STREAM}.${serviceName}`, project)
 
