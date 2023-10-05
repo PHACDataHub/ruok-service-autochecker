@@ -57,6 +57,7 @@ async function publish( subject, payload) {
 
 async function getProjects() {
     await cloneDnsRepository() //TODO if exisits remove and clone again?
+    
     const dnsRecordsAnnotations = await extractAnnotationsFromDnsRecords();
     const projects = await consolidateProjectAnnotations(dnsRecordsAnnotations);
 

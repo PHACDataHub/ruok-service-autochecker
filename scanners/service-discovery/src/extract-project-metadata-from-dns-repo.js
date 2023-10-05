@@ -43,6 +43,7 @@ export async function extractAnnotationsFromDnsRecords(clonedRepoPath='./temp-cl
                         apmId,
                         domain
                     });
+    
                 }
             }
         } catch (error) {
@@ -87,7 +88,7 @@ export async function consolidateProjectAnnotations(results) {
                     newResult[field] = rest[field];
                 }
             }
-            // Add domains collected earlier for project
+            // Add domains collected before for project
             if (domainsByProject[projectName]) {
                 newResult.domains = domainsByProject[projectName];
             }
@@ -102,10 +103,9 @@ export async function consolidateProjectAnnotations(results) {
             }
         }
     }
-
+    console.log(consolidatedResults)
     return consolidatedResults;
 }
-
 
 
 
