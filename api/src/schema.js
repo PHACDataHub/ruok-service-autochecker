@@ -4,6 +4,7 @@ import { aql } from "arangojs";
 
 // #TODO use schema first definition - ie. "export const schema = new GraphQLSchema({"with fields and definitions & resolvers for this once working 
 // upsertService(data: JSON): JSON
+
 export const schema = createSchema({
     typeDefs: /* GraphQL */ `
         scalar JSON
@@ -29,9 +30,9 @@ export const schema = createSchema({
 
               upsertGitHubScan(
                 _key: String! 
-                serviceName: String!
+                gitHubRepository: String!
                 scanResults: JSON
-                timestamp: Int 
+                timestamp: Int
                 ): JSON
         }
 
@@ -196,23 +197,21 @@ export const schema = createSchema({
             //       containerRegistries: "registry.example.com",
             //       serviceEndpointUrls: "https://example.com/service",
             //       domains: ["example.com", "sub.example.com"]
-            //     ) {
-            //       _key
-            //     }
+            //     ) 
             //   }
 
             upsertGitHubScan: async (_, args, context) => {
                 const { db } = context;
-                const { gitHubRepository, serviceName, scanResults } = args;
-                
-                // const timestamp = new Date.now()
-                const timestamp = new Date().toISOString();
-                
+                const { _key, serviceName, gitHubRepository, scanResults } = args;
+
+                console.log(_key, gitHubRepository, scanResults) // note the _key is the serviceName
+       
+                const timestamp = Date.now()
                 const upsertQuery = aql`
-                    INSERT { _key: ${gitHubRepository},
-                        serviceName: ${serviceName},
+                    INSERT { _key: ${_key},
+                        gitHubRepository: ${gitHubRepository},
                         scanResults: ${scanResults},
-                        timestamp: ${timestamp}  
+                        timestamp: ${timestamp}
                     }
                     IN gitHubScan
                     OPTIONS { overwriteMode: "update" }
@@ -226,24 +225,23 @@ export const schema = createSchema({
                     throw new Error("Failed to create/update service.");
                 }
                 return {
-                    _key: gitHubRepository,
-                    serviceName,
+                    _key,
+                    gitHubRepository,
                     scanResults,
-                    timestamp: timestamp.toISOString(), // Convert timestamp to ISO string
-                  };
+                    timestamp
+                };
             }
             // example: 
-            // mutation {
-            //     upsertGitHubScan(
-            //       _key: "https://github.com/example/repo",
-            //       serviceName: "example-service",
-            //       scanResults: {
-            //         hasAPI : true,
-            //       }
-            //     ) {
-            //       _key
-            //     }
-            //   }
+                // mutation {
+                //     upsertGitHubScan(
+                //             _key: "https",
+                //                     gitHubRepository: "sehsdfoh",
+                //             serviceName: "example-service",
+                //             scanResults: {
+                //                 hasAPI : true,
+                //             }
+                //         ) 
+                //         }
         
         }
     }
