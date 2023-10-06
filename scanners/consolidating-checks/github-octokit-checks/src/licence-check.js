@@ -1,8 +1,0 @@
-export async function getLicenseDetails(repoDetails) {
-    if (repoDetails.license) {
-        // console.log(repoDetails.license)
-        return({"hasLicense": true, "license": repoDetails.license.spdx_id})
-    } else {
-        return({"hasLicense": false, "license": null})
-    }
-}
