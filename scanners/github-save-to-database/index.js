@@ -16,7 +16,7 @@ const {
   API_URL = "http://0.0.0.0:4000/graphql"
 } = process.env;
 
-const NATS_PUB_STREAM = "gitHub.saveToDatabase.>" 
+const NATS_SUB_STREAM = "gitHub.saveToDatabase.>" 
 
 // API connection 
 const graphQLClient = new GraphQLClient(API_URL);
@@ -33,7 +33,8 @@ const nc = await connect({
   servers: NATS_URL,
 })
 const jc = JSONCodec(); // for encoding NAT's messages
-console.log('🚀 Connected to NATS server...');
+const sub = nc.subscribe(NATS_SUB_STREAM)
+console.log('🚀 Connected to NATS server - listening on ...', sub.subject, "channel...");
 
 async function publish( subject, payload) {
   nc.publish(subject, jc.encode(payload)) 
@@ -55,11 +56,13 @@ process.on('SIGINT', () => process.exit(0))
         const serviceName = message.subject.split(".").reverse()[0]
 
         // get gitHubRepository from services collection for that serviceName
-        const gitHubRepository = await getSourceCodeRepositoryByServiceName(serviceName, GraphQLClient)
-  
-        const upsertService = await upsertGitHubScanIntoDatabase(serviceName, gitHubRepository, payloadFromDoneCollector, graphQLClient)
- 
-        console.log(`Saved ${serviceName} scan results to database - services collection`)
+        try{
+            const gitHubRepository = await getGitHubRepositoryFromServicesCollection(serviceName, graphQLClient) // get repo url from services collection - will combine later
+            const upsertService = await upsertGitHubScanIntoDatabase(serviceName, gitHubRepository, payloadFromDoneCollector, graphQLClient)
+            console.log(`Saved ${serviceName} GitHub scan results to database - services collection`)
+        } catch {
+            console.log('Errors saving ${serviceName} GitHub Scan results to database')
+        }
     }
 })();
 
