@@ -2,7 +2,7 @@
 //  specifically called rather than listening in on a general channel - just combining for now
 
 import { connect, JSONCodec } from 'nats';
-import 'dotenv-safe/config.js';
+import 'dotenv-safe/config';
 
 const { NATS_URL } = process.env;
 
