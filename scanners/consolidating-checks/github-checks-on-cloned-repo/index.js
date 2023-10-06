@@ -14,7 +14,6 @@ const { NATS_URL } = process.env;
 const NATS_SUB_STREAM = "gitHub.cloned.>"
 const NATS_PUB_STREAM = "gitHub.checked" 
 
-
 // NATs connection 
 const nc = await connect({ 
   servers: NATS_URL,
@@ -74,14 +73,14 @@ process.on('SIGINT', () => process.exit(0))
         console.log(`Sent to ... ${NATS_PUB_STREAM}.${checkName}.${serviceName}: `, {'hasApiDirectory': hasApiDir} )
 
     // gitignoreDetails
-        checkName = 'gitignoreDetails'
+        checkName = 'gitignore'
         const gitignoreDetails = await searchIgnoreFile(clonedRepoPath, ".gitignore");
 
         await publish(`${NATS_PUB_STREAM}.${checkName}.${serviceName}`, {'gitignoreDetails': gitignoreDetails}) 
         console.log(`Sent to ... ${NATS_PUB_STREAM}.${checkName}.${serviceName}: `, {'gitignoreDetails': gitignoreDetails})
         
     // dockerignoreDetails
-        checkName = 'dockerDetails'
+        checkName = 'dockerignore'
         const dockerignoreDetails = await searchIgnoreFile(clonedRepoPath, ".dockerignore");
 
         await publish(`${NATS_PUB_STREAM}.${checkName}.${serviceName}`, {'dockerignoreDetails':dockerignoreDetails}) 
