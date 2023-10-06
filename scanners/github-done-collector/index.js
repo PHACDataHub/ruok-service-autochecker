@@ -1,4 +1,4 @@
-// github-done/index.js
+// github-done-collector/index.js
 
 import { connect, JSONCodec} from 'nats'
 import 'dotenv-safe/config.js'
@@ -7,7 +7,6 @@ const { NATS_URL } = process.env;
   
 const NATS_SUB_STREAM = "gitHub.checked.>"
 const NATS_PUB_STREAM = "gitHub.saveToDatabase" 
-
 
 // NATs connection 
 const nc = await connect({ 
@@ -33,35 +32,38 @@ process.on('SIGINT', () => process.exit(0))
         console.log('\n**************************************************************')
         console.log(`Message recieved from ... ${message.subject} \n`)
         
+        // pulled from the last and second last NATs message token 
         const serviceName = message.subject.split(".").reverse()[0]
         const checkName = message.subject.split(".").reverse()[1]
 
-        githubCheckResults = { ...githubCheckResults, ...jc.decode(message.data)}
-        
-        // Initialize the completed checks set for this service if it doesn't exist
+        // initialize completed checks set for this service if doesn't yet exist
         if (!completedChecksMap.has(serviceName)) {
           completedChecksMap.set(serviceName, new Set());
         }
 
         const completedChecksForService = completedChecksMap.get(serviceName);
+        // add this check to the completed checks set for this service
         completedChecksForService.add(checkName);
         console.log(`Completed checks so far for ${serviceName}: `, completedChecksForService);
-        // completedChecks.add(checkName);
-        // console.log(`Completed checks so far for ${serviceName}: `, completedChecks)
 
-        // Get pending checks
+        // Get the GitHub check results for this service
+        if (!githubCheckResults[serviceName]) {
+          githubCheckResults[serviceName] = {}; // create if doesn't exist
+        }
+        githubCheckResults[serviceName] = { ...githubCheckResults[serviceName], ...jc.decode(message.data) };
+        
+        // Check if all required checks are complete
         const pendingChecks = [...requiredChecks].filter((check) => !completedChecksForService.has(check));
         console.log(`Pending checks: `, pendingChecks);
 
-        // Check if all required checks are complete
-        // const allChecksComplete = [...requiredChecks].every((check) => completedChecks.has(check));
         if (pendingChecks.length === 0) {
             console.log(`All GitHub checks done for ${serviceName}!`)
-            // publish to savetodatabase
-            await publish(`${NATS_PUB_STREAM}.${serviceName}`, githubCheckResults)
-            console.log(`Message sent to ... ${NATS_PUB_STREAM}.${serviceName}: `, githubCheckResults)
-            // reset checks
+            // publish to saveToDatabase
+            await publish(`${NATS_PUB_STREAM}.${serviceName}`, githubCheckResults[serviceName])
+            console.log(`Message sent to ... ${NATS_PUB_STREAM}.${serviceName}: `, githubCheckResults[serviceName])
+            // reset checks for this service
             completedChecksForService.clear();
+            delete githubCheckResults[serviceName];
         }
     }
 })();
