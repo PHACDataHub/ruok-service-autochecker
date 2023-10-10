@@ -1,8 +1,10 @@
 // Note - this will change once we convert this to a workflow orchestrator, and each of these are 
 //  specifically called rather than listening in on a general channel - just combining for now
 
-import { connect, JSONCodec } from 'nats';
-import 'dotenv-safe/config';
+import { connect, JSONCodec } from 'nats'
+// import 'dotenv-safe/config'
+import dotenv from 'dotenv-safe'
+dotenv.config();
 
 const { NATS_URL } = process.env;
 

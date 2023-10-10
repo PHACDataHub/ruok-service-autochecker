@@ -6,6 +6,8 @@ import { hasSecurityMd } from './src/has-security-md.js'
 import { searchTests, formTestsDirectoryPayload } from './src/has-tests-directory.js'
 import { searchIgnoreFile } from './src/get-dotignore-details.js'
 import { hasApiDirectory } from './src/has-api-directory.js'
+// import { DotGitIgnoreDetails, DotDockerIgnoreDetails, HasSecurityMd, HasDependabotYaml, HasTestsDirectory, HasApiDirectory, AllChecks } from './src';
+
 
 import 'dotenv-safe/config.js'
 
@@ -27,6 +29,15 @@ async function publish(subject, payload) {
   nc.publish(subject, jc.encode(payload)) 
 }
 
+// const dotIgnoreChecker = new DotGitIgnoreDetails()
+// const hasApiDirectoryChecker = new HasApiDirectory()
+// const dotDockerIgnoreChecker = new DotDockerIgnoreDetails()
+// const dotGitIgnoreChecker = new DotGitIgnoreDetails() 
+// const hasSecurityMdChecker = new HasSecurityMd()
+// const hasDependabotYamlChecker = new HasDependabotYaml()
+// const hasTestsDirectoryChecker = new HasTestsDirectory()
+// const allChecksChecker = new AllChecks()
+
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
 ;(async () => {
@@ -39,8 +50,16 @@ process.on('SIGINT', () => process.exit(0))
         // console.log(payloadFromCloneRepo)
         const serviceName = message.subject.split(".").reverse()[0]
         const { repoName } = payloadFromCloneRepo
-        const clonedRepoPath = `../../../temp-cloned-repo/${repoName}` // TODO - there's got to be a cleaner way to do this and still be able to test
+        const clonedRepoPath = `../../temp-cloned-repo/${repoName}` // TODO - there's got to be a cleaner way to do this and still be able to test
         let checkName
+
+
+        // try {
+        //     const results = await allChecksChecker.doAllChecks(clonedRepoPath);
+        //     console.log('All Checks Results:', results);
+        //   } catch (error) {
+        //     console.error('Error during checks:', error);
+        //   }
 
     //has dependabot yaml 
         checkName = 'hasDependabotYaml'
