@@ -50,8 +50,11 @@ process.on('SIGINT', () => process.exit(0))
         if (!githubCheckResults[serviceName]) {
           githubCheckResults[serviceName] = {}; // create if doesn't exist
         }
-        githubCheckResults[serviceName] = { ...githubCheckResults[serviceName], ...jc.decode(message.data) };
-        
+        const decodedData = jc.decode(message.data);
+        delete decodedData.checkName; 
+        githubCheckResults[serviceName] = { ...githubCheckResults[serviceName], ...decodedData };
+        // githubCheckResults[serviceName] = { ...githubCheckResults[serviceName], ...jc.decode(message.data) };
+
         // Check if all required checks are complete
         const pendingChecks = [...requiredChecks].filter((check) => !completedChecksForService.has(check));
         console.log(`Pending checks: `, pendingChecks);

@@ -1,0 +1,170 @@
+title: |md
+  # Yesterday's Flow
+|
+Domain Scan (TBD).style.stroke-dash: 5
+DockerHub Scan (TBD).style.stroke-dash: 5
+Service URL Scan (TBD).style.stroke-dash: 5
+Artifact Registry Scan (TBD).style.stroke-dash: 5
+
+GitHub: {
+  shape: image
+  icon: https://icons.terrastruct.com/dev%2Fgithub.svg
+}
+
+User: {
+    shape: image
+    icon: https://icons.terrastruct.com/essentials%2F359-users.svg
+}
+
+Cron Job/ npm start: {
+    shape: image
+    icon: https://icons.terrastruct.com/essentials%2F359-users.svg
+}
+
+
+# Webhook Server: {
+#     shape: image
+#     icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+# }
+
+Web Application {
+shape: image
+icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+}
+
+# NATS : {
+#     shape: image
+#     icon: ./img/nats.png
+# }
+Clone Repo {
+    shape: image
+    # icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: ./img/cmdline.png
+}
+
+# Octokit API Calls {
+#     shape: image
+#     # icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+#     icon: ./img/cmdline.png
+# }
+
+Github Checks on Cloned Repo: {
+    shape: image
+    # icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: ./img/cmdline.png
+}
+
+Service Discovery: {
+    shape: image
+    # icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: ./img/cmdline.png
+}
+
+Endpoint Dispatcher {
+    shape: image
+    # icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: ./img/cmdline.png
+}
+
+API : {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+}
+
+Arangodb: {
+    shape: image
+    icon: ./img/arangodb.png 
+}
+
+GitHub parse Octokit RepoDetails response: {
+    shape: image
+    # icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: ./img/cmdline.png
+}
+
+
+GitHub Octokit API Calls: {
+    shape: image
+    # icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: ./img/cmdline.png
+}
+
+GitHub Done Collector: {
+    shape: image
+    # icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: ./img/cmdline.png
+}
+
+GitHub save to database: {
+    shape: image
+    # icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: ./img/cmdline.png
+}
+
+
+# Webhook server registers with GitHub repos/organization for webhook events
+# GitHub -> Webhook Server: Event Webhook
+
+Cron Job/ npm start -> Service Discovery: Kick off scan
+Service Discovery -> GitHub
+GitHub -> Service Discovery: Clone DNS repo
+
+Service Discovery -> API: save service details
+Service Discovery -> Endpoint Dispatcher: Subscribe to services from DNS repo
+
+# Webhook server publishes events in NATS queue
+# Service Discovery -> NATS: Publish service information from dns repo
+# NATS -> Endpoint Dispatcher: 
+
+# Endpoint Dispatcher -> NATS
+
+# NATS -> Clone Repo
+# Clone Repo -> NATS
+
+# NATS -> GitHub Octokit API Calls
+# GitHub Octokit API Calls -> NATS
+
+Endpoint Dispatcher -> Clone Repo: github.<serviceName> 
+# Clone Repo -> GitHub
+GitHub -> Clone Repo: clone service repo
+Endpoint Dispatcher -> GitHub Octokit API Calls: github..<serviceName> 
+
+
+GitHub -> GitHub Octokit API Calls: GitHub API calls 
+# GitHub Octokit API Calls -> GitHub
+
+Endpoint Dispatcher -> Service URL Scan (TBD): serviceUrl.<serviceName> 
+Endpoint Dispatcher -> Domain Scan (TBD): domains.<serviceName> 
+Endpoint Dispatcher -> DockerHub Scan (TBD): dockerHub.<serviceName> 
+Endpoint Dispatcher -> Artifact Registry Scan (TBD): artifactRegistry.<serviceName> 
+
+Service URL Scan (TBD) -> API:Write Scan {style: {stroke-dash: 3}}
+Domain Scan (TBD) -> API: Write Scan {style: {stroke-dash: 3}}
+DockerHub Scan (TBD) -> API: Write Scan {style: {stroke-dash: 3}}
+Artifact Registry Scan (TBD) -> API:Write Scan  {style: {stroke-dash: 3}}
+
+GitHub Octokit API Calls -> GitHub Done Collector
+GitHub Octokit API Calls -> GitHub parse Octokit RepoDetails response
+
+Clone Repo -> Github Checks on Cloned Repo 
+Github Checks on Cloned Repo  -> GitHub Done Collector
+GitHub parse Octokit RepoDetails response -> GitHub Done Collector
+
+GitHub Done Collector -> GitHub save to database
+# Scanners subscribe to certain repo events
+# Clone Repo Scanner -> NATS: Subscribe to Repo Events
+# API -> NATS: Subscribe to Repo Events
+
+# Scanners write metrics of interest to ArangoDB.
+# Clone Repo Scanner -> Arangodb: Write Metrics
+GitHub save to database -> API: Write Scan
+API -> Arangodb: Write Scan
+
+# Web application fetches data from arangodb and presents it on UI
+# Web Application -> Arangodb: Reads
+
+# Users are served pages from web application
+User -> Web Application: Visit
+Web Application -> API: Reads
+ArangoDB -> API: Reads
+
