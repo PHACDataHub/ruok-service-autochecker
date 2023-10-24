@@ -83,12 +83,14 @@ export class DotGitIgnoreDetails extends CheckOnClonedRepoStrategy {
     }
     async doRepoCheck() {
         const gitIgnoreDetails = await searchIgnoreFile(this.clonedRepoPath, ".gitignore");        
-        console.log(`gitignore: ${JSON.stringify(gitIgnoreDetails)}`)
-        return {'gitignore': gitIgnoreDetails}
+        return {
+            checkPasses: gitIgnoreDetails === undefined ? false : true,
+            metadata: {'gitIgnoreFiles': gitIgnoreDetails}, // gitIgnoreDetails is an array 
+            lastUpdated: Date.now()
+        }
     }
     checkName() {
         this.checkName = 'gitignore'
-        console.log(`checkName is ${this.checkName}`)
         return this.checkName
     }
 }
@@ -101,12 +103,14 @@ export class DotDockerIgnoreDetails extends CheckOnClonedRepoStrategy {
     }
     async doRepoCheck() {
         const dockerIgnoreDetails = await searchIgnoreFile(this.clonedRepoPath, ".dockerignore");        
-        console.log(`dockerignore: ${JSON.stringify(dockerIgnoreDetails)}`)
-        return {'dockerignore': dockerIgnoreDetails}
+        return {
+            checkPasses: dockerIgnoreDetails === undefined ? false : true,
+            metadata: dockerIgnoreDetails === undefined ? null : {'dockerIgnoreFiles': dockerIgnoreDetails},
+            lastUpdated: Date.now()
+        }
     }
     checkName() {
         this.checkName = 'dockerignore'
-        console.log(`checkName is ${this.checkName}`)
         return this.checkName
     }
 }

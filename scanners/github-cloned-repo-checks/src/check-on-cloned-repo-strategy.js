@@ -6,7 +6,7 @@ export class CheckOnClonedRepoStrategy {
         this.repoName = repoName
         this.clonedrepoPath = repoPath
         // this.clonedRepoPath = `../../temp-cloned-repo/${repoName}`
-        console.log('***************checkonclonedrepostrategy', this.repoName, this.clonedrepoPath)
+        // console.log('***************checkonclonedrepostrategy', this.repoName, this.clonedrepoPath)
     }
     async doRepoCheck() {
         return this.doRepoCheck()

@@ -176,15 +176,16 @@ export class HasApiDirectory extends CheckOnClonedRepoStrategy {
         this.repoName = repoName
     }
     async doRepoCheck() {
-        const hasApiDir = await hasApiDirectory(this.clonedRepoPath);
-        console.log(
-            `has api dir: ${hasApiDir}`
-        )
-        return hasApiDir
+        const hasApiDirectoryResult = await hasApiDirectory(this.clonedRepoPath);
+        return {
+            checkPasses: hasApiDirectoryResult,
+            metadata: null,
+            lastUpdated: Date.now()
+        }
     }
     checkName() {
         this.checkName = 'hasApiDirectory'
-        console.log(`checkName is ${this.checkName}`)
+        // console.log(`checkName is ${this.checkName}`)
         return this.checkName
     }
 }

@@ -25,7 +25,7 @@ export class AllChecks extends CheckOnClonedRepoStrategy {
       const checkResults = await Promise.all(
         this.checkers.map(async (checker) => {
           const result = await checker.doRepoCheck();
-          console.log(`Ran ${checker.checkName()}: ${JSON.stringify(result)}`);
+          // console.log(`Ran ${checker.checkName()}: ${JSON.stringify(result)}`);
           return result;
         })
       )
