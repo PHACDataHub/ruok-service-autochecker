@@ -13,7 +13,7 @@ import 'dotenv-safe/config.js'
 
 const { NATS_URL } = process.env;
 const NATS_SUB_STREAM="GitHubEvent"
-const NATS_PUB_STREAM = "gitHub.cloned.saveToDatabase" // Note- this will be appended with repo name when published. 
+// const NATS_PUB_STREAM = "gitHub.cloned.saveToDatabase" // Note- this will be appended with repo name when published. 
 
 // NATs connection 
 const nc = await connect({ servers: NATS_URL,})
@@ -32,7 +32,7 @@ async function publish(subject, payload) {
 const repoChecker = new RepoChecker()
 
 // Initialize Checkers //TODO - move to src???
-function initializeChecker(checkName, repoName, repoPath) {
+async function initializeChecker(checkName, repoName, repoPath) {
     switch (checkName) {
         case 'hasApiDirectory':
             return new HasApiDirectory(repoName, repoPath)
@@ -71,16 +71,23 @@ process.on('SIGINT', () => process.exit(0))
         const repoPath = await cloneRepository(cloneUrl, repoName) // change to not need repoName
     // Select, intialize and do check  (will be input in future iterations - now just hardcoding in)
         const checkName = 'allChecks' // This actually leads to not needing checkName in interface (since we're giving it here...)
-        const check = initializeChecker(checkName, repoName, repoPath)
-        // const check = initializeChecker(checkName, repoName)
-        const payload = repoChecker.doRepoCheck(check) // Wow, not super clear names here....
-        const subject = `${NATS_PUB_STREAM}.${repoChecker.checkName(check)}.${repoName}` // like here - so long as they match what is going in db, can repace middle token with checkName hardcoded above. 
+        // const checkName = 'hasDependabotYaml'
+        // const checkName = 'dotGitIgnoreDetails'
+        console.log('*****************', checkName, repoName, repoPath)
+       
+        const check = await initializeChecker(checkName, repoName, repoPath)
+        console.log(check)
+        const payload = await repoChecker.doRepoCheck(check) // Wow, not super clear names here....
+        // const payload = await check.doRepoCheck()
+        // SAVE TO DB through API
+        console.log(payload)
+        // const subject = `${NATS_PUB_STREAM}.${repoChecker.checkName(check)}.${repoName}` // like here - so long as they match what is going in db, can repace middle token with checkName hardcoded above. 
     
    // This removes it too so
 
     // Publish
         // TODO - include or append original payload here - or just the sourcecoderepository
-        await publish(subject, payload) 
+        // await publish(subject, payload) 
 
     // Remove temp repository
         await removeClonedRepository(repoPath) 

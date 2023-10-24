@@ -32,6 +32,11 @@ export async function hasSecurityMd(clonedRepoPath) {
 }
 
 export class HasSecurityMd extends CheckOnClonedRepoStrategy {
+    constructor(repoName, clonedRepoPath) { 
+        super(repoName, clonedRepoPath); 
+        this.clonedRepoPath = clonedRepoPath;
+        this.repoName = repoName
+    }
     async doRepoCheck() {
         const securityMdFound = await hasSecurityMd(this.clonedRepoPath)
         console.log(

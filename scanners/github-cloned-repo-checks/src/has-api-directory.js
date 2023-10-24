@@ -170,6 +170,11 @@ export async function searchFileForText(filePath, text) {
 
 
 export class HasApiDirectory extends CheckOnClonedRepoStrategy {
+    constructor(repoName, clonedRepoPath) { 
+        super(repoName, clonedRepoPath); 
+        this.clonedRepoPath = clonedRepoPath;
+        this.repoName = repoName
+    }
     async doRepoCheck() {
         const hasApiDir = await hasApiDirectory(this.clonedRepoPath);
         console.log(

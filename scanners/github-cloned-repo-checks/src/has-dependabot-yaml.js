@@ -28,6 +28,8 @@ export function searchForFile(directory, targetFileName) {
 
 export async function hasDependabotYaml(clonedRepoPath) {
     // searchForFile returns array of found file paths
+    console.log('hasDependabotYaml called with path:', clonedRepoPath);
+
     const dependabotFile = searchForFile(clonedRepoPath, "dependabot.y") // accounting for both .yaml and .yml
     if (dependabotFile.length > 0) {
         // console.log('****', dependabotFile)
@@ -39,12 +41,15 @@ export async function hasDependabotYaml(clonedRepoPath) {
 
 
 export class HasDependabotYaml extends CheckOnClonedRepoStrategy {
+    constructor(repoName, clonedRepoPath) { 
+        super(repoName, clonedRepoPath); 
+        this.clonedRepoPath = clonedRepoPath;
+        this.repoName = repoName
+    }
     async doRepoCheck() {
         const hasDependabotYamlResult = await hasDependabotYaml(this.clonedRepoPath);
-        console.log(
-            `hasDependabotYamlResult: ${hasDependabotYamlResult}`
-        )
-        return hasDependabotYamlResult
+        console.log(`hasDependabotYamlResult: ${hasDependabotYamlResult}`)
+        return {'hasDependabotYaml': hasDependabotYamlResult}
     }
     checkName() {
         this.checkName = 'hasDependabotYaml'

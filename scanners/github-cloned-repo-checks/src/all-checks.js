@@ -7,15 +7,17 @@ import { CheckOnClonedRepoStrategy } from './check-on-cloned-repo-strategy.js'
 
 
 export class AllChecks extends CheckOnClonedRepoStrategy {
-    constructor(repoName) {
-      super(repoName);
+    constructor(repoName, clonedRepoPath) {
+      super(repoName, clonedRepoPath);
+      this.clonedRepoPath = clonedRepoPath;
+      this.repoName = repoName
       this.checkers = [
-        new HasApiDirectory(repoName),
-        new HasDependabotYaml(repoName),
-        new HasTestsDirectory(repoName),
-        new HasSecurityMd(repoName),
-        new DotDockerIgnoreDetails(repoName),
-        new DotGitIgnoreDetails(repoName),
+        new HasApiDirectory(repoName, clonedRepoPath),
+        new HasDependabotYaml(repoName, clonedRepoPath),
+        new HasTestsDirectory(repoName, clonedRepoPath),
+        new HasSecurityMd(repoName, clonedRepoPath),
+        new DotDockerIgnoreDetails(repoName, clonedRepoPath),
+        new DotGitIgnoreDetails(repoName, clonedRepoPath),
       ];
     }
   

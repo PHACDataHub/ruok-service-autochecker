@@ -76,6 +76,11 @@ export async function searchIgnoreFile(repoPath, ignoreFileName) {  //TODO - pro
 }
 
 export class DotGitIgnoreDetails extends CheckOnClonedRepoStrategy {
+    constructor(repoName, clonedRepoPath) { 
+        super(repoName, clonedRepoPath); 
+        this.clonedRepoPath = clonedRepoPath;
+        this.repoName = repoName
+    }
     async doRepoCheck() {
         const gitIgnoreDetails = await searchIgnoreFile(this.clonedRepoPath, ".gitignore");        
         console.log(`gitignore: ${JSON.stringify(gitIgnoreDetails)}`)
@@ -89,6 +94,11 @@ export class DotGitIgnoreDetails extends CheckOnClonedRepoStrategy {
 }
 
 export class DotDockerIgnoreDetails extends CheckOnClonedRepoStrategy {
+    constructor(repoName, clonedRepoPath) { 
+        super(repoName, clonedRepoPath); 
+        this.clonedRepoPath = clonedRepoPath;
+        this.repoName = repoName
+    }
     async doRepoCheck() {
         const dockerIgnoreDetails = await searchIgnoreFile(this.clonedRepoPath, ".dockerignore");        
         console.log(`dockerignore: ${JSON.stringify(dockerIgnoreDetails)}`)

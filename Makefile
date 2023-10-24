@@ -29,6 +29,16 @@ build-api-image:
 build-webhook-server-image:
 	$(CONTAINER_RUNTIME) build ./webhook-server/ -t localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
 
+#
+kind-push-api:
+	kind load docker-image localhost/$(APP_NAME)-api:$(APP_VERSION)
+
+kind-push-webhook-server:
+	kind load docker-image localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
+
+kind-push-all: kind-push-webhook-server kind-push-api
+	
+
 #       _            _             
 #    __| | ___ _ __ | | ___  _   _ 
 #   / _` |/ _ \ '_ \| |/ _ \| | | |

@@ -58,6 +58,11 @@ export async function formTestsDirectoryPayload(testDirectories) {
 }
 
 export class HasTestsDirectory extends CheckOnClonedRepoStrategy {
+  constructor(repoName, clonedRepoPath) { 
+    super(repoName, clonedRepoPath); 
+    this.clonedRepoPath = clonedRepoPath;
+    this.repoName = repoName
+}
   async doRepoCheck() {
       const testDirectories = await searchTests(this.clonedRepoPath)
       const formatedTestDirectory = await formTestsDirectoryPayload(testDirectories)
