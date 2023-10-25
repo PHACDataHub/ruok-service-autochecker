@@ -12,7 +12,10 @@ import puppeteer from 'puppeteer'
 
 
 (async () => {
-    const browser = await puppeteer.launch()
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'], 
+      headless:'new'
+    });
     const page = await browser.newPage()
     await page.setBypassCSP(true)
     await page.goto('https://dequeuniversity.com/demo/mars/')

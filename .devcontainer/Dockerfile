@@ -25,5 +25,11 @@ RUN curl -fsSL https://github.com/nats-io/natscli/releases/download/v0.1.1/nats-
     mv nats-0.1.1-linux-amd64/nats /usr/local/bin/nats && \
     rm -r nats-0.1.1-linux-amd64 && rm nats-0.1.1-linux-amd64.zip
 
+# Install Chrome
+RUN apt-get install -y wget
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN apt-get install -y ./google-chrome-stable_current_amd64.deb 
+# may need sudo
+
 # Start container as non-root user
 USER node
