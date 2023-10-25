@@ -51,7 +51,7 @@ process.on('SIGINT', () => process.exit(0))
     for await (const message of sub) {
     // decode payload 
         const gitHubEventPayload  = await jc.decode(message.data)
-        const { sourceCodeRepository, productName, wholePayload, repoName, cloneUrl } = gitHubEventPayload
+        const { sourceCodeRepository, productName, repoName, cloneUrl } = gitHubEventPayload
 
         console.log('\n**************************************************************')
         console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(gitHubEventPayload)}`)
@@ -61,7 +61,7 @@ process.on('SIGINT', () => process.exit(0))
 
     // parse .product.yaml and dispatch (publish as NATs message)
         const productYamlData = await parseYamlFile(`${repoPath}/.product.yaml`);
-        publish(NATS_PUB_STREAM, productYamlData)
+        publish(`${NATS_PUB_STREAM}.${productName}`, productYamlData)
 
     // Instantiate and do the check(s)
         const checkName = 'allChecks' 

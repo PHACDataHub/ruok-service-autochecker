@@ -1,10 +1,6 @@
-// github-has-dependabot-yaml-check/index.js
-
 import { connect, JSONCodec} from 'nats'
-// import { initializeChecker } from './src/initialize-checker.js'
-// import { cloneRepository, removeClonedRepository, formCloneUrl} from './src/clone-repo-functions.js'
 import { Database } from "arangojs";
-import { GraphQLClient } from 'graphql-request'
+// import { GraphQLClient } from 'graphql-request'
 import 'dotenv-safe/config.js'
 
 const { 
@@ -16,10 +12,10 @@ const {
     API_URL,
   } = process.env;
   
-const NATS_SUB_STREAM="ClonedRepoEvent"
+const NATS_SUB_STREAM="ClonedRepoEvent.>"
 
-// API connection 
-const graphQLClient = new GraphQLClient(API_URL);
+// // API connection 
+// const graphQLClient = new GraphQLClient(API_URL);
 
 // Database connection 
 const db = new Database({
@@ -39,19 +35,22 @@ process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
 ;(async () => {
  
-    for await (const message of sub) {
-    // decode payload 
-        const clonedRepoEventPayload  = await jc.decode(message.data)
-        // const { sourceCodeRepository, productName, repoName, cloneUrl } = clonedRepoEventPayload 
-
-        console.log('\n**************************************************************')
-        console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(clonedRepoEventPayload)}`)
-
-
-    // SAVE to ArangoDB through API
-        // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
+  for await (const message of sub) {
+    const clonedRepoEventPayload  = await jc.decode(message.data)
+    const { serviceUrls } = clonedRepoEventPayload 
+    const productName = message.subject.split('.').pop()  // last token of nats message
     
-    }
+    console.log(productName, serviceUrls)   
+
+    // console.log('\n**************************************************************')
+    // console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(clonedRepoEventPayload)}`)
+
+  // Accessibility check 
+
+
+  // SAVE to ArangoDB through API
+      // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
+  }
 })();
 
 await nc.closed();
