@@ -1,5 +1,4 @@
 // github-cloned-has-tests-directory/src/has-tests-directory.js
-import * as fs from 'fs';
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
 import { searchForDirectory } from './searching-functions.js';
 

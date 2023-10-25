@@ -4,7 +4,8 @@ import { connect, JSONCodec} from 'nats'
 
 
 import { initializeChecker } from './src/initialize-checker.js'
-import { cloneRepository, removeClonedRepository, formCloneUrl} from './src/clone-repo-functions.js'
+import { cloneRepository, removeClonedRepository } from './src/clone-repo-functions.js'
+import { parseYamlFile } from './src/yaml-parser.js';
 import { Database } from "arangojs";
 import { GraphQLClient } from 'graphql-request'
 import 'dotenv-safe/config.js'
@@ -19,6 +20,7 @@ const {
   } = process.env;
   
 const NATS_SUB_STREAM="GitHubEvent"
+const NATS_PUB_STREAM="ClonedRepoEvent"
 
 // API connection 
 const graphQLClient = new GraphQLClient(API_URL);
@@ -33,6 +35,11 @@ const db = new Database({
 // NATs connection 
 const nc = await connect({ servers: NATS_URL,})
 const jc = JSONCodec()
+
+async function publish(subject, payload) {
+    nc.publish(subject, jc.encode(payload)) 
+    console.log(`Sent to ... ${subject}: `, payload)
+  }
 
 const sub = nc.subscribe(NATS_SUB_STREAM)
 console.log('🚀 Connected to NATS server - listening on ...', sub.subject, "channel...");
@@ -52,11 +59,15 @@ process.on('SIGINT', () => process.exit(0))
     // Clone repository
         const repoPath = await cloneRepository(cloneUrl, repoName) 
 
-    // Instantiate and to the check(s)
+    // parse .product.yaml and dispatch (publish as NATs message)
+        const productYamlData = await parseYamlFile(`${repoPath}/.product.yaml`);
+        publish(NATS_PUB_STREAM, productYamlData)
+
+    // Instantiate and do the check(s)
         const checkName = 'allChecks' 
         const check = await initializeChecker(checkName, repoName, repoPath)
         const results = await check.doRepoCheck()
-     
+
         console.log(JSON.stringify(results)) // to see inside arrays
         console.log(results)
 
