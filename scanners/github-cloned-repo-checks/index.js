@@ -46,11 +46,10 @@ process.on('SIGINT', () => process.exit(0))
         const gitHubEventPayload  = await jc.decode(message.data)
         console.log('\n**************************************************************')
         console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(gitHubEventPayload)}`)
-        
-    //Note these will all be passed with gitHubEventPayload in the future 
-        const { sourceCodeRepository } = gitHubEventPayload
-        const repoName = sourceCodeRepository.split('/').pop() 
-        const { cloneUrl } = await formCloneUrl(sourceCodeRepository)
+
+        const { sourceCodeRepository, repoName, cloneUrl } = gitHubEventPayload
+        // const repoName = sourceCodeRepository.split('/').pop() 
+        // const { cloneUrl } = await formCloneUrl(sourceCodeRepository)
         
     // Clone repository
         const repoPath = await cloneRepository(cloneUrl, repoName) 
@@ -58,13 +57,13 @@ process.on('SIGINT', () => process.exit(0))
     // Instantiate and to the check(s)
         const checkName = 'allChecks' 
         const check = await initializeChecker(checkName, repoName, repoPath)
-        const payload = await check.doRepoCheck()
+        const results = await check.doRepoCheck()
      
-        console.log(JSON.stringify(payload)) // to see inside arrays
-        console.log(payload)
+        console.log(JSON.stringify(results)) // to see inside arrays
+        console.log(results)
 
     // SAVE to ArangoDB through API
-        // const upsertService = await upsertClonedGitHubScanIntoDatabase(repoName, payload, graphQLClient)
+        // const upsertService = await upsertClonedGitHubScanIntoDatabase(repoName, sourceCodeRepository, results, graphQLClient)
     
     // Remove temp repository
         await removeClonedRepository(repoPath) 
