@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as util from 'util';
 
 export function searchForDirectory(directory, targetDirectoryName) {
     const subDirectories = fs.readdirSync(directory);
@@ -37,4 +38,33 @@ export function searchForFile(directory, targetFileName) {
         }
     }
     return(foundFilePaths)
+}
+
+export async function hasTextInFile(filePath, text) {
+  // returns true if text found, false if not
+  const readFileAsync = util.promisify(fs.readFile);
+  const regEx = new RegExp(text);
+  const result = [];
+
+  try {
+      const contents = await readFileAsync(filePath, 'utf8');
+      let lines = contents.toString().split("\n");
+      lines.forEach(line => {
+          if (line && line.search(regEx) >= 0) {
+              // console.log('found in file ', filePath);
+              result.push(line);
+          }
+      });
+
+      if (result.length > 0) {
+          // console.log(text, "found text in file", result.length, "times");
+          return true;
+      } else {
+          // console.log("text not found in file");
+          return false;
+      }
+  } catch (error) {
+      console.error('An error occurred:', error);
+      throw error;
+  }
 }

@@ -1,6 +1,6 @@
 // github-cloned-has-tests-directory/src/has-tests-directory.js
 import * as fs from 'fs';
-import { CheckOnClonedRepoStrategy } from './check-on-cloned-repo-strategy.js'
+import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
 import { searchForDirectory } from './searching-functions.js';
 
 export async function findTestsPaths(repoPath) {
@@ -13,7 +13,7 @@ export async function findTestsPaths(repoPath) {
   return scopedTestDirectoryPaths;
 }
 
-export class HasTestsDirectory extends CheckOnClonedRepoStrategy {
+export class HasTestsDirectory extends CheckOnClonedRepoInterface {
   constructor(repoName, clonedRepoPath) { 
     super(repoName, clonedRepoPath); 
     this.clonedRepoPath = clonedRepoPath;

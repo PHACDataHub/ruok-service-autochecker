@@ -1,13 +1,9 @@
 // github-has-dependabot-yaml-check/index.js
 
 import { connect, JSONCodec} from 'nats'
-import { RepoChecker } from "./src/repo-check-context.js"
-import { HasApiDirectory } from './src/has-api-directory.js'
-import { HasDependabotYaml } from './src/has-dependabot-yaml.js'
-import { HasTestsDirectory } from './src/has-tests-directory.js'
-import { HasSecurityMd } from "./src/has-security-md.js"
-import { DotDockerIgnoreDetails, DotGitIgnoreDetails } from "./src/get-dotignore-details.js"
-import { AllChecks } from './src/all-checks.js'
+
+
+import { initializeChecker } from './src/initialize-checker.js'
 import { cloneRepository, removeClonedRepository, formCloneUrl} from './src/clone-repo-functions.js'
 import { Database } from "arangojs";
 import { GraphQLClient } from 'graphql-request'
@@ -41,37 +37,6 @@ const jc = JSONCodec()
 const sub = nc.subscribe(NATS_SUB_STREAM)
 console.log('🚀 Connected to NATS server - listening on ...', sub.subject, "channel...");
 
-// NATs publish
-async function publish(subject, payload) {
-    nc.publish(subject, jc.encode(payload)) 
-    console.log(`Sent to ... ${subject}: `, payload)
-  }
-
-// Initialize Checkers 
-const repoChecker = new RepoChecker()
-
-// Initialize Checkers //TODO - move to src???
-async function initializeChecker(checkName, repoName, repoPath) {
-    switch (checkName) {
-        case 'hasApiDirectory':
-            return new HasApiDirectory(repoName, repoPath)
-        case 'hasDependabotYaml':
-            return new HasDependabotYaml(repoName, repoPath)
-        case 'hasTestsDirectory':
-            return new HasTestsDirectory(repoName, repoPath)
-        case 'hasSecurityMd':
-            return new HasSecurityMd(repoName, repoPath)
-        case 'dotDockerIgnoreDetails':
-            return new DotDockerIgnoreDetails(repoName, repoPath)
-        case 'dotGitIgnoreDetails':
-            return new DotGitIgnoreDetails(repoName, repoPath)
-        case 'allChecks':
-            return new AllChecks(repoName, repoPath)
-        default:
-            throw new Error(`Unknown checker: ${checkName}`)
-    }
-}
-
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
 ;(async () => {
@@ -82,15 +47,16 @@ process.on('SIGINT', () => process.exit(0))
         console.log('\n**************************************************************')
         console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(gitHubEventPayload)}`)
         
-        //Note these will all be passed with gitHubEventPayload in the future 
+    //Note these will all be passed with gitHubEventPayload in the future 
         const { sourceCodeRepository } = gitHubEventPayload
         const repoName = sourceCodeRepository.split('/').pop() 
         const { cloneUrl } = await formCloneUrl(sourceCodeRepository)
         
     // Clone repository
         const repoPath = await cloneRepository(cloneUrl, repoName) 
+
+    // Instantiate and to the check(s)
         const checkName = 'allChecks' 
-       
         const check = await initializeChecker(checkName, repoName, repoPath)
         const payload = await check.doRepoCheck()
      
