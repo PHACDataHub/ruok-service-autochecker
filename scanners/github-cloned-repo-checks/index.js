@@ -44,13 +44,11 @@ process.on('SIGINT', () => process.exit(0))
     for await (const message of sub) {
     // decode payload 
         const gitHubEventPayload  = await jc.decode(message.data)
+        const { sourceCodeRepository, productName, wholePayload, repoName, cloneUrl } = gitHubEventPayload
+
         console.log('\n**************************************************************')
         console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(gitHubEventPayload)}`)
 
-        const { sourceCodeRepository, repoName, cloneUrl } = gitHubEventPayload
-        // const repoName = sourceCodeRepository.split('/').pop() 
-        // const { cloneUrl } = await formCloneUrl(sourceCodeRepository)
-        
     // Clone repository
         const repoPath = await cloneRepository(cloneUrl, repoName) 
 
@@ -63,7 +61,7 @@ process.on('SIGINT', () => process.exit(0))
         console.log(results)
 
     // SAVE to ArangoDB through API
-        // const upsertService = await upsertClonedGitHubScanIntoDatabase(repoName, sourceCodeRepository, results, graphQLClient)
+        // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
     
     // Remove temp repository
         await removeClonedRepository(repoPath) 

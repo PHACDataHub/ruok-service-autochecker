@@ -38,18 +38,20 @@ app.post('/', async (req, res) => {
     return;
   }
   // extract relevant information to put into queue.
-  // const cloneUrl = req.body.repository.git_url
-  const wholePayload = req.body.repository,
+  const cloneUrl = req.body.repository.ssh_url
   const repoName = req.body.repository.name
+  const orgName = req.body.repository.owner.login
   const sourceCodeRepository = req.body.repository.html_url // or svn_url
   const eventType = req.headers['x-github-event']
+  const productName = `${orgName}_${repoName}`
+
   // publish message to NATS
   await nc.publish(NATS_PUB_STREAM, jc.encode({
     eventType,
     sourceCodeRepository,
-    wholePayload,
-    // cloneUrl,
-    repoName
+    cloneUrl,
+    repoName,
+    productName
   }))
   // TODO: replace this with a proper logger
   console.log("successfully published event: ", eventType)
