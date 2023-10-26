@@ -24,12 +24,15 @@ RUN curl -fsSL https://github.com/nats-io/natscli/releases/download/v0.1.1/nats-
     chmod +x nats-0.1.1-linux-amd64/nats && \
     mv nats-0.1.1-linux-amd64/nats /usr/local/bin/nats && \
     rm -r nats-0.1.1-linux-amd64 && rm nats-0.1.1-linux-amd64.zip
-
+# Install dependencies for Chrome
+RUN sudo apt-get update && \
+    sudo apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2
 # Install Chrome
-RUN apt-get install -y wget
-RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN apt-get install -y ./google-chrome-stable_current_amd64.deb 
-# may need sudo
+RUN sudo apt-get install -y wget && \
+    sudo wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    sudo apt-get install -y ./google-chrome-stable_current_amd64.deb && \
+    rm ./google-chrome-stable_current_amd64.deb 
+RUN npm install -g puppeteer
 
 # Start container as non-root user
 USER node
