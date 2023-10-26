@@ -1,6 +1,8 @@
 import { connect, JSONCodec} from 'nats'
 import { Database } from "arangojs";
 // import { GraphQLClient } from 'graphql-request'
+import { getPages} from './src/get-url-slugs.js'
+import { evaluateAccessibility } from './src/accessability-checks.js'
 import 'dotenv-safe/config.js'
 
 const { 
@@ -47,6 +49,20 @@ process.on('SIGINT', () => process.exit(0))
 
   // Accessibility check 
 
+  for (const serviceUrl of serviceUrls) {
+    console.log ('************************************************')
+    console.log('webappUrl',serviceUrl)
+    const pages = await getPages(serviceUrl) // gets slugs and forms page urls
+    console.log('Pages', pages)
+
+    for (const page of pages) {
+      console.log('****************************')
+      console.log(page, 'evaluating accessibility')
+        const axeReport = await evaluateAccessibility(page)
+        console.log(JSON.stringify(axeReport, null, 2))
+        // console.log(page)
+    }
+  }
 
   // SAVE to ArangoDB through API
       // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
