@@ -1,8 +1,8 @@
 import { connect, JSONCodec} from 'nats'
 import { Database } from "arangojs";
-// import { GraphQLClient } from 'graphql-request'
+import { GraphQLClient } from 'graphql-request'
 import { getPages} from './src/get-url-slugs.js'
-import { evaluateAccessibility } from './src/accessability-checks.js'
+import { evaluateAccessibility } from './src/accessibility-checks.js'
 import 'dotenv-safe/config.js'
 
 const { 
@@ -16,8 +16,8 @@ const {
   
 const NATS_SUB_STREAM="ClonedRepoEvent.>"
 
-// // API connection 
-// const graphQLClient = new GraphQLClient(API_URL);
+// API connection 
+const graphQLClient = new GraphQLClient(API_URL);
 
 // Database connection 
 const db = new Database({
@@ -39,30 +39,33 @@ process.on('SIGINT', () => process.exit(0))
  
   for await (const message of sub) {
     const clonedRepoEventPayload  = await jc.decode(message.data)
-    const { serviceUrls } = clonedRepoEventPayload 
-    const productName = message.subject.split('.').pop()  // last token of nats message
+    const { webEndpoints } = clonedRepoEventPayload 
+    const productName = message.subject.split('.').pop()  // last NATs subject token
     
-    console.log(productName, serviceUrls)   
+    console.log(productName, webEndpoints)   
 
     // console.log('\n**************************************************************')
     // console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(clonedRepoEventPayload)}`)
+    const accessibilityResults = [];
 
-  // Accessibility check 
-
-  for (const serviceUrl of serviceUrls) {
-    console.log ('************************************************')
-    console.log('webappUrl',serviceUrl)
-    const pages = await getPages(serviceUrl) // gets slugs and forms page urls
-    console.log('Pages', pages)
-
-    for (const page of pages) {
-      console.log('****************************')
-      console.log(page, 'evaluating accessibility')
-        const axeReport = await evaluateAccessibility(page)
-        console.log(JSON.stringify(axeReport, null, 2))
-        // console.log(page)
+    for (const webEndpoint of webEndpoints) {
+      const pages = await getPages(webEndpoint);
+  
+      const webEndpointResults = {
+        [webEndpoint]: {},
+      };
+  
+      for (const page of pages) {
+        console.log('Evaluating page: ', page)
+        const axeReport = await evaluateAccessibility(page);
+  
+        webEndpointResults[webEndpoint][page] = axeReport;
+      }
+  
+      accessibilityResults.push(webEndpointResults);
     }
-  }
+
+    console.log(accessibilityResults)
 
   // SAVE to ArangoDB through API
       // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)

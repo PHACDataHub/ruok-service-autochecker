@@ -31,7 +31,8 @@
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"dbaeumer.vscode-eslint",
-				"terrastruct.d2"
+				"terrastruct.d2",
+				"markdownlint"
 			]
 		}
 	}

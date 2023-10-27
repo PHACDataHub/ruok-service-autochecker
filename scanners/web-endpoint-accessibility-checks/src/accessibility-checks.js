@@ -11,6 +11,8 @@
 //  options new AxePuppeteer(page).options({
   // checks: { 'valid-lang': ['orcish'] }
 // });
+// // Note can limit search to specified rules ie 
+// // new AxePuppeteer(page).withRules(['html-lang', 'image-alt']
 
 import AxePuppeteer  from "@axe-core/puppeteer";
 import puppeteer from 'puppeteer'
@@ -18,7 +20,7 @@ import fs from 'fs'
 
 export async function evaluateAccessibility(url) {
     const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'], 
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],  //this is to work with debian container
       headless:'new'
     });
     const page = await browser.newPage()
@@ -35,47 +37,49 @@ export async function evaluateAccessibility(url) {
 
       const axeChecks = [
         ...results.inapplicable.map(item => ({
-          id: item.id,
-          checkPasses: null,
-          metadata: {
-            description: item.description,
-            // impact: item.impact, // it's null if inapplicable
-            helpUrl: item.helpUrl,
-          },
+          [item.id]: {
+            checkPasses: null,
+            metadata: {
+              description: item.description,
+              // impact: item.impact, // it's null if inapplicable
+              helpUrl: item.helpUrl,
+            },
+          }
         })),
         ...results.passes.map(item => ({
-          id: item.id,
-          checkPasses: true,
-          metadata: {
-            description: item.description,
-            // impact: item.impact, // it's null if true
-            helpUrl: item.helpUrl,
-          },
+          [item.id]: {
+            checkPasses: true,
+            metadata: {
+              description: item.description,
+              // impact: item.impact, // it's null if true
+              helpUrl: item.helpUrl,
+              },
+          }
         })),
         ...results.incomplete.map(item => ({
-          id: item.id,
-          checkPasses: 'incomplete',
-          metadata: {
-            description: item.description,
-            impact: item.impact,
-            helpUrl: item.helpUrl,
-            nodes: item.nodes,
-          },
+          [item.id]: {
+            checkPasses: 'incomplete',
+            metadata: {
+              description: item.description,
+              impact: item.impact,
+              helpUrl: item.helpUrl,
+              nodes: item.nodes,
+            },
+          }
         })),
         ...results.violations.map(item => ({
-          id: item.id,
-          checkPasses: false,
-          metadata: {
-            description: item.description,
-            impact: item.impact,
-            helpUrl: item.helpUrl,
-            nodes: item.nodes,
-          },
+          [item.id]: {
+            checkPasses: false,
+            metadata: {
+              description: item.description,
+              impact: item.impact,
+              helpUrl: item.helpUrl,
+              nodes: item.nodes,
+            },
+          }
         })),
       ];
-      // console.log('All Checks:', JSON.stringify(axeChecks, null, 2));
-      return axeChecks 
-
+      return { [url]: axeChecks }
     } catch (e) {
       console.log(e)
     } finally {
@@ -85,10 +89,5 @@ export async function evaluateAccessibility(url) {
   }
 
 
-// // Note can limit search to specified rules ie 
-// // new AxePuppeteer(page).withRules(['html-lang', 'image-alt']
 
-// // const url = 'https://safeinputs.phac.alpha.canada.ca'
-// const url = 'https://hopic-sdpac.k8s.phac-aspc.alpha.canada.ca'
-// const axeResults = await evaluateAccessibility(url)
-// console.log(JSON.stringify(axeResults, null, 2))
+
