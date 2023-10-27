@@ -15,11 +15,8 @@
   "dependencies": {
     "@axe-core/puppeteer": "^4.8.1",
     "arangojs": "^8.5.0",
-    "axios": "^1.5.1",
-    "cheerio": "^1.0.0-rc.12",
     "dotenv-safe": "^8.2.0",
     "graphql-request": "^6.1.0",
-    "i": "^0.3.7",
     "nats": "^2.16.0",
     "npm": "^10.2.1",
     "puppeteer": "^21.4.1"

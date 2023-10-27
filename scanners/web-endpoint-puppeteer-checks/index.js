@@ -2,7 +2,7 @@ import { connect, JSONCodec} from 'nats'
 import { Database } from "arangojs";
 import { GraphQLClient } from 'graphql-request'
 import { getPages} from './src/get-url-slugs.js'
-import { evaluateAccessibility } from './src/accessibility-checks.js'
+import { evaluateAccessibility } from './src/puppeteer-checks.js'
 import 'dotenv-safe/config.js'
 
 const { 

@@ -30,10 +30,10 @@ export async function evaluateAccessibility(url) {
       const results = await new AxePuppeteer(page)
         .withTags(["wcag2a", "wcag2aa"])
         .analyze();
-      // // Save to file to be able to look at results
-      const accResults = JSON.stringify(results, null, 2)
-      const outputFilePath = 'axe_results.json';  
-      fs.writeFileSync(outputFilePath, accResults, 'utf-8');
+      // // // Save to file to be able to look at results
+      // const accResults = JSON.stringify(results, null, 2)
+      // const outputFilePath = 'axe_results.json';  
+      // fs.writeFileSync(outputFilePath, accResults, 'utf-8');
 
       const axeChecks = [
         ...results.inapplicable.map(item => ({
