@@ -2,7 +2,9 @@ import { connect, JSONCodec} from 'nats'
 import { Database } from "arangojs";
 import { GraphQLClient } from 'graphql-request'
 import { getPages} from './src/get-url-slugs.js'
-import { evaluateAccessibility } from './src/puppeteer-checks.js'
+import { isWebEndpointType } from './src/check-endpoint-type.js'
+import { evaluateAccessibility } from './src/accessibility-checks.js'
+import puppeteer from 'puppeteer';
 import 'dotenv-safe/config.js'
 
 const { 
@@ -35,7 +37,13 @@ console.log('🚀 Connected to NATS server - listening on ...', sub.subject, "ch
 
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
+
 ;(async () => {
+
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    headless: 'new'
+  });
  
   for await (const message of sub) {
     const clonedRepoEventPayload  = await jc.decode(message.data)
@@ -46,30 +54,39 @@ process.on('SIGINT', () => process.exit(0))
 
     // console.log('\n**************************************************************')
     // console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(clonedRepoEventPayload)}`)
+ 
+ 
     const accessibilityResults = [];
 
     for (const webEndpoint of webEndpoints) {
-      const pages = await getPages(webEndpoint);
-  
-      const webEndpointResults = {
-        [webEndpoint]: {},
-      };
-  
-      for (const page of pages) {
-        console.log('Evaluating page: ', page)
-        const axeReport = await evaluateAccessibility(page);
-  
-        webEndpointResults[webEndpoint][page] = axeReport;
-      }
-  
-      accessibilityResults.push(webEndpointResults);
-    }
+      const pageInstance = await browser.newPage();
+      await pageInstance.setBypassCSP(true);
 
+      if (webEndpoint.split('/').pop() !== 'graphql') {  // filtering out graphiql
+
+        if (await isWebEndpointType(webEndpoint, pageInstance)) { //filtering out api endpoings
+          const pages = await getPages(webEndpoint, pageInstance, browser);
+          const webEndpointResults = {[webEndpoint]: {},} // form response
+      
+          for (const pageToEvaluate of pages) {
+            console.log('Evaluating page: ', pageToEvaluate)
+            const axeReport = await evaluateAccessibility(pageToEvaluate, pageInstance, browser)
+            webEndpointResults[webEndpoint][pageToEvaluate] = axeReport
+          }
+
+          accessibilityResults.push(webEndpointResults)
+          await pageInstance.close()
+        }
+      }
+    }
     console.log(accessibilityResults)
+  }
+  await browser.close()
 
   // SAVE to ArangoDB through API
-      // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
-  }
+  // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
+
 })();
+
 
 await nc.closed();

@@ -1,48 +1,28 @@
-import puppeteer from 'puppeteer';
-
-async function checkEndpointType(endpoint) {
-    const browser = await puppeteer.launch({
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],  //this is to work with debian container
-        headless:'new'
-      });
-
-  const page = await browser.newPage();
-
+export async function isWebEndpointType(endpoint, page) {
   try {
     const response = await page.goto(endpoint, {
       waitUntil: 'networkidle0',
     });
-    if (response.status() === 200) {
+    if (response.status() === 200 || response.status() == 304) { // includes cached responses
       const contentType = response.headers()['content-type'];
 
       if (contentType.includes('text/html')) {
-        console.log(`${endpoint} serves html content, likely a web app.`);
-        return endpoint
-      } else if (contentType.includes('application/json')) {
-        console.log(`${endpoint} serves JSON content, likely an API endpoint.`);
+        console.log(`${endpoint} serves html content - web app.`);
+        return true
       } else {
-        console.log(`${endpoint} serves an unknown content type.`);
+        console.log(`Skipping ${endpoint} - doesn't serve html content.`);
+        return false
       }
     } else {
       console.log(`Failed to access ${endpoint}. Status code: ${response.status()}`);
     }
   } catch (error) {
-    console.log(`skipping ${endpoint} as doesn't serve html content`)
-  } finally {
-    await browser.close();
+    console.log(`Skipping ${endpoint} - doesn't serve html content.`)
+    return false
+
   }
 }
 
-// const endpoints = [
-//   'https://google.com',
-//   'https://api.example.com/data',
-// ];
+export function notGraphQL(url){
 
-
-// const processEndpoints = async () => {
-//   for (const endpoint of endpoints) {
-//     await checkEndpointType(endpoint);
-//   }
-// };
-
-// processEndpoints();
+}

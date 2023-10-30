@@ -1,11 +1,11 @@
 import puppeteer from 'puppeteer';
 
-async function getSlugs(url) {
-  const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox'], 
-    headless:'new'
-  });
-  const page = await browser.newPage();
+async function getSlugs(url, page, browser) {
+  // const browser = await puppeteer.launch({
+  //   args: ['--no-sandbox', '--disable-setuid-sandbox'], 
+  //   headless:'new'
+  // });
+  // const page = await browser.newPage();
 
   try {
     await page.goto(url);
@@ -20,21 +20,25 @@ async function getSlugs(url) {
           return pathSegments.join('/');
         });
     });
-
+    // console.log('Slugs: ', slugs)
     return slugs;
   } catch (error) {
     console.error('Error:', error.message);
-  } finally {
-    await browser.close();
+  // } finally {
+  //   await browser.close();
   }
 }
 
-export async function getPages(url) {
+export async function getPages(url, page, browser) {
   let pages = [url]
-  const slugs = await getSlugs(url)
+  // const slugs = await getSlugs(url)
+  const slugs = await getSlugs(url, page, browser)
   for (const slug of slugs) {
-    pages.push(`${url}/${slug}`)
+    if (slug !== "" && slug !== "/"){
+      pages.push(`${url}/${slug}`)
+    }
   }
+  console.log('Pages', pages)
   return pages 
 }
 // // // const websiteUrl = 'https://google.com';
