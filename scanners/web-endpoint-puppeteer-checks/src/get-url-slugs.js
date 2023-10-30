@@ -1,12 +1,5 @@
-import puppeteer from 'puppeteer';
-
 async function getSlugs(url, page, browser) {
-  // const browser = await puppeteer.launch({
-  //   args: ['--no-sandbox', '--disable-setuid-sandbox'], 
-  //   headless:'new'
-  // });
-  // const page = await browser.newPage();
-
+  // given a url, get all of the associated slugs
   try {
     await page.goto(url);
 
@@ -20,18 +13,15 @@ async function getSlugs(url, page, browser) {
           return pathSegments.join('/');
         });
     });
-    // console.log('Slugs: ', slugs)
     return slugs;
   } catch (error) {
     console.error('Error:', error.message);
-  // } finally {
-  //   await browser.close();
   }
 }
 
 export async function getPages(url, page, browser) {
+  // concatenates slugs for a url, to the url to form an array of page url(s) for a particular endpoint
   let pages = [url]
-  // const slugs = await getSlugs(url)
   const slugs = await getSlugs(url, page, browser)
   for (const slug of slugs) {
     if (slug !== "" && slug !== "/"){
@@ -41,9 +31,3 @@ export async function getPages(url, page, browser) {
   console.log('Pages', pages)
   return pages 
 }
-// // // const websiteUrl = 'https://google.com';
-// // // const websiteUrl = 'https://safeinputs.phac.alpha.canada.ca/'
-// const url = 'https://hopic-sdpac.k8s.phac-aspc.alpha.canada.ca'
-// // const slugs = await getSlugs(url)
-// // console.log(slugs)
-// console.log(await getPages(url))

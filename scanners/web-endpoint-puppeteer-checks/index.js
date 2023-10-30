@@ -51,10 +51,6 @@ process.on('SIGINT', () => process.exit(0))
     const productName = message.subject.split('.').pop()  // last NATs subject token
     
     console.log(productName, webEndpoints)   
-
-    // console.log('\n**************************************************************')
-    // console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(clonedRepoEventPayload)}`)
- 
  
     const accessibilityResults = [];
 
@@ -62,22 +58,20 @@ process.on('SIGINT', () => process.exit(0))
       const pageInstance = await browser.newPage();
       await pageInstance.setBypassCSP(true);
 
-      if (webEndpoint.split('/').pop() !== 'graphql') {  // filtering out graphiql
-
-        if (await isWebEndpointType(webEndpoint, pageInstance)) { //filtering out api endpoings
-          const pages = await getPages(webEndpoint, pageInstance, browser);
-          const webEndpointResults = {[webEndpoint]: {},} // form response
-      
-          for (const pageToEvaluate of pages) {
-            console.log('Evaluating page: ', pageToEvaluate)
-            const axeReport = await evaluateAccessibility(pageToEvaluate, pageInstance, browser)
-            webEndpointResults[webEndpoint][pageToEvaluate] = axeReport
-          }
-
-          accessibilityResults.push(webEndpointResults)
-          await pageInstance.close()
+      if (await isWebEndpointType(webEndpoint, pageInstance)) { //filtering for only web endpoints
+        const pages = await getPages(webEndpoint, pageInstance, browser);
+        const webEndpointResults = {[webEndpoint]: {},} // form response
+    
+        for (const pageToEvaluate of pages) {
+          console.log('Evaluating page: ', pageToEvaluate)
+          const axeReport = await evaluateAccessibility(pageToEvaluate, pageInstance, browser)
+          webEndpointResults[webEndpoint][pageToEvaluate] = axeReport
         }
+
+        accessibilityResults.push(webEndpointResults)
+        await pageInstance.close()
       }
+
     }
     console.log(accessibilityResults)
   }
