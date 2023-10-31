@@ -68,6 +68,9 @@ process.on('SIGINT', () => process.exit(0))
           webEndpointResults[webEndpoint][pageToEvaluate] = axeReport
         }
 
+        // SAVE to ArangoDB through API
+        // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
+
         accessibilityResults.push(webEndpointResults)
         await pageInstance.close()
       }
@@ -77,8 +80,7 @@ process.on('SIGINT', () => process.exit(0))
   }
   await browser.close()
 
-  // SAVE to ArangoDB through API
-  // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
+
 
 })();
 
