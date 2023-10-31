@@ -24,7 +24,7 @@
             "program": "${workspaceFolder}/webhook-server/index.js",
             "cwd": "${workspaceFolder}/webhook-server"
         },
-                {
+        {
             "type": "node",
             "request": "launch",
             "name": "Debug octokit scanner",
@@ -33,6 +33,16 @@
             ],
             "program": "${workspaceFolder}/scanners/github-octokit-checks/index.js",
             "cwd": "${workspaceFolder}/scanners/github-octokit-checks/"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug puppeteer scanner",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/scanners/web-endpoint-puppeteer-checks/index.js",
+            "cwd": "${workspaceFolder}/scanners/web-endpoint-puppeteer-checks/"
         },
         {
             "type": "node",
