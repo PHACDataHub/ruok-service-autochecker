@@ -20,7 +20,7 @@ const {
   } = process.env;
   
 const NATS_SUB_STREAM="GitHubEvent"
-const NATS_PUB_STREAM="ClonedRepoEvent"
+const NATS_PUB_STREAM="WebEvent"
 
 // API connection 
 const graphQLClient = new GraphQLClient(API_URL);

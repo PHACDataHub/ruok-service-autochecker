@@ -16,7 +16,7 @@ const {
     API_URL,
   } = process.env;
   
-const NATS_SUB_STREAM="ClonedRepoEvent.>"
+const NATS_SUB_STREAM="WebEvent.>"
 
 // API connection 
 const graphQLClient = new GraphQLClient(API_URL);
@@ -52,7 +52,7 @@ process.on('SIGINT', () => process.exit(0))
     
     console.log(productName, webEndpoints)   
  
-    const accessibilityResults = [];
+    // const accessibilityResults = [];
 
     for (const webEndpoint of webEndpoints) {
       const pageInstance = await browser.newPage();
@@ -60,23 +60,30 @@ process.on('SIGINT', () => process.exit(0))
 
       if (await isWebEndpointType(webEndpoint, pageInstance)) { //filtering for only web endpoints
         const pages = await getPages(webEndpoint, pageInstance, browser);
-        const webEndpointResults = {[webEndpoint]: {},} // form response
+        // const webEndpointResults = {[webEndpoint]: {},} // form response
+        const webEndpointAxeResults = {} 
     
         for (const pageToEvaluate of pages) {
           console.log('Evaluating page: ', pageToEvaluate)
           const axeReport = await evaluateAccessibility(pageToEvaluate, pageInstance, browser)
-          webEndpointResults[webEndpoint][pageToEvaluate] = axeReport
-        }
+  
+          if (!webEndpointAxeResults[webEndpoint]) {
+            webEndpointAxeResults[webEndpoint] = {};
+          }
+          webEndpointAxeResults[webEndpoint][pageToEvaluate] = axeReport;
 
+        }
         // SAVE to ArangoDB through API
         // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
 
-        accessibilityResults.push(webEndpointResults)
+        // console.log(JSON.stringify(webEndpointResults, null, 2))
+        console.log(webEndpointAxeResults)
         await pageInstance.close()
+        
       }
 
     }
-    console.log(accessibilityResults)
+    // console.log(accessibilityResults)
   }
   await browser.close()
 

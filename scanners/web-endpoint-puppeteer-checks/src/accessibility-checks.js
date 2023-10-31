@@ -62,7 +62,7 @@ export async function evaluateAccessibility(url, page, browser) {
           }
         })),
       ];
-      return { [url]: axeChecks }
+      return axeChecks 
     } catch (e) {
       console.log(e)
     }
