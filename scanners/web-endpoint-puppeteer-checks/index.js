@@ -46,8 +46,8 @@ process.on('SIGINT', () => process.exit(0))
   });
  
   for await (const message of sub) {
-    const clonedRepoEventPayload  = await jc.decode(message.data)
-    const { webEndpoints } = clonedRepoEventPayload 
+    const webEventPayload  = await jc.decode(message.data)
+    const { webEndpoints } = webEventPayload 
     const productName = message.subject.split('.').pop()  // last NATs subject token
     
     console.log(productName, webEndpoints)   
