@@ -6,6 +6,7 @@ import { isWebEndpointType } from './src/check-endpoint-type.js'
 import { evaluateAccessibility } from './src/accessibility-checks.js'
 import puppeteer from 'puppeteer';
 import 'dotenv-safe/config.js'
+import { ConsumerOptsBuilderImpl } from 'nats/lib/jetstream/types.js';
 
 const { 
     DB_NAME,
@@ -47,12 +48,11 @@ process.on('SIGINT', () => process.exit(0))
  
   for await (const message of sub) {
     const webEventPayload  = await jc.decode(message.data)
+    console.log(webEventPayload)
     const { webEndpoints } = webEventPayload 
     const productName = message.subject.split('.').pop()  // last NATs subject token
     
     console.log(productName, webEndpoints)   
- 
-    // const accessibilityResults = [];
 
     for (const webEndpoint of webEndpoints) {
       const pageInstance = await browser.newPage();
@@ -60,8 +60,7 @@ process.on('SIGINT', () => process.exit(0))
 
       if (await isWebEndpointType(webEndpoint, pageInstance)) { //filtering for only web endpoints
         const pages = await getPages(webEndpoint, pageInstance, browser);
-        // const webEndpointResults = {[webEndpoint]: {},} // form response
-        const webEndpointAxeResults = {} 
+        const webEndpointAxeResults = {}  //form response
     
         for (const pageToEvaluate of pages) {
           console.log('Evaluating page: ', pageToEvaluate)
@@ -81,9 +80,7 @@ process.on('SIGINT', () => process.exit(0))
         await pageInstance.close()
         
       }
-
     }
-    // console.log(accessibilityResults)
   }
   await browser.close()
 
