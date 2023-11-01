@@ -6,7 +6,6 @@ import { isWebEndpointType } from './src/check-endpoint-type.js'
 import { evaluateAccessibility } from './src/accessibility-checks.js'
 import puppeteer from 'puppeteer';
 import 'dotenv-safe/config.js'
-import { ConsumerOptsBuilderImpl } from 'nats/lib/jetstream/types.js';
 
 const { 
     DB_NAME,
@@ -17,7 +16,7 @@ const {
     API_URL,
   } = process.env;
   
-const NATS_SUB_STREAM="WebEvent.>"
+const NATS_SUB_STREAM="WebEvent"
 
 // API connection 
 const graphQLClient = new GraphQLClient(API_URL);
@@ -78,13 +77,10 @@ process.on('SIGINT', () => process.exit(0))
         // console.log(JSON.stringify(webEndpointResults, null, 2))
         console.log(webEndpointAxeResults)
         await pageInstance.close()
-        
       }
     }
   }
   await browser.close()
-
-
 
 })();
 
