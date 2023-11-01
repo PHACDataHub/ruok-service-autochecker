@@ -37,9 +37,9 @@ process.on('SIGINT', () => process.exit(0))
   for await (const message of sub) {
     const webEventPayload  = await jc.decode(message.data)
     console.log(webEventPayload)
-    const { url } = webEventPayload 
+    const { webEndpoints } = webEventPayload 
     
-    console.log(url)   
+    console.log(webEndpoints)   
 
     for (const webEndpoint of webEndpoints) {
       const pageInstance = await browser.newPage();

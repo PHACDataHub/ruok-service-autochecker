@@ -9,7 +9,7 @@
 
 import AxePuppeteer  from "@axe-core/puppeteer";
 import puppeteer from 'puppeteer'
-import fs from 'fs'
+// import fs from 'fs'
 
 export async function evaluateAccessibility(url, page, browser) {
     await page.goto(url, { cache: 'no-store' })
@@ -46,8 +46,12 @@ export async function evaluateAccessibility(url, page, browser) {
               description: item.description,
               impact: item.impact,
               helpUrl: item.helpUrl,
-              nodes: item.nodes,
-            },
+              // nodes: item.nodes,
+              nodes: item.nodes.map(node => ({
+                message: (node.any && node.any.length > 0) ? node.any.map(msg => msg.message) : null,
+                html: node.html
+              }))
+            }
           }
         })),
         ...results.violations.map(item => ({
@@ -57,11 +61,17 @@ export async function evaluateAccessibility(url, page, browser) {
               description: item.description,
               impact: item.impact,
               helpUrl: item.helpUrl,
-              nodes: item.nodes,
+              nodes: item.nodes.map(node => ({
+                message: (node.any && node.any.length > 0) ? node.any.map(msg => msg.message) : null,
+                html: node.html
+              }))
             },
           }
         })),
       ];
+      // const axeChecksJSON = JSON.stringify(axeChecks, null, 2);
+      // const outputFile = 'axe_results.json'
+      // fs.appendFileSync(outputFile, axeChecksJSON);
       return axeChecks 
     } catch (e) {
       console.log(e)
