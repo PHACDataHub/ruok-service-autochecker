@@ -8,10 +8,6 @@ import puppeteer from 'puppeteer';
 import 'dotenv-safe/config.js'
 
 const { 
-    DB_NAME,
-    DB_URL,
-    DB_USER, 
-    DB_PASS,
     NATS_URL,
     API_URL,
   } = process.env;
@@ -20,13 +16,6 @@ const NATS_SUB_STREAM="WebEvent"
 
 // API connection 
 const graphQLClient = new GraphQLClient(API_URL);
-
-// Database connection 
-const db = new Database({
-  url: DB_URL,
-  databaseName: DB_NAME,
-  auth: { username: DB_USER, password: DB_PASS },
-});
 
 // NATs connection 
 const nc = await connect({ servers: NATS_URL,})
@@ -48,10 +37,9 @@ process.on('SIGINT', () => process.exit(0))
   for await (const message of sub) {
     const webEventPayload  = await jc.decode(message.data)
     console.log(webEventPayload)
-    const { webEndpoints } = webEventPayload 
-    const productName = message.subject.split('.').pop()  // last NATs subject token
+    const { url } = webEventPayload 
     
-    console.log(productName, webEndpoints)   
+    console.log(url)   
 
     for (const webEndpoint of webEndpoints) {
       const pageInstance = await browser.newPage();
@@ -74,8 +62,8 @@ process.on('SIGINT', () => process.exit(0))
         // SAVE to ArangoDB through API
         // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
 
-        // console.log(JSON.stringify(webEndpointResults, null, 2))
-        console.log(webEndpointAxeResults)
+        console.log(JSON.stringify(webEndpointAxeResults, null, 2))
+        // console.log(webEndpointAxeResults)
         await pageInstance.close()
       }
     }
