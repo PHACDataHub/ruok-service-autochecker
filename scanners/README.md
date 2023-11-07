@@ -41,6 +41,7 @@ Also listens to NATs GitHubEvents, and when it recieves a message, it will use G
 * [ ] existence of an API (only have directory now - will use langagues to dig into libraries and languagues)
 * [ ] REST/graphql (see above)
 * [ ] vuln scanning enabled (only see dependabot.yml now... but seems like you can have without this)
+* [ ] vuln scanning enabled for artifact registry (GKE is [auto-enabled](https://cloud.google.com/artifact-registry/docs/analysis))
 * [ ] More from Open data products spec: <https://opendataproducts.org/>
 * [ ] PHAC data standards (also see <https://www.dublincore.org>)
 
