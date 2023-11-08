@@ -57,8 +57,15 @@ RUN apt-get update && apt-get install gnupg wget -y && \
   apt-get install google-chrome-stable -y --no-install-recommends && \
   rm -rf /var/lib/apt/lists/*
 
+# Install gitleaks
+RUN sudo curl -LO https://github.com/zricethezav/gitleaks/releases/download/v8.18.0/gitleaks_8.18.0_linux_x64.tar.gz && \
+    sudo tar -xzf gitleaks_8.18.0_linux_x64.tar.gz && \
+    sudo mv gitleaks /usr/local/bin && \
+    sudo chmod +x /usr/local/bin/gitleaks
+
 # Start container as non-root user
 USER node
 
 # Install puppeteer globally as node user
 RUN npm install -g puppeteer
+
