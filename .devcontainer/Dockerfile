@@ -56,8 +56,15 @@ RUN curl -fsSL https://github.com/nats-io/natscli/releases/download/v0.1.1/nats-
     mv nats-0.1.1-linux-amd64/nats /usr/local/bin/nats && \
     rm -r nats-0.1.1-linux-amd64 && rm nats-0.1.1-linux-amd64.zip
 
+# Install gitleaks
+RUN sudo curl -LO https://github.com/zricethezav/gitleaks/releases/download/v8.18.0/gitleaks_8.18.0_linux_x64.tar.gz && \
+    sudo tar -xzf gitleaks_8.18.0_linux_x64.tar.gz && \
+    sudo mv gitleaks /usr/local/bin && \
+    sudo chmod +x /usr/local/bin/gitleaks
+
 # Start container as non-root user
 USER node
 
 # Install puppeteer globally as node user
 RUN npm install -g puppeteer
+

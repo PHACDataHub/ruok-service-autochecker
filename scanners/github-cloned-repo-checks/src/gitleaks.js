@@ -1,0 +1,1 @@
+gitleaks --path=/path/to/local/repo --depth=-1
