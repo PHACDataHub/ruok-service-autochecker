@@ -85,3 +85,6 @@ process.on('SIGINT', () => process.exit(0))
     })();
 
 await nc.closed();
+
+// nats pub "EventsScanner.githubEndpoints" "{\"sourceCodeRepository\":\"ruok-service-autochecker\", \"productName\": \"yourProductName\", \"repoName\": \"ruok-service-autochecker\", \"cloneUrl\": \"https://github.com/PHACDataHub/ruok-service-autochecker.git\"}"
+// 18:06:23 Published 200 bytes to "EventsScanner.githubEndpoints"

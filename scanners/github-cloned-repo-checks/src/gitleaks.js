@@ -6,7 +6,7 @@ const execPromisified = util.promisify(exec);
 
 export async function gitleaksScan(clonedRepoPath) {
     return new Promise((resolve, reject) => {
-      exec(`gitleaks --path=${clonedRepoPath} --depth=-1`, (error, stdout, stderr) => {
+      exec(`gitleaks --path=${clonedRepoPath}`, (error, stdout, stderr) => {
         if (error) {
           reject(error);
         } else if (stderr) {
