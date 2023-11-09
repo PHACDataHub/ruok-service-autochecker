@@ -6,6 +6,7 @@ import { HasDependabotYaml } from './has-dependabot-yaml.js'
 import { HasTestsDirectory } from './has-tests-directory.js'
 import { HasSecurityMd } from "./has-security-md.js"
 import { DotDockerIgnoreDetails, DotGitIgnoreDetails } from "./get-dotignore-details.js"
+import { Gitleaks } from "./gitleaks.js"
 import { AllChecks } from './all-checks.js'
 
 export async function initializeChecker(checkName, repoName, repoPath) {
@@ -22,6 +23,8 @@ export async function initializeChecker(checkName, repoName, repoPath) {
             return new DotDockerIgnoreDetails(repoName, repoPath)
         case 'dotGitIgnoreDetails':
             return new DotGitIgnoreDetails(repoName, repoPath)
+        case 'gitleaks':
+            return new Gitleaks(repoName, repoPath)
         case 'allChecks':
             return new AllChecks(repoName, repoPath)
         default:
