@@ -45,7 +45,8 @@ process.on('SIGINT', () => process.exit(0))
             const repoPath = await cloneRepository(gitHubEventPayload.endpoint, repoName)
 
             // Instantiate and do the check(s)
-            const checkName = 'allChecks'
+            // const checkName = 'allChecks'
+            const checkName = 'gitleaks'
             const check = await initializeChecker(checkName, repoName, repoPath)
             const results = await check.doRepoCheck()
 
@@ -78,7 +79,7 @@ process.on('SIGINT', () => process.exit(0))
             // New GraphQL client - TODO: remove hard-coded URL
             const graphqlClient = new GraphQLClient(GRAPHQL_URL);
             // Write mutation to GraphQL API
-            const mutationResponse = await graphqlClient.request(mutation);
+            // const mutationResponse = await graphqlClient.request(mutation);
             // Remove temp repository
             await removeClonedRepository(repoPath)
         }
@@ -86,5 +87,4 @@ process.on('SIGINT', () => process.exit(0))
 
 await nc.closed();
 
-// nats pub "EventsScanner.githubEndpoints" "{\"sourceCodeRepository\":\"ruok-service-autochecker\", \"productName\": \"yourProductName\", \"repoName\": \"ruok-service-autochecker\", \"cloneUrl\": \"https://github.com/PHACDataHub/ruok-service-autochecker.git\"}"
-// 18:06:23 Published 200 bytes to "EventsScanner.githubEndpoints"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}"
