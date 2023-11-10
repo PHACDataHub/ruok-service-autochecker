@@ -1,0 +1,1 @@
+// https://thenewstack.io/hadolint-lint-dockerfiles-from-the-command-line/#:~:text=is%20called%20Hadolint.-,Hadolint%20is%20a%20command%20line%20tool%20that%20helps%20you%20ensure,tool)%20to%20lint%20the%20code.

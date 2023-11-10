@@ -14,6 +14,11 @@ RUN apk add --no-cache git
 #     sudo chmod +x /usr/local/bin/gitleaks && \
 #     rm gitleaks_8.18.0_linux_x64.tar.gz
 
+# # Install hadolint
+# RUN wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 && \
+#     sudo mv hadolint-Linux-x86_64 /usr/local/bin/hadolint && \
+#     sudo chmod +x /usr/local/bin/hadolint
+
 COPY package*.json ./
 
 RUN npm ci
