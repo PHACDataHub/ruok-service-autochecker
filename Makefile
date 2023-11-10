@@ -20,7 +20,7 @@ build: build-api-image build-webhook-server-image build-graph-updater build-octo
 
 # GraphQL API
 build-api-image:
-	$(CONTAINER_RUNTIME) build ./api/ -t localhost/$(APP_NAME)-api:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./api/ -t localhost/$(APP_NAME)-graphql-api:$(APP_VERSION)
 
 # Scanners
 build-octokit-scanner:
@@ -71,6 +71,9 @@ port-forward:
 	kubectl port-forward svc/example-simple-single-ea 8529:8529 &
 	kubectl port-forward svc/nats 4222:4222 &
 	kubectl port-forward svc/webhook-server 3000:3000 &
-	kubectl port-forward svc/api 4000:4000
+	kubectl port-forward svc/graphql-api 4000:4000
 
-all: build kind-push-all k8s-deploy port-forward
+sleep:
+	sleep 20
+
+all: build kind-push-all k8s-deploy sleep port-forward
