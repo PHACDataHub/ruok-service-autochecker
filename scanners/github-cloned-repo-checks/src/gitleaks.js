@@ -1,66 +1,31 @@
 // TODO test using https://github.com/gitleaks/fake-leaks
 // Reference https://github.com/gitleaks/gitleaks
-//  -r - report paht, -v verboth -f json -f json 
 
-// exit codes 0 - no leaks present
-// 1 - leaks or error encountered
-// 126 - unknown flag
+// TODO - link to add config doc
+// TODO - gitleaks protect . in ci?
+// gitleaks protect --staged
+// TODO - detail how to handle false positives (.gitleaksignore)
+// TODO - document how to remove leaks from history, and how to check prior
+// TODO - check if repo exists/ exits for other reasons (right now defaults to passes if no leaks found (for anyreasone))
+// TODO - git guardian
 
+// https://blog.gitguardian.com/rewriting-git-history-cheatsheet/
+//  install git-filter-repo
+// ORIGINAL==>REPLACEMENT in replacements.txt (in route)
+// git filter-repo --replace-text ../replacements.txt
+// git filter-repo --replace-text ../replacements.txt --force
+// git push --all --tags --force
 
-// gitleaks detect -f json --report-path gitleaks-report.json -b=/tmp/ruok-service-autochecker-1699554151272
-// gitleaks detect --report-path gitleaks-report.json -b=/tmp/ruok-service-autochecker-1699554151272
-import { resourceLimits } from 'worker_threads';
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
-import { exec, spawn } from 'child_process';
-// import { promisify } from 'util';
+import { spawn } from 'child_process';
 
 
-const clonedRepoPath = '/tmp/ruok-service-autochecker-1699554151272'
-
-// function runGitleaks(clonedRepoPath) {
-//     return new Promise((resolve, reject) => {
-//       const gitleaksProcess = spawn('gitleaks', ['detect', '--source', clonedRepoPath, '-v']);
-//       let gitleaksOutput = '';
-  
-//       gitleaksProcess.stdout.on('data', (data) => {
-//         gitleaksOutput += data.toString();
-//       });
-  
-//       gitleaksProcess.stderr.on('data', (data) => {
-//         console.error(`gitleaks stderr: ${data}`);
-//       });
-  
-//       gitleaksProcess.on('close', (code) => {
-//         console.log(`gitleaks process exited with code ${code}`);
-  
-//         if ((code === 0 || code === 1) && gitleaksOutput.includes('leaks found')) {
-//           const result = {
-//             code,
-//             leaksFound: true,
-//             output: gitleaksOutput
-//           };
-//           resolve(result);
-//         } else {
-//           reject(new Error('No leaks found or unexpected error.'));
-//         }
-//       });
-//     });
-//   }
-  
-//   // Usage
-
-  
-//   runGitleaks(clonedRepoPath)
-//     .then((result) => {
-//       console.log('Result:', result);
-//     })
-//     .catch((error) => {
-//       console.error('Error:', error.message);
-//     });
-
-// // const execPromisified = promisify(exec);
+// const clonedRepoPath = '/tmp/ruok-service-autochecker-1699630267330'
 
 function extractSummaryInfo(summary) {
+  // Runing gitleaks ouputs an ascii image, followed by results as a string if using -v, then the summary as stderr
+  // It uses exit code of 0 for no leaks found, 1 if leaks are found, and 126 if unknown
+  // This pulls out the leaks found, and number of commits scanned. 
     const leaksFoundRegex = /leaks found: (\d+)/;
     const commitsScannedRegex = /(\d+) commits scanned/;
   
@@ -75,101 +40,110 @@ function extractSummaryInfo(summary) {
       commitsScanned
     };
   }
-  
+
   function extractDetailsInfo(details) {
+    // Runing gitleaks ouputs an ascii image, followed by results as a string if using -v, then the summary as stderr
+    // This pulls out the details section (minus the actual secret), and collects into an array
     const fileRegex = /File:\s+(.*)\n/;
     const lineRegex = /Line:\s+(\d+)\n/;
     const commitRegex = /Commit:\s+(.*)\n/;
     const authorRegex = /Author:\s+(.*)\n/;
     const emailRegex = /Email:\s+(.*)\n/;
     const dateRegex = /Date:\s+(.*)\n/;
-  
-    const fileMatch = details.match(fileRegex);
-    const lineMatch = details.match(lineRegex);
-    const commitMatch = details.match(commitRegex);
-    const authorMatch = details.match(authorRegex);
-    const emailMatch = details.match(emailRegex);
-    const dateMatch = details.match(dateRegex);
-  
-    const extractedInfo = {
-      File: fileMatch ? fileMatch[1] : null,
-      Line: lineMatch ? parseInt(lineMatch[1]) : null,
-      Commit: commitMatch ? commitMatch[1] : null,
-      Author: authorMatch ? authorMatch[1] : null,
-      Email: emailMatch ? emailMatch[1] : null,
-      Date: dateMatch ? dateMatch[1] : null,
-    };
-  
-    return extractedInfo;
+
+    const detailsArray = Array.isArray(details) ? details : [details];
+
+    return detailsArray.map((detail) => {
+        return {
+            File: detail.match(fileRegex) ? detail.match(fileRegex)[1] : null,
+            Line: detail.match(lineRegex) ? parseInt(detail.match(lineRegex)[1]) : null,
+            Commit: detail.match(commitRegex) ? detail.match(commitRegex)[1] : null,
+            Author: detail.match(authorRegex) ? detail.match(authorRegex)[1] : null,
+            Email: detail.match(emailRegex) ? detail.match(emailRegex)[1] : null,
+            Date: detail.match(dateRegex) ? detail.match(dateRegex)[1] : null,
+        };
+    });
 }
+  
 
 function runGitleaks(clonedRepoPath) {
-    return new Promise((resolve, reject) => {
-      const gitleaksProcess = spawn('gitleaks', ['detect', '--source', clonedRepoPath, '-v']);
-      let gitleaksDetails = '';
-      let errorOutput = '';
-      let exitCode = 0;
-  
-      gitleaksProcess.stdout.on('data', (data) => { // -v part of gitleaks 
-        gitleaksDetails += data.toString();
-        // console.log(gitleaksDetails);
-      });
-  
-      gitleaksProcess.stderr.on('data', (data) => { // ths is where the summary lives as well
-        errorOutput += data.toString();
-        // console.log(errorOutput);
-      });
-  
-      gitleaksProcess.on('close', (code) => { 
-        exitCode += code.toString();
-        // console.log(exitCode);
-  
-        if ((code === 0 || code === 1) && errorOutput.includes('leaks found')) { // If leak is found, gitleaks uses exit code of 1 -otherwise, it's an error 
-            const summaryInfo = extractSummaryInfo(errorOutput);
-            const detailsInfo = extractDetailsInfo(gitleaksDetails);
-            
-            const result = {
-            //   exitCode,
-                leaksFound: true,
-                numberOfLeaks: summaryInfo.leaksFound,
-                commitsScanned: summaryInfo.commitsScanned,
-                details: extractDetailsInfo(gitleaksDetails),
-            };
-            return resolve(result);
-        } else {
-            const result = {
-                exitCode,
-                leaksFound: false,
-            };
-            return resolve(result);
-            // return reject(new Error('No leaks found or unexpected error.'));
-        }
-      });
+  return new Promise((resolve) => {
+    const gitleaksProcess = spawn('gitleaks', ['detect', '--source', clonedRepoPath, '-v']);
+    let gitleaksDetails = '';
+    let errorOutput = '';
+    let exitCode = 0;
+
+    gitleaksProcess.stdout.on('data', (data) => { // -v (verbose) part of gitleaks 
+      gitleaksDetails += data.toString();
     });
-  }
+
+    gitleaksProcess.stderr.on('data', (data) => { // this is where the summary lives as well
+      errorOutput += data.toString();
+    });
+
+    gitleaksProcess.on('close', (code) => { 
+      exitCode += code.toString();
+
+      if ((code === 0 || code === 1) && errorOutput.includes('leaks found')) { // If leak is found, gitleaks uses exit code of 1 -otherwise, it's an error 
+        const summaryInfo = extractSummaryInfo(errorOutput);
+        const detailsArray = gitleaksDetails.split('Finding:');
+
+        const result = {
+            leaksFound: true,
+            numberOfLeaks: summaryInfo.leaksFound,
+            commitsScanned: summaryInfo.commitsScanned,
+            details: [].concat(detailsArray.slice(1).map(extractDetailsInfo)),
+          };
+        return resolve(result);
+
+      } else if (code === 126) {
+        // This is an error - or unknown situation
+        const result = {
+            exitCode,
+            leaksFound: null,
+            errorMessage: 'An error was encountered running the Gitleaks check.',
+        };
+        return resolve(result);
+
+      } else {
+        const result = {
+            leaksFound: false,
+        };
+        return resolve(result);
+      }
+    });
+  });
+}
+
  
   async function formatGitleaksResults(clonedRepoPath) {
     try {
-      const result = await runGitleaks(clonedRepoPath);
-      
-      if (!result.leaksFound) {
-        return {
-          checkPasses: true,
-          metadata: result
-        };
-      } else {
-        return {
-          checkPasses: false,
-          metadata: result
-        };
-      }
+        const result = await runGitleaks(clonedRepoPath);
+
+        if (result.leaksFound == true) {
+            return {
+                checkPasses: false,
+                metadata: result
+            };
+        } else if (result.leaksFound == null){
+            return {
+                checkPasses: null,
+                metadata: result
+            };
+        } else {
+          return {
+            checkPasses: true,
+            metadata: result
+          };
+        }
     } catch (error) {
-      console.error(error.message);
+        console.error(error.message);
     }
-  }
+}
+
 
 // const results = await formatGitleaksResults(clonedRepoPath)
-// console.log(results)
+// console.log(JSON.stringify(results, null, 2))
 
 export class Gitleaks extends CheckOnClonedRepoInterface {
     constructor(repoName, clonedRepoPath) { 

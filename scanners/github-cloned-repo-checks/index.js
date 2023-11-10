@@ -43,6 +43,7 @@ process.on('SIGINT', () => process.exit(0))
 
             // Clone repository
             const repoPath = await cloneRepository(gitHubEventPayload.endpoint, repoName)
+            console.log (repoPath)
 
             // Instantiate and do the check(s)
             // const checkName = 'allChecks'
@@ -52,8 +53,6 @@ process.on('SIGINT', () => process.exit(0))
 
             console.log(results)
 
-            // SAVE to ArangoDB through API
-            // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
             // Mutation to add a graph for the new endpoints
             // TODO: refactor this into a testable query builder function
             const mutation = gql`
@@ -72,6 +71,7 @@ process.on('SIGINT', () => process.exit(0))
                             checkPasses: ${results.hasDependabotYaml.checkPasses}
                             metadata: {}
                         },
+
                     }
                 )
             }
@@ -80,8 +80,9 @@ process.on('SIGINT', () => process.exit(0))
             const graphqlClient = new GraphQLClient(GRAPHQL_URL);
             // Write mutation to GraphQL API
             // const mutationResponse = await graphqlClient.request(mutation);
+            
             // Remove temp repository
-            await removeClonedRepository(repoPath)
+            // await removeClonedRepository(repoPath)
         }
     })();
 

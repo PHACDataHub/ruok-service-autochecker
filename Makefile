@@ -72,3 +72,5 @@ port-forward:
 	kubectl port-forward svc/nats 4222:4222 &
 	kubectl port-forward svc/webhook-server 3000:3000 &
 	kubectl port-forward svc/api 4000:4000
+
+all: build kind-push-all k8s-deploy port-forward
