@@ -46,8 +46,8 @@ process.on('SIGINT', () => process.exit(0))
             console.log (repoPath)
 
             // Instantiate and do the check(s)
-            // const checkName = 'allChecks'
-            const checkName = 'gitleaks'
+            const checkName = 'allChecks'
+            // const checkName = 'gitleaks'
             const check = await initializeChecker(checkName, repoName, repoPath)
             const results = await check.doRepoCheck()
 
@@ -71,7 +71,26 @@ process.on('SIGINT', () => process.exit(0))
                             checkPasses: ${results.hasDependabotYaml.checkPasses}
                             metadata: {}
                         },
-
+                        gitleaks: {
+                            checkPasses: ${results.gitleaks.checkPasses}
+                            metadata: {}
+                        }
+                        hasApiDirectory: {
+                            checkPasses: ${results.hasApiDirectory.checkPasses}
+                            metadata: {}
+                        }
+                        hasTestsDirectory: {
+                            checkPasses: ${results.hasTestsDirectory.checkPasses}
+                            metadata: {}
+                        }
+                        dotDockerIgnoreDetails: {
+                            checkPasses: ${results.dotDockerIgnoreDetails.checkPasses}
+                            metadata: {}
+                        }
+                        dotGitIgnoreDetails: {
+                            checkPasses: ${results.dotGitIgnoreDetails.checkPasses}
+                            metadata: {}
+                        }
                     }
                 )
             }
@@ -79,10 +98,10 @@ process.on('SIGINT', () => process.exit(0))
             // New GraphQL client - TODO: remove hard-coded URL
             const graphqlClient = new GraphQLClient(GRAPHQL_URL);
             // Write mutation to GraphQL API
-            // const mutationResponse = await graphqlClient.request(mutation);
+            const mutationResponse = await graphqlClient.request(mutation);
             
             // Remove temp repository
-            // await removeClonedRepository(repoPath)
+            await removeClonedRepository(repoPath)
         }
     })();
 

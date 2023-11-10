@@ -4,6 +4,7 @@ import { HasTestsDirectory } from './has-tests-directory.js'
 import { HasSecurityMd } from "./has-security-md.js"
 import { DotDockerIgnoreDetails, DotGitIgnoreDetails }  from "./get-dotignore-details.js"
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
+import { Gitleaks } from './gitleaks.js'
 
 
 export class AllChecks extends CheckOnClonedRepoInterface {
@@ -18,6 +19,7 @@ export class AllChecks extends CheckOnClonedRepoInterface {
         new HasSecurityMd(repoName, clonedRepoPath),
         new DotDockerIgnoreDetails(repoName, clonedRepoPath),
         new DotGitIgnoreDetails(repoName, clonedRepoPath),
+        new Gitleaks(repoName, clonedRepoPath)
       ];
     }
   
@@ -36,6 +38,7 @@ export class AllChecks extends CheckOnClonedRepoInterface {
         hasSecurityMd: checkResults[3],
         dotDockerIgnoreDetails: checkResults[4],
         dotGitIgnoreDetails: checkResults[5],
+        gitleaks: checkResults[6]
       }
   
       return allResults;
