@@ -94,6 +94,7 @@ function runGitleaks(clonedRepoPath) {
             commitsScanned: summaryInfo.commitsScanned,
             details: [].concat(detailsArray.slice(1).map(extractDetailsInfo)),
           };
+          console.log(result)
         return resolve(result);
 
       } else if (code === 126) {
@@ -142,8 +143,8 @@ function runGitleaks(clonedRepoPath) {
 }
 
 
-// const results = await formatGitleaksResults(clonedRepoPath)
-// console.log(JSON.stringify(results, null, 2))
+const results = await formatGitleaksResults(clonedRepoPath)
+console.log(JSON.stringify(results, null, 2))
 
 export class Gitleaks extends CheckOnClonedRepoInterface {
     constructor(repoName, clonedRepoPath) { 

@@ -43,8 +43,13 @@ process.on('SIGINT', () => process.exit(0))
       // Each kind of endpoint knows how to get its own metadata (i.e. what endpoints are
       // related to this endpoint?); polymorphic method getGraphMetadata knows how to
       // parse the endpointEventPayload object to extract metadata about related endpoints.
+      console.log('endpointKind', endpointKind)
+
       const endpointHandler = getEndpoint(endpointKind);
       const newEndpoints = await endpointHandler.getGraphMetaData(endpointEventPayload)
+
+      console.log('newEndpoints', newEndpoints)
+
       // Create string serialized array of endpoints associated with this endpoint
       const newEndpointsString = `["${Array.from(newEndpoints).join('", "')}"]`;
 
@@ -58,6 +63,8 @@ process.on('SIGINT', () => process.exit(0))
       const graphqlClient = new GraphQLClient(GRAPHQL_URL);
       // Write mutation to GraphQL API
       const mutationResponse = await graphqlClient.request(mutation);
+
+      console.log('graphql mutation complete')
 
       // Now that we've written the new graph to the database, we need to query
       // the same subgraph since there may be existing nodes in the database

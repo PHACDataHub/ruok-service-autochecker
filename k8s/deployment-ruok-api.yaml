@@ -19,7 +19,7 @@ spec:
       containers:
       - name: graphql-api
         imagePullPolicy: Never
-        image: localhost/ruok-api:0.0.1
+        image: localhost/ruok-graphql-api:0.0.1
         securityContext:
           allowPrivilegeEscalation: false
         ports:

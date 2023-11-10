@@ -16,10 +16,10 @@ CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
 #  |_.__/ \__,_|_|_|\__,_|
 
 # Build all images in the repo
-build: build-api-image build-webhook-server-image build-graph-updater build-octokit-scanner build-cloned-repo-scanner build-web-endpoint-scanner
+build: build-graphql-api-image build-webhook-server-image build-graph-updater build-octokit-scanner build-cloned-repo-scanner build-web-endpoint-scanner
 
 # GraphQL API
-build-api-image:
+build-graphql-api-image:
 	$(CONTAINER_RUNTIME) build ./api/ -t localhost/$(APP_NAME)-graphql-api:$(APP_VERSION)
 
 # Scanners
@@ -40,13 +40,17 @@ build-webhook-server-image:
 build-graph-updater:
 	$(CONTAINER_RUNTIME) build ./graph-updater/ -t localhost/$(APP_NAME)-graph-updater:$(APP_VERSION)
 
-kind-push-api:
-	kind load docker-image localhost/$(APP_NAME)-api:$(APP_VERSION)
+kind-push-graphql-api:
+	kind load docker-image localhost/$(APP_NAME)-graphql-api:$(APP_VERSION)
+
+kind-push-graph-updater:
+	kind load docker-image localhost/$(APP_NAME)-graph-updater:$(APP_VERSION)
+
 
 kind-push-webhook-server:
 	kind load docker-image localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
 
-kind-push-all: kind-push-webhook-server kind-push-api
+kind-push-all: kind-push-webhook-server kind-push-graphql-api kind-push-graph-updater
 	
 
 #       _            _             
