@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ui-server
+  name: ui-server
+  namespace: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ui-server
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: ui-server
+    spec:
+      containers:
+      - name: ui-server
+        imagePullPolicy: Never
+        image: localhost/ruok-ui:0.0.1
+        securityContext:
+          allowPrivilegeEscalation: false
+        ports:
+          - containerPort: 8080
+        resources:
+          limits:
+            cpu: 300m
+            memory: 30Mi
+          requests:
+            cpu: 200m
+            memory: 20Mi

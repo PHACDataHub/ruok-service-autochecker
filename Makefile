@@ -16,7 +16,11 @@ CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
 #  |_.__/ \__,_|_|_|\__,_|
 
 # Build all images in the repo
-build: build-api-image build-webhook-server-image build-graph-updater build-octokit-scanner build-cloned-repo-scanner build-web-endpoint-scanner
+build: build-ui-image build-api-image build-webhook-server-image build-graph-updater build-octokit-scanner build-cloned-repo-scanner build-web-endpoint-scanner
+
+# Web UI Server
+build-ui-image:
+	$(CONTAINER_RUNTIME) build ./ui/ -t localhost/$(APP_NAME)-ui:$(APP_VERSION)
 
 # GraphQL API
 build-api-image:
@@ -71,4 +75,5 @@ port-forward:
 	kubectl port-forward svc/example-simple-single-ea 8529:8529 &
 	kubectl port-forward svc/nats 4222:4222 &
 	kubectl port-forward svc/webhook-server 3000:3000 &
-	kubectl port-forward svc/api 4000:4000
+	kubectl port-forward svc/graphql-api 4000:4000 &
+	kubectl port-forward svc/ui-server 8080:8080

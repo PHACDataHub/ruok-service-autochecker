@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - ./arangodeployment-single-server.yaml
 - ./deployment-nats.yaml
+- ./ui/deployment-ui-server.yaml
 - ./deployment-ruok-api.yaml
 - ./deployment-webhook-server.yaml
 - ./deployment-graph-updater.yaml
@@ -11,6 +12,8 @@ resources:
 - ./deployment-cloned-repo-scanner.yaml
 - ./svc-nats.yaml
 - ./svc-ruok-api.yaml
+- ./ui/svc-ui.yaml
+- ./ui/ns-ui.yaml
 - ./svc-webhook-server.yaml
 patches:
 - target:
