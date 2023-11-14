@@ -73,23 +73,7 @@ process.on('SIGINT', () => process.exit(0))
                         },
                         gitleaks: {
                             checkPasses: ${results.gitleaks.checkPasses}
-                            metadata: {}
-                        }
-                        hasApiDirectory: {
-                            checkPasses: ${results.hasApiDirectory.checkPasses}
-                            metadata: {}
-                        }
-                        hasTestsDirectory: {
-                            checkPasses: ${results.hasTestsDirectory.checkPasses}
-                            metadata: {}
-                        }
-                        dotDockerIgnoreDetails: {
-                            checkPasses: ${results.dotDockerIgnoreDetails.checkPasses}
-                            metadata: {}
-                        }
-                        dotGitIgnoreDetails: {
-                            checkPasses: ${results.dotGitIgnoreDetails.checkPasses}
-                            metadata: {}
+                            metadata: ${results.gitleaks.metadata}
                         }
                     }
                 )
