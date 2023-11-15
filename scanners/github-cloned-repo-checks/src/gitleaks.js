@@ -45,10 +45,10 @@ function extractSummaryInfo(summary) {
   }
 
 
-async function readGitleaksOutputFile(filePath) {
+async function readGitleaksOutputFile(reportFilePath) {
   // Reads contents of gitleaks output file, filters for specific fields and returns array of results
   try {
-    const data = await readFile(filePath, 'utf-8');
+    const data = await readFile(reportFilePath, 'utf-8');
     const jsonData = JSON.parse(data);
 
     if (jsonData) {
@@ -73,7 +73,7 @@ async function readGitleaksOutputFile(filePath) {
 async function runGitleaks(clonedRepoPath) {
   try {
     const tempDir = await mkdtemp(path.join(os.tmpdir(), 'gitleaks-'));
-    const filePath = path.join(tempDir, 'gitleaks-report.json');
+    const reportFilePath = path.join(tempDir, 'gitleaks-report.json');
 
     const gitleaksProcess = spawn('gitleaks', [
       'detect',
@@ -83,12 +83,13 @@ async function runGitleaks(clonedRepoPath) {
       '--no-banner',
       '--exit-code', 95,
       '-f', 'json',
-      '-r', filePath,
+      '-r', reportFilePath,
     ]);
 
     let errorOutput = '';
     let results
 
+    // Extract summary form sterr and exit code
     gitleaksProcess.stderr.on('data', (data) => {
       errorOutput += data.toString();
     });
@@ -102,7 +103,8 @@ async function runGitleaks(clonedRepoPath) {
     // console.log('code', code);
     // console.log('errorOutput', errorOutput);
 
-    const gitleaksJson = await readGitleaksOutputFile(filePath);
+    // Get details from the report output as json file
+    const gitleaksJson = await readGitleaksOutputFile(reportFilePath);
 
     // Remove temp dir
     try {
@@ -132,6 +134,8 @@ async function runGitleaks(clonedRepoPath) {
         errorMessage: 'An error was encountered running the Gitleaks check.',
       };
     }
+    console.log('gitleaks results:', results)
+
     return results
   } catch (error) {
     console.error(error.message);
@@ -144,7 +148,7 @@ async function runGitleaks(clonedRepoPath) {
   }
 }
 
-// const clonedRepoPath = '.'
+// const clonedRepoPath = '/tmp/ruok-service-autochecker-1700060804550'
 // const results = await runGitleaks(clonedRepoPath) 
 // console.log(JSON.stringify(results, null, 2))
 
@@ -158,7 +162,7 @@ export class Gitleaks extends CheckOnClonedRepoInterface {
     
     async doRepoCheck() {
       try {
-        const gitleaksResult = await runGitleaks(clonedRepoPath);
+        const gitleaksResult = await runGitleaks(this.clonedRepoPath);
         let checkPasses
 
         if (gitleaksResult.leaksFound == true) {
@@ -168,6 +172,12 @@ export class Gitleaks extends CheckOnClonedRepoInterface {
         } else {
           checkPasses = true
         }
+
+        console.log({
+          checkPasses: checkPasses,
+          metadata: gitleaksResult
+        })
+
         return {
           checkPasses: checkPasses,
           metadata: gitleaksResult

@@ -41,9 +41,12 @@ process.on('SIGINT', () => process.exit(0))
             const orgName = prefix[1];
             const repoName = prefix[2];
 
+            console.log('orgName', orgName)
+            console.log('repoName', repoName)
+
             // Clone repository
             const repoPath = await cloneRepository(gitHubEventPayload.endpoint, repoName)
-            console.log (repoPath)
+            console.log ('repoPath', repoPath)
 
             // Instantiate and do the check(s)
             const checkName = 'allChecks'
@@ -51,7 +54,9 @@ process.on('SIGINT', () => process.exit(0))
             const check = await initializeChecker(checkName, repoName, repoPath)
             const results = await check.doRepoCheck()
 
-            console.log(results)
+            console.log('Scan Results:',results)
+            console.log('gitleaks metadata',results.gitleaks.metadata)
+            console.log('gitleaks stingified metadata',JSON.stringify(results.gitleaks.metadata))
 
             // Mutation to add a graph for the new endpoints
             // TODO: refactor this into a testable query builder function
@@ -83,9 +88,11 @@ process.on('SIGINT', () => process.exit(0))
             const graphqlClient = new GraphQLClient(GRAPHQL_URL);
             // Write mutation to GraphQL API
             const mutationResponse = await graphqlClient.request(mutation);
+            console.log('saved to database!')
             
             // Remove temp repository
             await removeClonedRepository(repoPath)
+    
         }
     })();
 

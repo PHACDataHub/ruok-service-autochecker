@@ -40,17 +40,20 @@ build-webhook-server-image:
 build-graph-updater:
 	$(CONTAINER_RUNTIME) build ./graph-updater/ -t localhost/$(APP_NAME)-graph-updater:$(APP_VERSION)
 
+
+kind-push-cloned-repo-scanner:
+	kind load docker-image localhost/$(APP_NAME)-cloned-repo-scanner:$(APP_VERSION)
+
 kind-push-graphql-api:
 	kind load docker-image localhost/$(APP_NAME)-graphql-api:$(APP_VERSION)
 
 kind-push-graph-updater:
 	kind load docker-image localhost/$(APP_NAME)-graph-updater:$(APP_VERSION)
 
-
 kind-push-webhook-server:
 	kind load docker-image localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
 
-kind-push-all: kind-push-webhook-server kind-push-graphql-api kind-push-graph-updater
+kind-push-all: kind-push-webhook-server kind-push-graphql-api kind-push-graph-updater 
 	
 
 #       _            _             
