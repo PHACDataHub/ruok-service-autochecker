@@ -65,7 +65,30 @@ async function hadolintRepo(clonedRepoPath) {
   
     return results;
   }
-  
+
+async function checkLevels(results, maxLevel) {
+    for (const dockerfilePath in results) {
+        const dockerfileResults = results[dockerfilePath];
+        for (const result of dockerfileResults) {
+            if (result.level !== 'info' && compareLevels(result.level, maxLevel) > 0) {
+                return false; // Set checkPasses to false if a higher level is found
+            }
+        }
+    }
+    return true; // Set checkPasses to true if no higher levels are found
+}
+
+function compareLevels(level1, level2) {
+    const levels = ['info', 'warning', 'error'];
+    return levels.indexOf(level1) - levels.indexOf(level2);
+}
+
+const clonedRepoPath = '/tmp/ruok-service-autochecker-1700076813912'
+const results = await hadolintRepo(clonedRepoPath)
+const isLevelInfoOrBelow = await checkLevels(results, 'info')
+console.log(results)
+console.log(isLevelInfoOrBelow)
+
 
 export class Hadolint extends CheckOnClonedRepoInterface {
     constructor(repoName, clonedRepoPath) {
