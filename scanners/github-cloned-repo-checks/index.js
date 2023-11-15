@@ -71,26 +71,11 @@ process.on('SIGINT', () => process.exit(0))
                             checkPasses: ${results.hasDependabotYaml.checkPasses}
                             metadata: {}
                         },
-                        gitleaks: {
-                            checkPasses: ${results.gitleaks.checkPasses}
-                            metadata: {}
+                        hadolint: {
+                            checkPasses: ${results.hadolint.checkPasses}
+                            metadata: ${results.hadolint.metadata}
                         }
-                        hasApiDirectory: {
-                            checkPasses: ${results.hasApiDirectory.checkPasses}
-                            metadata: {}
-                        }
-                        hasTestsDirectory: {
-                            checkPasses: ${results.hasTestsDirectory.checkPasses}
-                            metadata: {}
-                        }
-                        dotDockerIgnoreDetails: {
-                            checkPasses: ${results.dotDockerIgnoreDetails.checkPasses}
-                            metadata: {}
-                        }
-                        dotGitIgnoreDetails: {
-                            checkPasses: ${results.dotGitIgnoreDetails.checkPasses}
-                            metadata: {}
-                        }
+   
                     }
                 )
             }
@@ -101,7 +86,7 @@ process.on('SIGINT', () => process.exit(0))
             const mutationResponse = await graphqlClient.request(mutation);
             
             // Remove temp repository
-            await removeClonedRepository(repoPath)
+            // await removeClonedRepository(repoPath)
         }
     })();
 
