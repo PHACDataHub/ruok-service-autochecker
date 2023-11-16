@@ -78,7 +78,7 @@ process.on('SIGINT', () => process.exit(0))
                         },
                         gitleaks: {
                             checkPasses: ${results.gitleaks.checkPasses}
-                            metadata: ${results.gitleaks.metadata}
+                            metadata: ${JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
                         }
                     }
                 )

@@ -1,0 +1,42 @@
+[
+ {
+  "Description": "Private Key",
+  "StartLine": 1,
+  "EndLine": 1,
+  "StartColumn": 1,
+  "EndColumn": 0,
+  "Match": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDW8OVrrcJ/rZxZ\n/kHlgz5THtgGS2VTbCpMzhksfrD0eFnPAzxTSW/5oDk3iT9AfKnRDWnYYogIvb6e\nEoKCqHXLbDVPIdZlFi6wRmr82u8HJAZaqGmPklwag2ajNFBpct4LXpzY70gvWt1e\n6s+kTDqEv+jw60Cl6NizUtkPmBJSJYgVUsDH2zt4lQl4A0yMr82SBpRJjrlX6jrE\nt8PjrMHKESD02SUkah096D33UI8jhD+MYhvatkucDL2dffoD8ZHUj0wPYtj4jb0m\nNd50X5YKjKZtwezbWzZ78auknHJXkaLf9lYYJW78UeDotoJ5md8wbiTVyxCVHt6V\nUtnBfWHJAgMBAAECggEAZ7XYnPo8bOrSFEIwfZO0ENtDFNZwT65TQrf3QZbnvy4K\n923yP6Whl+sNcJSSpoUAU1SLi9MPHFihjxgTTQQHwl214zbKggAQCxIPMW5aAzII\nttmoBZRzSH+6mGj3m8nHBeli+PGL/P107wWRpw749XC77vM0QFl3ph8FiRaxUFzV\nM0CMcRRoGmAB+5lsOQlM38jJIs01HWLmfoKfUd9R+ciW0uda2nsTsopaRu0rlOP7\nCOJ28c/NrFbVL+Dgs6cmCQUe/MOGF4x9KNgRLam4LiUag8x0CBmvAkcwu/vtvSD7\nJY5UaTb0slwCyAJaVzVKG4dPPVte27AZGvZEUmycmQKBgQDxhDnZPp85IqJbnoj4\npkpc2m+cSQq8Ct6OXXiqQYZTAnMEY1SOZdhXDySjyr2hPQ0HItktdj9ulNGYickV\nBqBgZURq+st7cAPl0yFsAf1TGTDzmFT7EUeR7hI6VraCyz2p17On27EGtuWTdCOD\njcIm6eBjE+ArIdohSsOu51RTywKBgQDj1K5/elTisRJMOCtMtRTfkeYzimXG+XdY\nppPhAjEF5mioyfFpiizR+RbyvwMdSqUChU6UTVIpd02Gl1dN55LRnQ5KnbHY6xLg\n0WkL1Cv5NXsKHQxAbQL9O+k66IkY6IPljMH+JMnI12XRGzi+LQw/86Sc2irJBqp+\nvF9osnv2OwKBgQC1D5f+0f+0ac6mORgesSwWqHv8ApZVmyB2QoTvvufg23k21PDT\nQG8L9YJWeOvpMUfPDcUbXAb58/+eB84EQU+CdOjx+ssJ41RIvBvWSTeNUNluBcnP\n34h0UrK/obp6G7xC1D8PnJf+nKdIAE2PlnrziWp7XK82Js7NHqvNOAf0OQKBgDwy\nYbjE9dC/wHnrDWXDIrS/s/dCRgoAuAvwV3pIPfO1IUoXsXWVUKpaCjoxRf1jT54O\n4uhEVcUnBJDfQ+4NlblUqgYFDIyn7+D+86ZwdP3vp4bQjgAnzXZjcghikHbIWLE6\nM7eWuMocP4a0jpWRCX+MPJ5E9rEO1dWOqBbdsespAoGAGdsLb/RaHHk2KVLQvd3B\nECoKfVdoyiyiesMXa8UBZm+EuCnvKt0TkefLq2a7mj1S7tVzX4Qax19kpB4540FL\n9HnGt3Wj19PfHr6WSW7cVhXZ0QoCP4+1+VpuJJitQcfZhMTOn2sAx4lRR3po/zac\nbR6f0IOR8YEtSlJ1T/CLTm0=\n-----END PRIVATE KEY----",
+  "Secret": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDW8OVrrcJ/rZxZ\n/kHlgz5THtgGS2VTbCpMzhksfrD0eFnPAzxTSW/5oDk3iT9AfKnRDWnYYogIvb6e\nEoKCqHXLbDVPIdZlFi6wRmr82u8HJAZaqGmPklwag2ajNFBpct4LXpzY70gvWt1e\n6s+kTDqEv+jw60Cl6NizUtkPmBJSJYgVUsDH2zt4lQl4A0yMr82SBpRJjrlX6jrE\nt8PjrMHKESD02SUkah096D33UI8jhD+MYhvatkucDL2dffoD8ZHUj0wPYtj4jb0m\nNd50X5YKjKZtwezbWzZ78auknHJXkaLf9lYYJW78UeDotoJ5md8wbiTVyxCVHt6V\nUtnBfWHJAgMBAAECggEAZ7XYnPo8bOrSFEIwfZO0ENtDFNZwT65TQrf3QZbnvy4K\n923yP6Whl+sNcJSSpoUAU1SLi9MPHFihjxgTTQQHwl214zbKggAQCxIPMW5aAzII\nttmoBZRzSH+6mGj3m8nHBeli+PGL/P107wWRpw749XC77vM0QFl3ph8FiRaxUFzV\nM0CMcRRoGmAB+5lsOQlM38jJIs01HWLmfoKfUd9R+ciW0uda2nsTsopaRu0rlOP7\nCOJ28c/NrFbVL+Dgs6cmCQUe/MOGF4x9KNgRLam4LiUag8x0CBmvAkcwu/vtvSD7\nJY5UaTb0slwCyAJaVzVKG4dPPVte27AZGvZEUmycmQKBgQDxhDnZPp85IqJbnoj4\npkpc2m+cSQq8Ct6OXXiqQYZTAnMEY1SOZdhXDySjyr2hPQ0HItktdj9ulNGYickV\nBqBgZURq+st7cAPl0yFsAf1TGTDzmFT7EUeR7hI6VraCyz2p17On27EGtuWTdCOD\njcIm6eBjE+ArIdohSsOu51RTywKBgQDj1K5/elTisRJMOCtMtRTfkeYzimXG+XdY\nppPhAjEF5mioyfFpiizR+RbyvwMdSqUChU6UTVIpd02Gl1dN55LRnQ5KnbHY6xLg\n0WkL1Cv5NXsKHQxAbQL9O+k66IkY6IPljMH+JMnI12XRGzi+LQw/86Sc2irJBqp+\nvF9osnv2OwKBgQC1D5f+0f+0ac6mORgesSwWqHv8ApZVmyB2QoTvvufg23k21PDT\nQG8L9YJWeOvpMUfPDcUbXAb58/+eB84EQU+CdOjx+ssJ41RIvBvWSTeNUNluBcnP\n34h0UrK/obp6G7xC1D8PnJf+nKdIAE2PlnrziWp7XK82Js7NHqvNOAf0OQKBgDwy\nYbjE9dC/wHnrDWXDIrS/s/dCRgoAuAvwV3pIPfO1IUoXsXWVUKpaCjoxRf1jT54O\n4uhEVcUnBJDfQ+4NlblUqgYFDIyn7+D+86ZwdP3vp4bQjgAnzXZjcghikHbIWLE6\nM7eWuMocP4a0jpWRCX+MPJ5E9rEO1dWOqBbdsespAoGAGdsLb/RaHHk2KVLQvd3B\nECoKfVdoyiyiesMXa8UBZm+EuCnvKt0TkefLq2a7mj1S7tVzX4Qax19kpB4540FL\n9HnGt3Wj19PfHr6WSW7cVhXZ0QoCP4+1+VpuJJitQcfZhMTOn2sAx4lRR3po/zac\nbR6f0IOR8YEtSlJ1T/CLTm0=\n-----END PRIVATE KEY----",
+  "File": "scanners/github-cloned-repo-checks/src/fake-secret",
+  "SymlinkFile": "",
+  "Commit": "29c1850108f543f5eaab26ed052508fa0b45bb74",
+  "Entropy": 6.0282593,
+  "Author": "=",
+  "Email": "lila.kelland@gmail.com",
+  "Date": "2023-11-10T14:54:28Z",
+  "Message": "Merge remote-tracking branch 'origin/feat-gitleaks' into feat-gitleaks \"having fast-forward errors, merging local branch with origin/feat-gitleaks\"\n\ncommit a41f9a7a75c6b5006ae325ceebe7a6380d529e9c\nAuthor: = \u003clila.kelland@gmail.com\u003e\nDate:   Fri Nov 10 14:51:50 2023 +0000\n\nadding fake secret to see how it will handle more than one commited secret",
+  "Tags": [],
+  "RuleID": "private-key",
+  "Fingerprint": "29c1850108f543f5eaab26ed052508fa0b45bb74:scanners/github-cloned-repo-checks/src/fake-secret:private-key:1"
+ },
+ {
+  "Description": "GitHub Personal Access Token",
+  "StartLine": 10,
+  "EndLine": 10,
+  "StartColumn": 39,
+  "EndColumn": 78,
+  "Match": "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",
+  "Secret": "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",
+  "File": "scanners/github-octokit-checks/app.js",
+  "SymlinkFile": "",
+  "Commit": "de35a4b238a136ac6f98955d6087e89dfe5d2c25",
+  "Entropy": 4.734184,
+  "Author": "LilaKelland",
+  "Email": "lila.kelland@gmail.com",
+  "Date": "2023-10-17T19:59:22Z",
+  "Message": "changed node to 18 (in json not docker - will need to change tomorrow and move to alpine), moving to strategy pattern for octokit - still need to add a few more and extract the call to octokit function",
+  "Tags": [],
+  "RuleID": "github-pat",
+  "Fingerprint": "de35a4b238a136ac6f98955d6087e89dfe5d2c25:scanners/github-octokit-checks/app.js:github-pat:10"
+ }
+]

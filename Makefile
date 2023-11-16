@@ -53,7 +53,7 @@ kind-push-graph-updater:
 kind-push-webhook-server:
 	kind load docker-image localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
 
-kind-push-all: kind-push-webhook-server kind-push-graphql-api kind-push-graph-updater 
+kind-push-all: kind-push-webhook-server kind-push-graphql-api kind-push-graph-updater kind-push-cloned-repo-scanner
 	
 
 #       _            _             
