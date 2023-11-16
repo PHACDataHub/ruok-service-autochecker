@@ -21,6 +21,7 @@
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
 import { spawn } from 'child_process';
 import { readFile, mkdtemp, rm } from 'fs/promises';
+import { once } from 'events';
 import os from 'os';
 import path from 'path';
 
@@ -59,6 +60,10 @@ async function readGitleaksOutputFile(reportFilePath) {
         Author: detail.Author,
         Email: detail.Email,
         Date: detail.Date,
+        StartLine: 28,
+        EndLine: 28,
+        StartColumn: 14,
+        EndColumn: 53,
       }));
       return filteredDetails;
     } else {
@@ -94,14 +99,13 @@ async function runGitleaks(clonedRepoPath) {
       errorOutput += data.toString();
     });
 
-    const code = await new Promise((resolve) => {
-      gitleaksProcess.on('close', (code) => {
-        resolve(code);
-      });
-    });
+    // const code = await new Promise((resolve) => {
+    //   gitleaksProcess.on('close', (code) => {
+    //     resolve(code);
+    //   });
+    // });
+    const [code] = await once(hadolintProcess, 'close');
 
-    // console.log('code', code);
-    // console.log('errorOutput', errorOutput);
 
     // Get details from the report output as json file
     const gitleaksJson = await readGitleaksOutputFile(reportFilePath);
