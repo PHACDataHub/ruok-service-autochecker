@@ -77,17 +77,20 @@ process.on('SIGINT', () => process.exit(0))
                             metadata: {}
                         },
                         gitleaks: {
-                            checkPasses: ${results.gitleaks.checkPasses}
+                            checkPasses: ${JSON.stringify(results.gitleaks.checkPasses, null, 4).replace(/"([^"]+)":/g, '$1:')}
                             metadata: ${JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
                         }
                     }
                 )
             }
             `;
+            console.log('*************************\n',mutation,'\n*************************\n')
             // New GraphQL client - TODO: remove hard-coded URL
             const graphqlClient = new GraphQLClient(GRAPHQL_URL);
             // Write mutation to GraphQL API
             const mutationResponse = await graphqlClient.request(mutation);
+            console.log('*************************\n',mutationResponse,'\n*************************\n')
+
             console.log('saved to database!')
             
             // Remove temp repository

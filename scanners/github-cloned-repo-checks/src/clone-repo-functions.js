@@ -3,30 +3,33 @@ import { simpleGit } from "simple-git"
 import os  from 'os'
 import path from 'path'
 
-export async function formCloneUrl(sourceCodeRepository) {
-  // ```Forms cloneurl from sourceCodeRepository```
-  const parts = sourceCodeRepository.split('/');
-  const repoName = parts[parts.length - 1];
-  const cloneUrl = `git@github.com:${parts[parts.length - 2]}/${repoName}.git`;
-  return { cloneUrl };
-}
-
 
 export async function cloneRepository(clone_url, repoName) {
-  // ```Clones Repository into tmp directory - returns path```
+  // Clones Repository into tmp directory - returns path
   try {
     const tempDir = os.tmpdir();
-    const repoPath = path.join(tempDir, `${repoName}-${Date.now()}`)
+    const repoPath = path.join(tempDir, `${repoName}-${Date.now()}`);
 
-    await simpleGit().clone(clone_url, repoPath)
-    console.log('Repository cloned successfully.')
-    return repoPath
+    // Check if the repository directory already exists
+    const repoExists = await fse.pathExists(repoPath);
 
+    // If the repository exists, remove it
+    if (repoExists) {
+      console.log('Repository already exists. Removing...');
+      await removeClonedRepository(repoPath);
+      console.log('Repository removed successfully.');
+    }
+
+    // Clone the repository
+    await simpleGit().clone(clone_url, repoPath);
+    console.log('Repository cloned successfully.');
+    
+    return repoPath;
   } catch (error) {
     console.error('Error cloning repository:', error);
+    throw error;
   }
 }
-
 
 export async function removeClonedRepository(clonedRepoPath) {
   // ```Given tmp dir path of cloned repository, removes it```
