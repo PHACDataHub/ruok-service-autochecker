@@ -68,7 +68,46 @@ Include a file called `Security.md` at the root of your repository explaining ho
 
 ### Gitleaks Report
 
-> TODO
+[Gitleaks](https://github.com/gitleaks/gitleaks) detects secrets that have been commited at any point in the repository's history.  
+
+**Remediation**
+
+Remove the leak from the [commit history](https://blog.gitguardian.com/rewriting-git-history-cheatsheet/).
+
+If the leak is not a secret, but a false positive, include a [.gitleaksignore](https://github.com/gitleaks/gitleaks/tree/master#gitleaksignore) file at the root of your repository containing that item.
+
+For preventative protection, consider using 'gitleaks protect' [pre-commit]((https://github.com/gitleaks/gitleaks/tree/master#pre-commit)) or using the [gitleaks GitHub Action](https://github.com/gitleaks/gitleaks-action).
+
+**Data Example**
+```jsonc
+{
+    // ...
+  gitleaks: {
+    checkPasses: false,
+    metadata: {
+      leaksFound: true,
+      numberOfLeaks: 2,
+      commitsScanned: 466,
+      details: [
+        {
+            Description: 'Private Key',
+            File: 'scanners/github-cloned-repo-checks/src/fake-secret',
+            StartLine: 28,
+            EndLine: 28,
+            StartColumn: 14,
+            EndColumn: 53
+            Commit: '29c1850108f543f5eaab26ed052508fa0b45bb74',
+            Author: '=',
+            Email: 'my.email@gmail.com',
+        },
+     // ...
+      ]
+    }
+  }
+      // ...
+}
+
+```
 
 ### File Size Check
 

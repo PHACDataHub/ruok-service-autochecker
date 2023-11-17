@@ -1,23 +1,6 @@
 // TODO test using https://github.com/gitleaks/fake-leaks
 // Reference https://github.com/gitleaks/gitleaks
 
-// TODO - link to add config doc
-// TODO - gitleaks protect . in ci?
-// gitleaks protect --staged
-// TODO - detail how to handle false positives (.gitleaksignore)
-// TODO - document how to remove leaks from history, and how to check prior
-// TODO - check if repo exists/ exits for other reasons (right now defaults to passes if no leaks found (for anyreasone))
-// TODO - git guardian
-// TODO - entropy false positives?
-
-// https://blog.gitguardian.com/rewriting-git-history-cheatsheet/
-//  install git-filter-repo
-// ORIGINAL==>REPLACEMENT in replacements.txt (in route)
-// git filter-repo --replace-text ../replacements.txt
-// git filter-repo --replace-text ../replacements.txt --force
-// git push --all --tags --force
-
-
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
 import { spawn } from 'child_process';
 import { readFile, mkdtemp, rm } from 'fs/promises';
@@ -56,14 +39,13 @@ async function readGitleaksOutputFile(reportFilePath) {
       const filteredDetails = jsonData.map(detail => ({
         Description: detail.Description,
         File: detail.File,
-        Commit: detail.Commit,
-        Author: detail.Author,
-        Email: detail.Email,
-        Date: detail.Date,
         StartLine: 28,
         EndLine: 28,
         StartColumn: 14,
         EndColumn: 53,
+        Commit: detail.Commit,
+        Author: detail.Author,
+        Email: detail.Email,
       }));
       return filteredDetails;
     } else {
@@ -99,13 +81,7 @@ async function runGitleaks(clonedRepoPath) {
       errorOutput += data.toString();
     });
 
-    // const code = await new Promise((resolve) => {
-    //   gitleaksProcess.on('close', (code) => {
-    //     resolve(code);
-    //   });
-    // });
-    const [code] = await once(hadolintProcess, 'close');
-
+    const [code] = await once(gitleaksProcess, 'close');
 
     // Get details from the report output as json file
     const gitleaksJson = await readGitleaksOutputFile(reportFilePath);
