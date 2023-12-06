@@ -14,6 +14,11 @@ RUN curl -LO https://github.com/zricethezav/gitleaks/releases/download/v8.18.0/g
     chmod +x /usr/local/bin/gitleaks && \
     rm gitleaks_8.18.0_linux_x64.tar.gz
 
+# Install hadolint
+RUN wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 && \
+    mv hadolint-Linux-x86_64 /usr/local/bin/hadolint && \
+    chmod +x /usr/local/bin/hadolint
+
 COPY package*.json ./
 
 RUN npm ci

@@ -54,9 +54,11 @@ process.on('SIGINT', () => process.exit(0))
             const check = await initializeChecker(checkName, repoName, repoPath)
             const results = await check.doRepoCheck()
 
-            console.log('Scan Results:',results)
+            // console.log('Scan Results:',results)
             console.log('gitleaks metadata',results.gitleaks.metadata)
-            console.log('gitleaks stingified metadata',JSON.stringify(results.gitleaks.metadata))
+            console.log('gitleaks stingified metadata',JSON.stringify(results.gitleaks.metadata).replace(/"([^"]+)":/g, '$1:'))
+            console.log('hadolint metadata',results.hadolint.metadata)
+            console.log('hadolint stingified metadata',JSON.stringify(results.hadolint.metadata).replace(/"([^"]+)":/g, '$1:').replace(/\/+/g, '_'))
 
             // Mutation to add a graph for the new endpoints
             // TODO: refactor this into a testable query builder function
@@ -79,7 +81,13 @@ process.on('SIGINT', () => process.exit(0))
                         gitleaks: {
                             checkPasses: ${JSON.stringify(results.gitleaks.checkPasses, null, 4).replace(/"([^"]+)":/g, '$1:')}
                             metadata: ${JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+                        },
+                        hadolint: {
+                            checkPasses: ${results.hadolint.checkPasses},
+                            metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:').replace(/\/+/g, '_')}
                         }
+
+  
                     }
                 )
             }
@@ -102,3 +110,13 @@ process.on('SIGINT', () => process.exit(0))
 await nc.closed();
 
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}"
+
+// hadolint: {
+//     checkPasses: ${results.hadolint.checkPasses},
+//     metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:').replace(/\n/g, '')}
+// }
+
+                        // hadolint: {
+                        //     checkPasses: ${results.hadolint.checkPasses},
+                        //     metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n')   
+                        // }

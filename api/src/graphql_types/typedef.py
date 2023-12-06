@@ -42,6 +42,7 @@ class GithubEndpoint(Endpoint):
     has_security_md: CheckPasses
     has_dependabot_yaml: CheckPasses
     gitleaks: CheckPasses
+    hadolint: CheckPassess
 
 @strawberry.type
 class Accessibility:
