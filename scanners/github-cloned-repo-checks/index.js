@@ -46,7 +46,7 @@ process.on('SIGINT', () => process.exit(0))
 
             // Clone repository
             const repoPath = await cloneRepository(gitHubEventPayload.endpoint, repoName)
-            console.log ('repoPath', repoPath)
+            console.log ('repoPath', repoPath, '\n')
 
             // Instantiate and do the check(s)
             const checkName = 'allChecks'
@@ -95,8 +95,8 @@ process.on('SIGINT', () => process.exit(0))
 
                 console.log('Scan results saved to database.')
 
-            } catch {
-                console.log("Error occured - unable to save to database. \n", error.message)
+            } catch (error) {
+                console.error("An error occurred - unable to save to the database.", error);
             }
             
             // Remove temp repository

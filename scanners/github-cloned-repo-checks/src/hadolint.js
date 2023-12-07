@@ -48,7 +48,7 @@ async function hadolintRepo(clonedRepoPath) {
   // For each Dockerfile in Repo, runs hadolint and consolidates results 
     const dockerfilePaths = glob.sync(path.join(clonedRepoPath, '**', '*Dockerfile*'));
     // let results = {};
-    let results = [];
+    let results = []; 
   
     for (const dockerfilePath of dockerfilePaths) {
       const relativePath = path.relative(clonedRepoPath, dockerfilePath);
@@ -63,6 +63,7 @@ async function hadolintRepo(clonedRepoPath) {
     return results;
 }
 
+
 function areAllArraysEmpty(obj) {
   for (const key in obj) {
     if (obj[key] instanceof Array && obj[key].length > 0) {
@@ -71,20 +72,6 @@ function areAllArraysEmpty(obj) {
   }
   return true; e
 }
-
-// // const clonedRepoPath = '/tmp/ruok-service-autochecker-1701808283929'
-// // const clonedRepoPath ='../../test-repo/ruok-service-autochecker'
-// const clonedRepoPath = '../../test-repo/django-htmx-autocomplete'
-// const results = await hadolintRepo(clonedRepoPath)
-// console.log(results)
-
-// const ifempty = areAllArraysEmpty(results)
-// console.log(ifempty)
-
-// const isEmpty = isObjectEmpty(results);
-
-// console.log('Is the object empty?', isEmpty);
-// // (isObjectEmpty(hadolintResult)
 
 
 export class Hadolint extends CheckOnClonedRepoInterface {
@@ -110,11 +97,10 @@ export class Hadolint extends CheckOnClonedRepoInterface {
 
         } catch (error) {
             console.error(error.message);
-            // Handle the error as needed
             return {
                 checkPasses: null,
                 metadata: {
-                errorMessage: 'An unexpected error occurred.',
+                errorMessage: 'An unexpected error occurred with hadolint check.',
                 },
             };
         }
