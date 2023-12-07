@@ -24,7 +24,7 @@ async function runHadolintOnDockerfile(dockerfilePath) {
     
         hadolintProcess.stderr.on('data', (data) => {
           stderrData += data.toString();
-          console.log('stderrData', stderrData)
+          // console.log('stderrData', stderrData)
         });
 
         const [code] = await once(hadolintProcess, 'close');
@@ -64,13 +64,14 @@ async function hadolintRepo(clonedRepoPath) {
 }
 
 
-function areAllArraysEmpty(obj) {
-  for (const key in obj) {
-    if (obj[key] instanceof Array && obj[key].length > 0) {
-      return false; // If any array is not empty, return false
+function anyArrayNonEmpty(obj) {
+  // If no rules violated for hadolint scan, ruleViolated will be empty
+  for (const entry of obj) {
+    if (entry.RulesViolated && entry.RulesViolated.length > 0) {
+      return true; // If any RulesViolated array is non-empty, return true
     }
   }
-  return true; e
+  return false; // Return false only if all RulesViolated arrays are empty
 }
 
 
@@ -84,7 +85,7 @@ export class Hadolint extends CheckOnClonedRepoInterface {
     async doRepoCheck() {
         try {
             const hadolintResult = await hadolintRepo(this.clonedRepoPath);
-            let areResults = areAllArraysEmpty(hadolintResult) // Will result in true if no dockerfiles and if no warnings or errors from linting. 
+            let areResults = !anyArrayNonEmpty(hadolintResult) // areResults will result in true if no dockerfiles and if no warnings or errors from linting.
 
             if (Object.keys(hadolintResult).length === 0){ // In the case of no Dockerfiles in repo
               areResults = null
