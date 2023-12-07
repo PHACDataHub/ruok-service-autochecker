@@ -114,23 +114,18 @@ async function runGitleaks(clonedRepoPath) {
         errorMessage: 'An error was encountered running the Gitleaks check.',
       };
     }
-    // console.log('gitleaks results:', results)
 
     return results
+
   } catch (error) {
     console.error(error.message);
-    // Handle the error as needed
     return {
-      exitCode: -1, // Or another appropriate error code
+      exitCode: -1, 
       leaksFound: null,
       errorMessage: 'An unexpected error occurred.',
     };
   }
 }
-
-// const clonedRepoPath = '/tmp/ruok-service-autochecker-1700060804550'
-// const results = await runGitleaks(clonedRepoPath) 
-// console.log(JSON.stringify(results, null, 2))
 
 
 export class Gitleaks extends CheckOnClonedRepoInterface {
@@ -152,11 +147,6 @@ export class Gitleaks extends CheckOnClonedRepoInterface {
         } else {
           checkPasses = true
         }
-
-        // console.log({
-        //   checkPasses: checkPasses,
-        //   metadata: gitleaksResult
-        // })
 
         return {
           checkPasses: checkPasses,
