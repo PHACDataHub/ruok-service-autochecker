@@ -114,7 +114,7 @@ async function runGitleaks(clonedRepoPath) {
         errorMessage: 'An error was encountered running the Gitleaks check.',
       };
     }
-    console.log('gitleaks results:', results)
+    // console.log('gitleaks results:', results)
 
     return results
   } catch (error) {

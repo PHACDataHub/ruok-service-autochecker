@@ -50,16 +50,11 @@ process.on('SIGINT', () => process.exit(0))
 
             // Instantiate and do the check(s)
             const checkName = 'allChecks'
-            // const checkName = 'gitleaks'
             const check = await initializeChecker(checkName, repoName, repoPath)
             const results = await check.doRepoCheck()
 
             // console.log('Scan Results:',results)
-            // console.log('gitleaks metadata',results.gitleaks.metadata)
-            // console.log('gitleaks stingified metadata',JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:'))
-            // console.log('hadolint metadata',results.hadolint.metadata)
-            // console.log('hadolint stingified metadata',JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:'))
-
+ 
             // Mutation to add a graph for the new endpoints
             // TODO: refactor this into a testable query builder function
             const mutation = gql`
@@ -86,43 +81,29 @@ process.on('SIGINT', () => process.exit(0))
                             checkPasses: ${results.hadolint.checkPasses}
                             metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
                         }
-
-
-  
                     }
                 )
             }
             `;
             console.log('*************************\n',mutation,'\n*************************\n')
             // New GraphQL client - TODO: remove hard-coded URL
-            const graphqlClient = new GraphQLClient(GRAPHQL_URL);
-            // Write mutation to GraphQL API
-            const mutationResponse = await graphqlClient.request(mutation);
-            console.log('*************************\n',mutationResponse,'\n*************************\n')
+            try {
+                const graphqlClient = new GraphQLClient(GRAPHQL_URL);
 
-            console.log('saved to database!')
+                // Write mutation to GraphQL API
+                const mutationResponse = await graphqlClient.request(mutation);
+
+                console.log('Scan results saved to database.')
+
+            } catch {
+                console.log("Error occured - unable to save to database. \n", error.message)
+            }
             
             // Remove temp repository
             await removeClonedRepository(repoPath)
-    
         }
     })();
 
 await nc.closed();
 
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}"
-
-// hadolint: {
-//     checkPasses: ${results.hadolint.checkPasses},
-//     metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
-// }
-
-// hadolint: {
-//     checkPasses: ${results.hadolint.checkPasses},
-//     metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:').replace(/\n/g, '')}
-// }
-
-                        // hadolint: {
-                        //     checkPasses: ${results.hadolint.checkPasses},
-                        //     metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n')   
-                        // }
