@@ -55,10 +55,10 @@ process.on('SIGINT', () => process.exit(0))
             const results = await check.doRepoCheck()
 
             // console.log('Scan Results:',results)
-            console.log('gitleaks metadata',results.gitleaks.metadata)
-            console.log('gitleaks stingified metadata',JSON.stringify(results.gitleaks.metadata).replace(/"([^"]+)":/g, '$1:'))
-            console.log('hadolint metadata',results.hadolint.metadata)
-            console.log('hadolint stingified metadata',JSON.stringify(results.hadolint.metadata).replace(/"([^"]+)":/g, '$1:').replace(/\/+/g, '_'))
+            // console.log('gitleaks metadata',results.gitleaks.metadata)
+            // console.log('gitleaks stingified metadata',JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:'))
+            // console.log('hadolint metadata',results.hadolint.metadata)
+            // console.log('hadolint stingified metadata',JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:'))
 
             // Mutation to add a graph for the new endpoints
             // TODO: refactor this into a testable query builder function
@@ -83,9 +83,10 @@ process.on('SIGINT', () => process.exit(0))
                             metadata: ${JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
                         },
                         hadolint: {
-                            checkPasses: ${results.hadolint.checkPasses},
-                            metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:').replace(/\/+/g, '_')}
+                            checkPasses: ${results.hadolint.checkPasses}
+                            metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
                         }
+
 
   
                     }
@@ -110,6 +111,11 @@ process.on('SIGINT', () => process.exit(0))
 await nc.closed();
 
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}"
+
+// hadolint: {
+//     checkPasses: ${results.hadolint.checkPasses},
+//     metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+// }
 
 // hadolint: {
 //     checkPasses: ${results.hadolint.checkPasses},

@@ -10,7 +10,8 @@ import { glob } from 'glob'
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
 
 
-async function runHadolint(dockerfilePath) {
+async function runHadolintOnDockerfile(dockerfilePath) {
+  // lints a particular Dockerfile
     try {
         const hadolintProcess = spawn('hadolint', [dockerfilePath, '--no-fail', '--format', 'json'])
 
@@ -44,13 +45,19 @@ async function runHadolint(dockerfilePath) {
 }
 
 async function hadolintRepo(clonedRepoPath) {
+  // For each Dockerfile in Repo, runs hadolint and consolidates results 
     const dockerfilePaths = glob.sync(path.join(clonedRepoPath, '**', '*Dockerfile*'));
-    let results = {};
+    // let results = {};
+    let results = [];
   
     for (const dockerfilePath of dockerfilePaths) {
       const relativePath = path.relative(clonedRepoPath, dockerfilePath);
-      const hadolintResult = await runHadolint(dockerfilePath);
-      results[relativePath] = hadolintResult;
+      const hadolintResult = await runHadolintOnDockerfile(dockerfilePath);
+      // results[relativePath] = hadolintResult;
+      results.push({
+        Dockerfile: relativePath,
+        RulesViolated: hadolintResult,
+    });
     }
 
     return results;
