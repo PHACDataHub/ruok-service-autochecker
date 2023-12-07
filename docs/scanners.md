@@ -115,7 +115,48 @@ For preventative protection, consider using 'gitleaks protect' [pre-commit]((htt
 
 ### Hadolint `Dockerfile`
 
-[`hadolint`](https://github.com/hadolint/hadolint) performs a series of lint checks on each `Dockerfile` found in the repository.
+[`Hadolint`](https://github.com/hadolint/hadolint) is a linter for Dockerfiles. This scanner analyzes the Dockerfiles in the source code repository, and flags any best practices rules that have been broken. 
+
+**Remediation**
+
+Follow the guidelines outlined in results message to update the Dockerfiles.  If your team has decided to not follow a particular rule in certain cases, you can clear the warning in this scanner by including an [inline ignore tag](https://github.com/hadolint/hadolint#inline-ignores) at the Dockerfile location where you would like to by-passed the rule check.  
+
+
+**Data Example**
+```jsonc
+{
+    // ...
+   hadolint: {
+      checkPasses: false
+      metadata: [
+        {
+          Dockerfile: "ui/Dockerfile",
+          RulesViolated: [
+            {
+                code: "DL1000",
+                level: "error",
+                line: 41,
+                message: "unexpected '#'\nexpecting a new line followed by the next instruction"
+            }
+          ]
+        },
+        {
+          Dockerfile: "scanners/web-endpoint-checks/Dockerfile",
+          RulesViolated: [
+            {
+                code: "DL3008",
+                level: "warning",
+                line: 11,
+                message: "Pin versions in apt get install. Instead of `apt-get install <package>` use `apt-get install <package>=<version>`"
+            },
+        // ...
+          ]
+        }
+      ]
+      // ...
+    }
+
+```
 
 > TODO
 
