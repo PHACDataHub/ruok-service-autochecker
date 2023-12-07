@@ -41,7 +41,7 @@ build-graph-updater:
 	$(CONTAINER_RUNTIME) build ./graph-updater/ -t localhost/$(APP_NAME)-graph-updater:$(APP_VERSION)
 
 kind-push-all: 
-	kind load docker-image localhost/$(APP_NAME)-api:$(APP_VERSION)
+	kind load docker-image localhost/$(APP_NAME)-graphql-api:$(APP_VERSION)
 	kind load docker-image localhost/$(APP_NAME)-web-endpoint-scanner:$(APP_VERSION)
 	kind load docker-image localhost/$(APP_NAME)-cloned-repo-scanner:$(APP_VERSION)
 	kind load docker-image localhost/$(APP_NAME)-octokit-scanner:$(APP_VERSION)
