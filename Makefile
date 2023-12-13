@@ -24,13 +24,13 @@ build-graphql-api-image:
 
 # Scanners
 build-octokit-scanner:
-	$(CONTAINER_RUNTIME) build ./scanners/github-octokit-checks/ -t localhost/$(APP_NAME)-octokit-scanner:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./scanners/github-octokit/ -t localhost/$(APP_NAME)-octokit-scanner:$(APP_VERSION)
 
 build-cloned-repo-scanner:
-	$(CONTAINER_RUNTIME) build ./scanners/github-cloned-repo-checks/ -t localhost/$(APP_NAME)-cloned-repo-scanner:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./scanners/github-cloned-repo/ -t localhost/$(APP_NAME)-cloned-repo-scanner:$(APP_VERSION)
 
 build-web-endpoint-scanner:
-	$(CONTAINER_RUNTIME) build ./scanners/web-endpoint-checks/ -t localhost/$(APP_NAME)-web-endpoint-scanner:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./scanners/web-endpoint/ -t localhost/$(APP_NAME)-web-endpoint-scanner:$(APP_VERSION)
 
 # Webhook Server
 build-webhook-server-image:
