@@ -76,10 +76,10 @@ async function parseScanResults(scanResultsFilePath){
                     result.Vulnerabilities.forEach(vulnerability => {
                         results.push({
                             library: vulnerability.PkgName,
-                            vulnerabilityID: vulnerability.VulnerabilityID,
+                            vulnerability_ID: vulnerability.VulnerabilityID,
                             severity: vulnerability.Severity,
-                            installedVersion: vulnerability.InstalledVersion,
-                            fixedVersion: vulnerability.FixedVersion || 'N/A',
+                            installed_version: vulnerability.InstalledVersion,
+                            fixed_version: vulnerability.FixedVersion || 'N/A',
                             title: vulnerability.Title,
                             url: vulnerability.PrimaryURL
                         });
