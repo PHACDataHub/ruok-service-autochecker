@@ -55,8 +55,8 @@ async function hadolintRepo(clonedRepoPath) {
       const hadolintResult = await runHadolintOnDockerfile(dockerfilePath);
       // results[relativePath] = hadolintResult;
       results.push({
-        Dockerfile: relativePath,
-        RulesViolated: hadolintResult,
+        dockerfile: relativePath,
+        rules_violated: hadolintResult,
       });
     }
 
@@ -67,11 +67,11 @@ async function hadolintRepo(clonedRepoPath) {
 function anyArrayNonEmpty(obj) {
   // If no rules violated for hadolint scan, ruleViolated will be empty
   for (const entry of obj) {
-    if (entry.RulesViolated && entry.RulesViolated.length > 0) {
-      return true; // If any RulesViolated array is non-empty, return true
+    if (entry.rules_violated && entry.rules_violated.length > 0) {
+      return true; // If any rules_violated array is non-empty, return true
     }
   }
-  return false; // Return false only if all RulesViolated arrays are empty
+  return false; // Return false only if all rules_violated arrays are empty
 }
 
 
