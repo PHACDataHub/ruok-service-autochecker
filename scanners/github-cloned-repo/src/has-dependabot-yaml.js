@@ -1,10 +1,9 @@
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
-// import { searchForFile } from './searching-functions.js'
 import { glob } from 'glob'
 
 export async function hasDependabotYaml(clonedRepoPath) {
-    // searchForFile returns array of found file paths
-    const dependabotFile = glob.sync(path.join(clonedRepoPath, '**', 'dependabot.y*')); // accounting for both .yaml and .yml
+    // search dependabot.yaml or dependabot.yml anywhere in path
+    const dependabotFile = glob.sync(path.join(clonedRepoPath, '**', 'dependabot.y*')); 
     
     return dependabotFile.length > 0;
 } 
