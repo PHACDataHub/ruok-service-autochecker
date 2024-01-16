@@ -1,6 +1,8 @@
 // checkname is passed in to instanitate a particular strategy - all checks will perform all checks
 // repoPath is the tmp directory of the cloned repository
 
+// Note - this separate intializer is not needed if we're always using all-checks.js
+
 import { HasApiDirectory } from './has-api-directory.js'
 import { HasDependabotYaml } from './has-dependabot-yaml.js'
 import { HasTestsDirectory } from './has-tests-directory.js'

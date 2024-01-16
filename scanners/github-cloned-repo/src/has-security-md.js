@@ -13,7 +13,7 @@ export class HasSecurityMd extends CheckOnClonedRepoInterface {
         return {
             checkPasses: (securityMdFound?.length ?? 0) > 0,
             metadata: null,
-            lastUpdated: Date.now()
+            // lastUpdated: Date.now()
         }
     }
 
