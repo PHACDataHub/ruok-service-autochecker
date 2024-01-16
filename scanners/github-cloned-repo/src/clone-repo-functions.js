@@ -27,7 +27,7 @@ export async function cloneRepository(clone_url, repoName) {
     return repoPath;
   } catch (error) {
     console.error('Error cloning repository:', error);
-    throw error;
+    // throw error;
   }
 }
 
