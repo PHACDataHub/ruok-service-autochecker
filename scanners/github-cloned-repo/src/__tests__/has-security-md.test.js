@@ -8,7 +8,6 @@ import { promises as fsPromises} from 'fs';
 describe('HasSecurityMd', () => {
     let testRepoPath;
 
-    // beforeAll(async () => {
     beforeEach(async () => {
         // Set up temp dir
         testRepoPath = join(tmpdir(), 'test-repo');
