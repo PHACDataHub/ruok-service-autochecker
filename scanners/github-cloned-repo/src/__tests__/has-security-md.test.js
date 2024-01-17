@@ -1,23 +1,9 @@
 
-// import * as fs from 'fs';
 import { HasSecurityMd  } from '../has-security-md.js';
-import { promisify } from 'util';
-// import { exec } from 'child_process';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { promises as fsPromises} from 'fs';
 
-
-const setupTestRepo = async (repoPath) => {
-    // Create a temp dir for the test "repo" with a simple directory structure and security.md file
-    await fsPromises.mkdir(`${repoPath}/docs`, { recursive: true });
-    // await fsPromises.writeFile(`${repoPath}/docs/security.md`, 'Test content');
-  };
-  
-  const teardownTestRepo = async (repoPath) => {
-    // Remove tmp dir
-    await fsPromises.rm(repoPath, { recursive: true });
-  };
 
 describe('HasSecurityMd', () => {
     let testRepoPath;
@@ -26,17 +12,18 @@ describe('HasSecurityMd', () => {
     beforeEach(async () => {
         // Set up temp dir
         testRepoPath = join(tmpdir(), 'test-repo');
-        await setupTestRepo(testRepoPath);
+        await fsPromises.mkdir(`${testRepoPath}/docs`, { recursive: true });
       });
     
     afterEach(async () => {
-        await teardownTestRepo(testRepoPath);
+        await fsPromises.rm(testRepoPath, { recursive: true });
       });
+
 
     it('should pass if a security.md file is found (anywhere in repo)', async () => {
         const repoName = 'test-repo';
-        await fsPromises.writeFile(`${testRepoPath}/docs/security.md`, 'Test content');
-        const checker = new HasSecurityMd(repoName, testRepoPath);
+        await fsPromises.writeFile(`${testRepoPath}/docs/security.md`, 'Test content'); // create secrurity.md file
+        const checker = new HasSecurityMd(repoName, testRepoPath); // initialize has security md checker
         const result = await checker.doRepoCheck();
 
         expect(result.checkPasses).toBeTruthy();
@@ -60,7 +47,7 @@ describe('HasSecurityMd', () => {
         expect(result.checkPasses).toBeTruthy();
     });
 
-    it('should pass if a security file is found', async () => {
+    it('should pass if a (non-extensioned) security file is found', async () => {
         const repoName = 'test-repo';
         await fsPromises.writeFile(`${testRepoPath}/security`, 'Test content');
         const checker = new HasSecurityMd(repoName, testRepoPath);
@@ -79,5 +66,4 @@ describe('HasSecurityMd', () => {
         expect(result.checkPasses).toBeFalsy();
     });
 
-//   test SECURITY, security, security.md, SECURITY.md, not at root 
 });
