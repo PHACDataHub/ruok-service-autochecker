@@ -22,8 +22,8 @@ export class HasTestsDirectory extends CheckOnClonedRepoInterface {
       const testDirectories = await findTestsPaths(this.clonedRepoPath)
       return {
         checkPasses:  (testDirectories?.length ?? 0) > 0,
-        metadata: testDirectories === undefined ? null : {testDirectoryPaths: testDirectories},
-        lastUpdated: Date.now()
+        metadata: (testDirectories === undefined || testDirectories.length === 0) ? null : { testDirectoryPaths: testDirectories },
+        // lastUpdated: Date.now()
     }
   }
 }
