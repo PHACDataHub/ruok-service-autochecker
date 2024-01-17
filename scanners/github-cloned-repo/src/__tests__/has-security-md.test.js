@@ -52,7 +52,7 @@ describe('HasSecurityMd', () => {
         const checker = new HasSecurityMd(repoName, testRepoPath);
         const result = await checker.doRepoCheck();
 
-        expect(result.checkPasses).toBeTruthy();
+        expect(result.checkPasses).toBeFalsy();
     });
     
 
