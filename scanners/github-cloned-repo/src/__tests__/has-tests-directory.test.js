@@ -1,14 +1,14 @@
 
 import { HasTestsDirectory, findTestsPaths } from '../has-tests-directory.js';
 import {  existsSync, rmSync } from 'fs';
-import * as fs from 'fs-extra';
+import * as fse from 'fs-extra';
 
 describe('HasTestsDirectory', () => {
   let testDirectory;
 
   beforeEach(() => {
-    testDirectory = './temp-cloned-repo/temp-repo';
-    fs.ensureDirSync(testDirectory);
+    testDirectory = './temp-dir/temp-repo';
+    fse.ensureDirSync(testDirectory);
   });
 
   afterEach(() => {
@@ -20,9 +20,9 @@ describe('HasTestsDirectory', () => {
   it('should pass if test directories are found', async () => {
     const repoName = 'test-repo';
     // create subdirectories in the temp directory
-    fs.ensureDirSync(`${testDirectory}/dir2/__tests__`);
-    fs.ensureDirSync(`${testDirectory}/dir1/sub1`);
-    fs.ensureDirSync(`${testDirectory}/dir2/subdir2/tests`);
+    fse.ensureDirSync(`${testDirectory}/dir2/__tests__`);
+    fse.ensureDirSync(`${testDirectory}/dir1/sub1`);
+    fse.ensureDirSync(`${testDirectory}/dir2/subdir2/tests`);
 
     const checker = new HasTestsDirectory(repoName, testDirectory);
     const result = await checker.doRepoCheck();
@@ -34,9 +34,9 @@ describe('HasTestsDirectory', () => {
   it('should fail if no test directories are found', async () => {
     const repoName = 'test-repo';
     // create subdirectories in the temp directory
-    fs.ensureDirSync(`${testDirectory}/dir2`);
-    fs.ensureDirSync(`${testDirectory}/dir1/sub1`);
-    fs.ensureDirSync(`${testDirectory}/dir2/subdir2`);
+    fse.ensureDirSync(`${testDirectory}/dir2`);
+    fse.ensureDirSync(`${testDirectory}/dir1/sub1`);
+    fse.ensureDirSync(`${testDirectory}/dir2/subdir2`);
 
     const checker = new HasTestsDirectory(repoName, testDirectory);
     const result = await checker.doRepoCheck();
