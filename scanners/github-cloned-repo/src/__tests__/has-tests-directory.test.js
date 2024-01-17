@@ -3,9 +3,6 @@ import { HasTestsDirectory, findTestsPaths } from '../has-tests-directory.js';
 import {  existsSync, rmdirSync } from 'fs';
 import * as fs from 'fs-extra';
 
-import {jest} from '@jest/globals';
-
-
 describe('HasTestsDirectory', () => {
   let testDirectory;
 
