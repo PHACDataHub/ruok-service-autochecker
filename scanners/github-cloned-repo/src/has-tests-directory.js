@@ -1,4 +1,4 @@
-// github-cloned-has-tests-directory/src/has-tests-directory.js
+// github-cloned-repo/src/has-tests-directory.js
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
 import * as glob from 'glob';
 

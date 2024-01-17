@@ -1,16 +1,17 @@
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
-import { searchForDirectory } from './searching-functions.js'
+import * as glob from 'glob';
+import path from 'path';
 
 // TODO - maybe include api dir path in metadata
 // TODO - look at searching for api libraries and patterns, determine if REST vs graphQL vs...
  
-export async function hasApiDirectory(directory) {
-    const apiDirectories = searchForDirectory (directory, "api")
-    if (apiDirectories.length > 0) {
-        return true
-    } else {
-        return false
-    }
+
+export async function hasApiDirectory(clonedRepoPath) {
+    // search api anywhere in path
+    const apiDirectories = glob.sync(path.join(clonedRepoPath, '**', 'api*'), { nocase: true });
+
+    
+    return apiDirectories.length > 0;
 } 
 
 
@@ -25,7 +26,8 @@ export class HasApiDirectory extends CheckOnClonedRepoInterface {
         return {
             checkPasses: hasApiDirectoryResult,
             metadata: null,
-            lastUpdated: Date.now()
+            // lastUpdated: Date.now()
         }
     }
 }
+
