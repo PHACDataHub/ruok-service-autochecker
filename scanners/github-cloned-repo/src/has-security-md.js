@@ -9,7 +9,7 @@ export class HasSecurityMd extends CheckOnClonedRepoInterface {
         this.repoName = repoName
     }
     async doRepoCheck() {
-        const securityMdFound = glob.sync(path.join(this.clonedRepoPath, '**', 'security*'), { nocase: true }); // will match md or txt ext, case insensitive
+        const securityMdFound = glob.sync(path.join(this.clonedRepoPath, '**', 'security*.{md,txt,rtf}'), { nocase: true }); // will match md or txt ext, case insensitive
         // const securityMdFound = await searchForFile(this.clonedRepoPath, "SECURITY") // Removed .md to search for .txt etc as well, glob is case insensitive
         return {
             checkPasses: (securityMdFound?.length ?? 0) > 0,
