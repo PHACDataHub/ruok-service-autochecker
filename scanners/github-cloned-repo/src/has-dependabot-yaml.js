@@ -1,5 +1,6 @@
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
 import { glob } from 'glob'
+import path from 'path';
 
 export async function hasDependabotYaml(clonedRepoPath) {
     // search dependabot.yaml or dependabot.yml anywhere in path

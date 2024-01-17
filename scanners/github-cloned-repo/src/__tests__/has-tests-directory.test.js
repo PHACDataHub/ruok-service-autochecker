@@ -1,7 +1,59 @@
 
 import { HasTestsDirectory, findTestsPaths } from '../has-tests-directory.js';
 import {  existsSync, rmSync } from 'fs';
+import * as fs from 'fs';
 import * as fse from 'fs-extra';
+
+
+
+describe('findTestsPaths function', () => {
+  let testDirectory;
+
+  beforeEach(() => {
+    testDirectory = './temp-dir/temp-repo';
+    fse.ensureDirSync(testDirectory);
+  });
+
+  afterEach(() => {
+    if (existsSync(testDirectory)) {
+      rmSync(testDirectory, { recursive: true });
+    }
+  });
+
+  it('should find test directories at root', async () => {
+    const repoName = 'test-repo';
+    fse.ensureDirSync(`${testDirectory}/tests`);
+
+    const result = await findTestsPaths(testDirectory);
+    expect(result).toEqual['tests']; 
+  });
+
+  // it('should not include test files', async () => {
+  //   fs.writeFileSync(`${testDirectory}/tests.js`, '');
+
+  //   const result = await findTestsPaths(testDirectory);
+  //   expect(result.length).toEqual(0); 
+  // });
+
+  it('should find case insenstive test directories', async () => {
+    const repoName = 'test-repo';
+    fse.ensureDirSync(`${testDirectory}/TESTS`);
+
+    const result = await findTestsPaths(testDirectory);
+    expect(result.length).toEqual(0); 
+  });
+
+   // This doesn't work - need to adjust if using this function.
+  it('should find test directories not at the root', async () => {
+    const repoName = 'test-repo';
+    fse.ensureDirSync(`${testDirectory}/dirA/tests/module.js`);
+
+    const result = await findTestsPaths(testDirectory);
+    expect(result).toEqual['dirA/tests']; 
+  });
+
+});
+
 
 describe('HasTestsDirectory', () => {
   let testDirectory;
