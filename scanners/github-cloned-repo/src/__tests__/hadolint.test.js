@@ -1,5 +1,7 @@
 // hadolint.test.js
-// import { Hadolint, runHadolintOnDockerfile, hadolintRepo } from '../hadolint.js'
+// NOTE - this will need hadolint installed to run tests
+
+import { Hadolint, runHadolintOnDockerfile, hadolintRepo } from '../hadolint.js'
 import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';

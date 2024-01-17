@@ -9,7 +9,7 @@ import os from 'os';
 import path from 'path';
 
 
-function extractSummaryInfo(summary) {
+export function extractSummaryInfo(summary) {
   // Runing gitleaks ouputs an ascii image, followed by results as a string if using -v, then the summary as stderr
   // It uses exit code of 0 for no leaks found, 95 if leaks are found, and anthing else is error
   // This pulls out the leaks found, and number of commits scanned. 
@@ -29,7 +29,7 @@ function extractSummaryInfo(summary) {
   }
 
 
-async function readGitleaksOutputFile(reportFilePath) {
+export async function readGitleaksOutputFile(reportFilePath) {
   // Reads contents of gitleaks output file, filters for specific fields and returns array of results
   try {
     const data = await readFile(reportFilePath, 'utf-8');
@@ -57,7 +57,7 @@ async function readGitleaksOutputFile(reportFilePath) {
 }
 
 
-async function runGitleaks(clonedRepoPath) {
+export async function runGitleaks(clonedRepoPath) {
   try {
     const tempDir = await mkdtemp(path.join(os.tmpdir(), 'gitleaks-'));
     const reportFilePath = path.join(tempDir, 'gitleaks-report.json');

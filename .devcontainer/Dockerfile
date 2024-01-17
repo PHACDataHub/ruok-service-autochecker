@@ -62,7 +62,11 @@ RUN sudo curl -LO https://github.com/zricethezav/gitleaks/releases/download/v8.1
     sudo mv gitleaks /usr/local/bin && \
     sudo chmod +x /usr/local/bin/gitleaks
 
-
+# Install hadolint
+RUN wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 && \
+    mv hadolint-Linux-x86_64 /usr/local/bin/hadolint && \
+    chmod +x /usr/local/bin/hadolint
+    
 # Start container as non-root user
 USER node
 
