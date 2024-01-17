@@ -1,6 +1,6 @@
 
 import { HasTestsDirectory, findTestsPaths } from '../has-tests-directory.js';
-import {  existsSync, rmdirSync } from 'fs';
+import {  existsSync, rmSync } from 'fs';
 import * as fs from 'fs-extra';
 
 describe('HasTestsDirectory', () => {
@@ -13,7 +13,7 @@ describe('HasTestsDirectory', () => {
 
   afterEach(() => {
     if (existsSync(testDirectory)) {
-      rmdirSync(testDirectory, { recursive: true });
+      rmSync(testDirectory, { recursive: true });
     }
   });
 
