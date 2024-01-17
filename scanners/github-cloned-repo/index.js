@@ -3,7 +3,7 @@
 import { connect, JSONCodec } from 'nats'
 
 import { initializeChecker } from './src/initialize-checker.js'
-import { cloneRepository, removeClonedRepository } from './src/clone-repo-functions.js'
+import { cloneRepository, removeClonedRepository } from './src/clone-remove-repo.js'
 import { GraphQLClient, gql } from 'graphql-request'
 import 'dotenv-safe/config.js'
 

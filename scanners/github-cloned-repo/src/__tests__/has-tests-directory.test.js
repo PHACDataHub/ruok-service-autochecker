@@ -1,10 +1,7 @@
 
 import { HasTestsDirectory, findTestsPaths } from '../has-tests-directory.js';
 import {  existsSync, rmSync } from 'fs';
-import * as fs from 'fs';
 import * as fse from 'fs-extra';
-
-
 
 describe('findTestsPaths function', () => {
   let testDirectory;

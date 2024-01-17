@@ -1,23 +1,19 @@
 
 import { HasApiDirectory, hasApiDirectory } from '../has-api-directory.js';
-import {  existsSync, rmSync } from 'fs';
-import * as fs from 'fs';
+import * as fsPromises from 'fs/promises';
 import * as fse from 'fs-extra';
-
 
 
 describe('hasApiDirectory function', () => {
   let testDirectory;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     testDirectory = './temp-dir/temp-repo';
-    fse.ensureDirSync(testDirectory);
+    await fse.ensureDir(testDirectory);
   });
 
-  afterEach(() => {
-    if (existsSync(testDirectory)) {
-      rmSync(testDirectory, { recursive: true });
-    }
+  afterEach(async () => {
+    await fsPromises.rm(testDirectory, { recursive: true });
   });
 
   it('should be able find api directories at root', async () => {
@@ -57,10 +53,8 @@ describe('HasApiDirectory', () => {
     fse.ensureDirSync(testDirectory);
   });
 
-  afterEach(() => {
-    if (existsSync(testDirectory)) {
-      rmSync(testDirectory, { recursive: true });
-    }
+  afterEach(async () => {
+    await fsPromises.rm(testDirectory, { recursive: true });
   });
 
   it('should pass if api directory is found', async () => {

@@ -5,7 +5,8 @@ import path from 'path';
 export async function hasDependabotYaml(clonedRepoPath) {
     // search dependabot.yaml or dependabot.yml anywhere in path
     const dependabotFile = glob.sync(path.join(clonedRepoPath, '**', 'dependabot.y*')); 
-    
+    // console.log('******************************', dependabotFile)
+    console.log(dependabotFile.length > 0)
     return dependabotFile.length > 0;
 } 
 

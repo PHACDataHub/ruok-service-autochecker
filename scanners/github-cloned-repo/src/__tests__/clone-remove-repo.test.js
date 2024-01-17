@@ -1,6 +1,6 @@
 // clone-repo-functions.test.js
 
-import { cloneRepository, removeClonedRepository } from '../clone-repo-functions.js'; // Replace 'your-module' with the correct module path
+import { cloneRepository, removeClonedRepository } from '../clone-remove-repo.js'; 
 import fsExtra from 'fs-extra';
 
 describe('Repository cloning and removal', () => {

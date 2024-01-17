@@ -10,7 +10,7 @@ export async function findTestsPaths(repoPath) {
   // Map the paths to repo-scoped paths
   const scopedTestDirectoryPaths = fullTestDirectoryPaths.map(dir => {
     const repoScopedPath = dir.split('/').slice(2).join('/');  //TODO - revisit (have changed from 3-2, need to confirm this is correct?)
-    console.log('**************************************',repoScopedPath)
+    // console.log('**************************************',repoScopedPath)
     return repoScopedPath;
   });
 

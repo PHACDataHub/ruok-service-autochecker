@@ -1,4 +1,3 @@
-
 import { HasSecurityMd  } from '../has-security-md.js';
 import { tmpdir } from 'os';
 import { join } from 'path';
