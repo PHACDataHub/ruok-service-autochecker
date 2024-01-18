@@ -1,24 +1,13 @@
-import {  existsSync, rmSync } from 'fs';
 import * as fse from 'fs-extra';
 import { hasDependabotYaml, HasDependabotYaml } from '../has-dependabot-yaml.js';
 import path from 'path';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { promises as fsPromises} from 'fs';
+import * as fs from 'fs'
 
 describe('hasDependabotYaml function', () => {
   let testRepoPath;
-
-  // beforeEach(async () => {
-  //     // Set up temp dir
-  //     testRepoPath = join(tmpdir(), `test-repo-${Date.now()}`); 
-  //     await fsPromises.mkdir(testRepoPath, { recursive: true });
-  //     await fsPromises.mkdir(`${testRepoPath}/docs`, { recursive: true });
-  //   });
-  
-  // afterEach(async () => {
-  //   await fsPromises.rm(testRepoPath, { recursive: true, force: true });
-  // });
 
   beforeEach(() => {
     testRepoPath = join(tmpdir(), `test-repo-${Date.now()}`); 
@@ -26,17 +15,14 @@ describe('hasDependabotYaml function', () => {
   });
 
   afterEach(() => {
-      if (existsSync(testRepoPath)) {
-        rmSync(testRepoPath, { recursive: true, force: true });
+      if (fs.existsSync(testRepoPath)) {
+        // fs.rmSync(testRepoPath, { recursive: true, force: true });
+        fs.rmSync(testRepoPath, { recursive: true});
       }
   });
 
-
   it('should return true if a dependabot YAML file exists at root', async () => {
       // create a dependabot YAML file
-      // fse.ensureDirSync(`${testDirectory}/dependabot.yaml`, '');
-      // fse.ensureDirSync(`${testRepoPath}/dependabot.yaml`);
-
       const dependabotFilePath = path.join(testRepoPath, 'dependabot.yaml');
       await fsPromises.writeFile(dependabotFilePath, '');
 
@@ -85,8 +71,9 @@ describe('HasDependabotYaml class', () => {
   });
 
   afterEach(() => {
-      if (existsSync(testRepoPath)) {
-        rmSync(testRepoPath, { recursive: true, force: true });
+      if (fs.existsSync(testRepoPath)) {
+        // fs.rmSync(testRepoPath, { recursive: true, force: true });
+        fs.rmSync(testRepoPath, { recursive: true});
       }
   });
 

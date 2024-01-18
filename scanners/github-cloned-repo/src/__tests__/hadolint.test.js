@@ -2,26 +2,28 @@
 // NOTE - this will need hadolint installed to run tests
 
 import { Hadolint, runHadolintOnDockerfile, hadolintRepo } from '../hadolint.js'
-import fs from 'fs';
 import path from 'path';
+import { promises as fsPromises} from 'fs';
+import * as fse from 'fs-extra';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { promises as fsPromises} from 'fs';
+import * as fs from 'fs'
 
 
 describe('Hadolint runHadolintOnDockerfile', () => {
   let testRepoPath;
 
-  beforeEach(async () => {
-      // Set up temp dir
-      testRepoPath = join(tmpdir(), `test-repo-${Date.now()}`); // added timestamp to eliminate race conditions
-      await fsPromises.mkdir(testRepoPath, { recursive: true });
-    });
-  
-  afterEach(async () => {
-    await fsPromises.rm(testRepoPath, { recursive: true, force: true });
+  beforeEach(() => {
+    testRepoPath = join(tmpdir(), `test-repo-${Date.now()}`); 
+    fse.ensureDirSync(testRepoPath);
   });
-  // const hadolintPath = await fsPromises.mkdir(`${testRepoPath}/docs`, { recursive: true });
+
+  afterEach(() => {
+      if (fs.existsSync(testRepoPath)) {
+        // fs.rmSync(testRepoPath, { recursive: true, force: true });
+        fs.rmSync(testRepoPath, { recursive: true});
+      }
+  });
 
   it('should lint a Dockerfile', async () => {
       const dockerfilePath = path.join(testRepoPath, 'Dockerfile');

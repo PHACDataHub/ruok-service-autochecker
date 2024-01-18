@@ -1,10 +1,9 @@
 
 import { HasTestsDirectory, findTestsPaths } from '../has-tests-directory.js';
-import {  existsSync, rmSync } from 'fs';
 import * as fse from 'fs-extra';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { promises as fsPromises} from 'fs';
+// import { promises as fsPromises} from 'fs';
 import * as fs from 'fs'
 
 describe('findTestsPaths function', () => {
@@ -25,8 +24,9 @@ describe('findTestsPaths function', () => {
   });
 
   afterEach(() => {
-      if (existsSync(testRepoPath)) {
-        rmSync(testRepoPath, { recursive: true, force: true });
+      if (fs.existsSync(testRepoPath)) {
+        // rmSync(testRepoPath, { recursive: true, force: true });
+        fs.rmSync(testRepoPath, { recursive: true});
       }
   });
 
@@ -68,24 +68,15 @@ describe('findTestsPaths function', () => {
 describe('HasTestsDirectory', () => {
   let testRepoPath;
 
-  // beforeEach(async () => {
-  //   // Set up temp dir
-  //   testRepoPath = join(tmpdir(), `test-repo-${Date.now()}`);
-  //   await fsPromises.mkdir(testRepoPath, { recursive: true });
-  // });
-
-  // afterEach(() => {
-  //   fs.rmSync(testRepoPath, { recursive: true });
-  // });
-  
   beforeEach(() => {
     testRepoPath = join(tmpdir(), `test-repo-${Date.now()}`); 
     fse.ensureDirSync(testRepoPath);
   });
 
   afterEach(() => {
-      if (existsSync(testRepoPath)) {
-        rmSync(testRepoPath, { recursive: true, force: true });
+      if (fs.existsSync(testRepoPath)) {
+        // fs.rmSync(testRepoPath, { recursive: true, force: true });
+        fs.rmSync(testRepoPath, { recursive: true});
       }
   });
 

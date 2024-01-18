@@ -1,10 +1,9 @@
 import { hasTextInFile, searchIgnoreFile, DotGitIgnoreDetails, DotDockerIgnoreDetails } from '../get-dotignore-details.js'
 import * as fs from 'fs';
 import * as fse from 'fs-extra';
-import {  existsSync, rmSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { promises as fsPromises} from 'fs';
+// import { promises as fsPromises} from 'fs';
 
 // TODO dockerignore as well! 
 describe('searchIgnoreFile function', () => {
@@ -13,22 +12,14 @@ describe('searchIgnoreFile function', () => {
     beforeEach(() => {
         testRepoPath = join(tmpdir(), `test-repo-${Date.now()}`); 
         fse.ensureDirSync(testRepoPath);
-    });
-
-    afterEach(() => {
-        if (existsSync(testRepoPath)) {
-          rmSync(testRepoPath, { recursive: true, force: true });
-        }
-    });
-    // beforeEach(async () => {
-    //     // Set up temp dir
-    //     testRepoPath = join(tmpdir(), `test-repo-${Date.now()}`); // added timestamp to eliminate race conditions
-    //     await fsPromises.mkdir(testRepoPath, { recursive: true });
-    //   });
+      });
     
-    // afterEach(async () => {
-    //   await fsPromises.rm(testRepoPath, { recursive: true, force: true });
-    // });
+      afterEach(() => {
+          if (fs.existsSync(testRepoPath)) {
+            // fs.rmSync(testRepoPath, { recursive: true, force: true });
+            fs.rmSync(testRepoPath, { recursive: true});
+          }
+      });
 
     it('should return details of ignore files with .env', async () => {
         fse.ensureDirSync(`${testRepoPath}/dir1`);
@@ -135,8 +126,8 @@ describe('hasTextInFile function', () => {
     });
 
     afterAll(() => {
-        if (existsSync(testFile)) {
-            rmSync(testFile);
+        if (fs.existsSync(testFile)) {
+            fs.rmSync(testFile);
         }
     });
 
