@@ -1,5 +1,6 @@
 // use the gitleaks repo site for testing 
 import { Gitleaks, extractSummaryInfo, readGitleaksOutputFile, runGitleaks } from '../gitleaks'
+import {  existsSync, rmSync } from 'fs';
 
 describe('Need tests', () => {
 

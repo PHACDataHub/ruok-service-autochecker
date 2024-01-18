@@ -9,13 +9,14 @@ describe('HasSecurityMd', () => {
 
     beforeEach(async () => {
         // Set up temp dir
-        testRepoPath = join(tmpdir(), 'test-repo');
+        testRepoPath = join(tmpdir(), `test-repo-${Date.now()}`); 
+        await fsPromises.mkdir(testRepoPath, { recursive: true });
         await fsPromises.mkdir(`${testRepoPath}/docs`, { recursive: true });
       });
     
     afterEach(async () => {
-        await fsPromises.rm(testRepoPath, { recursive: true });
-      });
+      await fsPromises.rm(testRepoPath, { recursive: true, force: true });
+    });
 
 
     it('should pass if a security.md file is found (anywhere in repo)', async () => {

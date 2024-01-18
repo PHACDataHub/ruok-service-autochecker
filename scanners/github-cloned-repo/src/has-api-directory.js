@@ -8,7 +8,10 @@ import path from 'path';
 
 export async function hasApiDirectory(clonedRepoPath) {
     // search api anywhere in path
-    const apiDirectories = glob.sync(path.join(clonedRepoPath, '**', 'api*'), { nocase: true });
+    // const apiDirectories = glob.sync(path.join(clonedRepoPath, '**', 'api*'), { nocase: true });
+    // case insenstive search anywhere for api
+    const pattern = path.join(clonedRepoPath, '**', 'api*', '**').replace(/\\/g, '/');
+    const apiDirectories = glob.sync(pattern, { nocase: true });
 
     
     return apiDirectories.length > 0;
