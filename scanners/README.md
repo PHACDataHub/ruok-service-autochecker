@@ -1,8 +1,6 @@
 # Scanners
 
 Please see the [docs site, scanners section](https://phacdatahub.github.io/ruok-service-autochecker/scanners/)) for the scanner check details. 
-Highly based on <https://github.com/canada-ca/tracker>
-
 
 ## To Run Individually
 

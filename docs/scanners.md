@@ -28,15 +28,87 @@ There are many idioms, best practices, and security requirements for remote sour
 
 ### Vulnerability Alerts Enabled
 
-> TODO
+This checks whether GitHub (dependabot) vunerability alerts have been enabled.  The repository can be configured to have Dependabot alerts sent when your repository uses an insecure dependency. There's no metadata for this check - just a true/ false result on check_passes.
+
+**Remediation**
+
+Follow [these directions](https://docs.github.com/en/code-security/dependabot/dependabot-alerts/configuring-dependabot-alerts) to configure the alerts for your project repository.  
+
+
+**Data Example**
+```jsonc
+{
+    // ...
+  vunerability_alerts_enabled: {
+    check_passes: false,
+    metadata: {empty}
+    }
+  }
+      // ...
+}
+
 
 ### Automated Security Fixes Enabled
 
-> TODO
+// **Data Example**
+// ```jsonc
+// {
+//     // ...
+//   gitleaks: {
+//     check_passes: false,
+//     metadata: {
+//       leaks_found: true,
+//       number_of_leaks: 2,
+//       commits_scanned: 466,
+//       details: [
+//         {
+//             description: 'Private Key',
+//             file: 'scanners/github-cloned-repo-checks/src/fake-secret',
+//             start_line: 28,
+//             end_line: 28,
+//             start_column: 14,
+//             end_column: 53
+//             commit: '29c1850108f543f5eaab26ed052508fa0b45bb74',
+//             author: '=',
+//             email: 'my.email@gmail.com',
+//         },
+//      // ...
+//       ]
+//     }
+//   }
+//       // ...
+// }
 
 ### Branch Protection Enabled
 
-> TODO
+// **Data Example**
+// ```jsonc
+// {
+//     // ...
+//   gitleaks: {
+//     check_passes: false,
+//     metadata: {
+//       leaks_found: true,
+//       number_of_leaks: 2,
+//       commits_scanned: 466,
+//       details: [
+//         {
+//             description: 'Private Key',
+//             file: 'scanners/github-cloned-repo-checks/src/fake-secret',
+//             start_line: 28,
+//             end_line: 28,
+//             start_column: 14,
+//             end_column: 53
+//             commit: '29c1850108f543f5eaab26ed052508fa0b45bb74',
+//             author: '=',
+//             email: 'my.email@gmail.com',
+//         },
+//      // ...
+//       ]
+//     }
+//   }
+//       // ...
+// }
 
 
 ## Repository Content Checks
@@ -110,10 +182,6 @@ For preventative protection, consider using 'gitleaks protect' [pre-commit]((htt
 }
 
 ```
-
-### File Size Check
-
-> TODO
 
 ### `Hadolint` Dockerfile Linting
 
@@ -199,9 +267,10 @@ Update the dependencies as indicated if there is a fixed version. Follow the URL
 }
 
 ```
-
+### File Size Check
 
 > TODO
+
 
 ## URL (Service) Scanning Checks
 
