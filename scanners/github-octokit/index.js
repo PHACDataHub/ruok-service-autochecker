@@ -79,6 +79,9 @@ process.on('SIGINT', () => process.exit(0))
           )
         }
         `;
+
+      console.log('*************************\n',mutation,'\n*************************\n')        
+
       // New GraphQL client - TODO: remove hard-coded URL
       const graphqlClient = new GraphQLClient(GRAPHQL_URL);
       // Write mutation to GraphQL API
@@ -88,3 +91,6 @@ process.on('SIGINT', () => process.exit(0))
   })();
 
 await nc.closed();
+
+
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}"

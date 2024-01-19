@@ -26,6 +26,28 @@ The sections below expand on each Check Type in greater detail, and also show th
 
 There are many idioms, best practices, and security requirements for remote source code repositories. Observatory automatically performs a number of these checks using information retrievable from the [GitHub Octokit API](https://github.com/octokit/octokit.js).
 
+### Repository Metadata
+
+The following metadata is extracted using the GitHub Octokit API:
+
+**Data Example**
+```jsonc
+{
+    // ...
+  {
+    url: "https://github.com/PHACDataHub/ruok-service-autochecker"
+    kind: "Github"
+    owner: "PHACDataHub"
+    repo: "ruok-service-autochecker"
+    license: "MIT"
+    visibility: "public"
+    programmingLanguage: ["JavaScript", "Dockerfile", "Makefile", "HTML", "TypeScript", "CSS", "Python"]
+  }
+  // ...
+}
+
+Prpgramming languages are ordered most frequent to least frequently occuring. 
+
 ### Vulnerability Alerts Enabled
 
 This checks whether GitHub (dependabot) vunerability alerts have been enabled.  The repository can be configured to have Dependabot alerts sent when your repository uses an insecure dependency. There's no metadata for this check - just a true/ false result on check_passes.
@@ -37,13 +59,13 @@ Follow [these directions](https://docs.github.com/en/code-security/dependabot/de
 **Data Example**
 ```jsonc
 {
-    // ...
+  // ...
   vunerability_alerts_enabled: {
     check_passes: false,
     metadata: (empty object)
     }
   }
-      // ...
+  // ...
 }
 
 **Pass Criteria** 
@@ -53,65 +75,42 @@ Dependabot alerts are enabled.
 
 ### Automated Security Fixes Enabled
 
-// **Data Example**
-// ```jsonc
-// {
-//     // ...
-//   gitleaks: {
-//     check_passes: false,
-//     metadata: {
-//       leaks_found: true,
-//       number_of_leaks: 2,
-//       commits_scanned: 466,
-//       details: [
-//         {
-//             description: 'Private Key',
-//             file: 'scanners/github-cloned-repo-checks/src/fake-secret',
-//             start_line: 28,
-//             end_line: 28,
-//             start_column: 14,
-//             end_column: 53
-//             commit: '29c1850108f543f5eaab26ed052508fa0b45bb74',
-//             author: '=',
-//             email: 'my.email@gmail.com',
-//         },
-//      // ...
-//       ]
-//     }
-//   }
-//       // ...
-// }
+**Data Example**
+```jsonc
+{
+  // ...
+  automatedSecurityFixes: {
+    checkPasses: false
+    metadata: {
+      enabled: false
+      paused: false
+    }
+  },
+  // ...
+}
 
 ### Branch Protection Enabled
 
-// **Data Example**
-// ```jsonc
-// {
-//     // ...
-//   gitleaks: {
-//     check_passes: false,
-//     metadata: {
-//       leaks_found: true,
-//       number_of_leaks: 2,
-//       commits_scanned: 466,
-//       details: [
-//         {
-//             description: 'Private Key',
-//             file: 'scanners/github-cloned-repo-checks/src/fake-secret',
-//             start_line: 28,
-//             end_line: 28,
-//             start_column: 14,
-//             end_column: 53
-//             commit: '29c1850108f543f5eaab26ed052508fa0b45bb74',
-//             author: '=',
-//             email: 'my.email@gmail.com',
-//         },
-//      // ...
-//       ]
-//     }
-//   }
-//       // ...
-// }
+Particular branches (generally master or main) can have [protection](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) through rules defined to restrict how code can be pushed to that branch. For example, this could require pull request reviews before merging.
+
+**Remediation**
+
+[Create a branch protection rule](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule#creating-a-branch-protection-rule) to prevent anyone from pushing to the main branch that is used for deployment. 
+
+**Data Example**
+
+```jsonc
+{
+  // ...
+  branchProtection: {
+    checkPasses: false
+    metadata: {
+      branches: ["clean-octokit-webendpoint", "container-trivy-scan", "feat-trivy", "gh-pages", "main", "moving-services", "ui", "ui-server"]
+      rules: [""]
+    }
+    // ...
+  }
+}
 
 
 ## Repository Content Checks
@@ -121,7 +120,7 @@ A number of checks are performed by scanning a deep clone of the repository's co
 
 ### Has `Security.md`
 
-A best practice with any open source code repository is to provide instructions via a `Security.md` file at the project root for how security vulnerabilities should be reported (see [GitHub's code security documentation](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) for more information). This check verifies whether a repository contains a `Security.md` file.
+A best practice with any open source code repository is to provide instructions via a `Security.md` file at the project root for how security vulnerabilities should be reported (see [GitHub's code security documentation](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) for more information). This check verifies whether a repository contains a `Security` file.
 
 **Remediation**
 
@@ -146,11 +145,15 @@ A SECURITY.md, txt or rtf (non-case-sensitive) file is at the root of the GitHub
 
 ### Has `dependabot.yaml`
 
-Dependabot is GitHub's dependency vunerability scanner. It uses the configuration outlined in the dependabot.yml file and usually resides in the .github folder.  
+Dependabot is GitHub's dependency vunerability scanner. It uses the configuration outlined in the dependabot.yml file and usually resides in the `.github` folder.  
 
 **Remediation**
 
 Add the dependabot.yml. [Here's](https://docs.github.com/en/code-security/getting-started/dependabot-quickstart-guide) some documentation.  
+
+**Pass Criteria** 
+
+A dependabot.yml or yaml resides in your GitHub repository.  **metadata** will always be null. (Note - it is possible to turn dependabot on through the GitHub GUI - settings, security, but it's best practices to include the yml for full transparency.)
 
 **Data Example**
 
@@ -164,9 +167,6 @@ Add the dependabot.yml. [Here's](https://docs.github.com/en/code-security/gettin
     // ...
 }
 ```
-**Pass Criteria** 
-
-A dependabot.yml or yaml resides in your GitHub repository.  **metadata** will always be null. (Note - it is possible to turn dependabot on through the GitHub GUI - settings, security, but it's best practices to include the yml for full transparency.)
 
 ### Gitleaks Report - secret scanning
 
