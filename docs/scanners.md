@@ -28,13 +28,13 @@ There are many idioms, best practices, and security requirements for remote sour
 
 ### Repository Metadata
 
-The following metadata is extracted using the GitHub Octokit API:
+The following items are extracted with the GitHub Octokit API during each scan:
 
 **Data Example**
 ```jsonc
 {
     // ...
-  {
+  endpoint: {
     url: "https://github.com/PHACDataHub/ruok-service-autochecker"
     kind: "Github"
     owner: "PHACDataHub"
@@ -45,12 +45,13 @@ The following metadata is extracted using the GitHub Octokit API:
   }
   // ...
 }
+```
 
-Prpgramming languages are ordered most frequent to least frequently occuring. 
+Note - the programming languages are ordered most to least frequently occuring, and the plan is to use this for future language specific checks. 
 
-### Vulnerability Alerts Enabled
+### Vulnerability (Dependabot) Alerts Enabled
 
-This checks whether GitHub (dependabot) vunerability alerts have been enabled.  The repository can be configured to have Dependabot alerts sent when your repository uses an insecure dependency. There's no metadata for this check - just a true/ false result on check_passes.
+This checks whether GitHub (Dependabot) vunerability alerts have been enabled.  The repository can be configured to have Dependabot alerts sent when your repository uses an insecure dependency. There's no metadata for this check.
 
 **Remediation**
 
@@ -67,13 +68,15 @@ Follow [these directions](https://docs.github.com/en/code-security/dependabot/de
   }
   // ...
 }
+```
 
 **Pass Criteria** 
 
 Dependabot alerts are enabled.
 
+### Automated Security Fixes Enabled (Dependabot)
 
-### Automated Security Fixes Enabled
+Dependabot can be configured to automatically pull request to resolve dependabot alerts if there's a patch. 
 
 **Data Example**
 ```jsonc
@@ -88,6 +91,9 @@ Dependabot alerts are enabled.
   },
   // ...
 }
+```
+
+[Configure Dependabot](https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/configuring-dependabot-security-updates) to automaticallly create pull requests. 
 
 ### Branch Protection Enabled
 
@@ -111,7 +117,10 @@ Particular branches (generally master or main) can have [protection](https://doc
     // ...
   }
 }
+```
+**Pass Criteria** 
 
+A branch protection rule has been found.
 
 ## Repository Content Checks
 
@@ -130,12 +139,12 @@ Include a file called `Security.md` at the root of your repository explaining ho
 
 ```jsonc
 {
-    // ...
-    "has_security_md":{
-        "check_passes": true,
-        "metadata": (empty object)
-    }
-    // ...
+  // ...
+  "has_security_md":{
+      "check_passes": true,
+      "metadata": (empty object)
+  }
+  // ...
 }
 ```
 **Pass Criteria** 
@@ -151,22 +160,22 @@ Dependabot is GitHub's dependency vunerability scanner. It uses the configuratio
 
 Add the dependabot.yml. [Here's](https://docs.github.com/en/code-security/getting-started/dependabot-quickstart-guide) some documentation.  
 
-**Pass Criteria** 
-
-A dependabot.yml or yaml resides in your GitHub repository.  **metadata** will always be null. (Note - it is possible to turn dependabot on through the GitHub GUI - settings, security, but it's best practices to include the yml for full transparency.)
-
 **Data Example**
 
 ```jsonc
 {
-    // ...
-    "has_dependabot.yaml":{
-        "check_passes": true,
-        "metadata": (empty object)
-    }
-    // ...
+  // ...
+  "has_dependabot.yaml":{
+      "check_passes": true,
+      "metadata": (empty object)
+  }
+  // ...
 }
 ```
+
+**Pass Criteria** 
+
+A dependabot.yml or yaml resides in your GitHub repository.  **metadata** will always be null. (Note - it is possible to turn dependabot on through the GitHub GUI - settings, security, but it's best practices to include the yml for full transparency.)
 
 ### Gitleaks Report - secret scanning
 
@@ -198,7 +207,7 @@ For preventative protection, consider using 'gitleaks protect' [pre-commit]((htt
             end_line: 28,
             start_column: 14,
             end_column: 53
-            commit: '29c1850108f543f5eaab26ed052508fa0b45bb74',
+            commit: '29c1850108f543f5eaab26ed052508fa0b45bb7',
             author: '=',
             email: 'my.email@gmail.com',
         },
@@ -208,8 +217,11 @@ For preventative protection, consider using 'gitleaks protect' [pre-commit]((htt
   }
       // ...
 }
-
 ```
+
+**Pass Criteria** 
+
+No secrets have been found in history of repository. 
 
 ### `Hadolint` Dockerfile Linting
 
@@ -253,8 +265,12 @@ Follow the guidelines outlined in the results message to update the Dockerfiles.
       ]
       // ...
     }
-
 ```
+
+**Pass Criteria** 
+
+No linting rules broken for all Dockerfiles within the repository. 
+
 ### `Trivy` Repository Vunerability Scanning
 
 [`Trivy`](https://github.com/aquasecurity/trivy) is a security scanner we're using in this case to scan software dependencies against known vunerabilities.  It offers a remote Git repository scanner, that works for public repositories. Since we have some private repositories, we're using the filesystem scan on the cloned repository instead. 
@@ -293,8 +309,12 @@ Update the dependencies as indicated if there is a fixed version. Follow the URL
     }
   // ...
 }
-
 ```
+
+**Pass Criteria** 
+
+No vunerabilities captured by trivy have been found in the repository. 
+
 ### File Size Check
 
 > TODO
@@ -304,6 +324,55 @@ Update the dependencies as indicated if there is a fixed version. Follow the URL
 
 Some products have one or more services exposed through URLs. URL compliance checks perform a series of automated accessibility and security compliance checks using information that can be retrieved via these public URLs.
 
+### web-endpoint
+
+[Puppeteer](https://pptr.dev/) is used for an accessibility scan. For the Observatory use case, if the accessibility check is non-applicable, check_passes is set to null, 
+
+**Data Example**
+(Though this is not complete, it runs through many, many checks.)
+
+```jsonc
+  accessibility: [
+    {
+      url: "https://some-webapp.canada.ca/about",
+      areaAlt: {
+          checkPasses: null,
+          metadata: {
+              description: "Ensures <area> elements of image maps have alternate text",
+              helpUrl: "https://dequeuniversity.com/rules/axe/4.8/area-alt?application=axe-puppeteer"
+          }
+      },
+      ariaBrailleEquivalent: {
+          checkPasses: "false",
+          metadata: {
+              description: "Ensure aria-braillelabel and aria-brailleroledescription have a non-braille equivalent",
+              helpUrl: "https://dequeuniversity.com/rules/axe/4.8/aria-braille-equivalent?application=axe-puppeteer"
+          }
+      },
+      ariaCommandName: {
+          checkPasses: null,
+          metadata: {
+              description: "Ensures every ARIA button, link and menuitem has an accessible name",
+              helpUrl: "https://dequeuniversity.com/rules/axe/4.8/aria-command-name?application=axe-puppeteer"
+          }
+      },
+      ariaHiddenFocus: {
+          checkPasses: "true",
+          metadata: {
+              description: "Ensures aria-hidden elements are not focusable nor contain focusable elements",
+              helpUrl: "https://dequeuniversity.com/rules/axe/4.8/aria-hidden-focus?application=axe-puppeteer"
+          }
+      },
+      ariaMeterName: {
+          checkPasses: "incomplete",
+          metadata: {
+              description: "Ensures every ARIA meter node has an accessible name",
+              helpUrl: "https://dequeuniversity.com/rules/axe/4.8/aria-meter-name?application=axe-puppeteer"
+          }
+      }
+    }
+  ]
+```
 
 ## Container Image Checks
 
