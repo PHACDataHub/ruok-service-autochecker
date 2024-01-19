@@ -15,7 +15,7 @@ Then trigger the the scan, the scanner's corresponding NATs message (ie. for git
 
 ## To Test 
 
-(can do without db, api and nats, but will need hadolint and gitleaks installed (note - they are installed in the dev container).)
+(can do without db, api and nats, but will need hadolint, trivy and gitleaks installed (note - they are installed in the dev container).)
 
 ```bash
 npm t
@@ -23,13 +23,27 @@ npm t
 
 ## GitHub Scanners
 
-### github-cloned-repo-checks
+### github-cloned-repo
 
 When this recieves a NATs payload on the GitHubEvents subject, it will clone the repository and perform checks that look at the directories, files and within the files. 
 
-### github-octokit-checks
+### github-octokit
 
 Also listens to NATs GitHubEvents, and when it recieves a message, it will use GitHub's octokit API to inquire about things like branch protection, as well as collecting details about the repository.
+
+## Web Endpoint Scanners
+
+### web-endpoint
+
+Accessibility Checks (Puppeteer)
+
+Performs accessibility checks for a given webendpoint. 
+
+## Container Scanners
+
+### container
+
+This is partially done with the github-cloned-repo scan with Trivy - finds vunerabilies within the repo.  Hadolint lints the Dockerfiles.  The hope is to use [Artifact Registries built in vunerability scanner](https://cloud.google.com/artifact-registry/docs/analysis) (will need to be turned on in each project), and have that sent to the the Observatory's security command centre. ([Here](https://medium.com/google-cloud/centrally-managing-artifact-registry-container-image-vulnerabilities-on-google-cloud-part-two-ad730e7cf649)) is a tutorial.
 
 ## Original list of checks
 
