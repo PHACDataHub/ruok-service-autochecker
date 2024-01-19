@@ -1,16 +1,16 @@
+# Puppeteer Web Accessibility Checks 
+
 Accessibiltiy checks - information found here - https://www.w3.org/TR/wai-aria/
-Using axe-puppeteer - launches in chrome (headless/ doesn't actually pop-up) to perform checks 
 
 nats cli command:
 ```
-nats pub 'WebEvent' '{"productName": "Observatory", "webEndpoints": ["https://safeinputs.phac.alpha.canada.ca", "https://hopic-sdpac.phac-aspc.alpha.canada.ca", "https://hopic-sdpac.k8s.phac-aspc.alpha.canada.ca", "https://safeinputs.phac.alpha.canada.ca/graphql", "https://api.example.com/api/fakeEndpoint"], "domains": ["entreessecurisees.aspc.alpha.canada.ca", "safeinputs.phac-aspc.alpha.canada.ca", "safeinputs.phac.alpha.canada.ca"], "containerEndpoints": "northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app"}'
+nats pub "EventsScanner.webEndpoints" "{\"endpoint\":\"https://safeinputs.phac.alpha.canada.ca\"}"
 ```
+
 
 
 TODO
 * save to database with API
-* modify index.js to only process one url, and use url rather than webEndpoints
-* docs / docstrings - add to doc pages 
 * have this actually crawl instead of finding/ scanning only the surface slugs 
 * address credentials by creating service account/ prinicipal to single sign on with minimal permissions to scan set pages for accessibility
 

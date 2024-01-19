@@ -13,7 +13,6 @@ const {
 } = process.env;
 
 
-
 // NATs connection 
 const nc = await connect({ servers: NATS_URL, })
 const jc = JSONCodec()
@@ -96,3 +95,5 @@ process.on('SIGINT', () => process.exit(0))
 
 
 await nc.closed();
+
+// nats pub "EventsScanner.webEndpoints" "{\"endpoint\":\"https://safeinputs.phac.alpha.canada.ca\"}"
