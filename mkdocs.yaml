@@ -34,7 +34,7 @@ nav:
   - Configuration: configuration.md
   - Deployment: deployment.md
   - Development Environment: development-environment.md
-  - Quick Start for Development: quickstart-for-development.md
+  - Quickstart for Development: quickstart-for-development.md
   - GitHub Webhooks: github-webhooks.md
   - GraphQL API:
     - Overview: graphql/graphql-api.md

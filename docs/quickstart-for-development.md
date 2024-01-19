@@ -1,4 +1,4 @@
-# Quick Start for Development
+# Quickstart for Development
 
 After [development environment](./development-environment.md) has been set up: 
 
