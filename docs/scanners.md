@@ -61,7 +61,7 @@ Follow [these directions](https://docs.github.com/en/code-security/dependabot/de
 ```jsonc
 {
   // ...
-  vunerability_alerts_enabled: {
+  vunerability_alerts: {
     check_passes: false,
     metadata: (empty object)
     }
@@ -336,35 +336,35 @@ Some products have one or more services exposed through URLs. URL compliance che
     {
       url: "https://some-webapp.canada.ca/about",
       areaAlt: {
-          checkPasses: null,
+          check_passes: null,
           metadata: {
               description: "Ensures <area> elements of image maps have alternate text",
               helpUrl: "https://dequeuniversity.com/rules/axe/4.8/area-alt?application=axe-puppeteer"
           }
       },
       ariaBrailleEquivalent: {
-          checkPasses: "false",
+          check_passes: "false",
           metadata: {
               description: "Ensure aria-braillelabel and aria-brailleroledescription have a non-braille equivalent",
               helpUrl: "https://dequeuniversity.com/rules/axe/4.8/aria-braille-equivalent?application=axe-puppeteer"
           }
       },
       ariaCommandName: {
-          checkPasses: null,
+          check_passes: null,
           metadata: {
               description: "Ensures every ARIA button, link and menuitem has an accessible name",
               helpUrl: "https://dequeuniversity.com/rules/axe/4.8/aria-command-name?application=axe-puppeteer"
           }
       },
       ariaHiddenFocus: {
-          checkPasses: "true",
+          check_passes: "true",
           metadata: {
               description: "Ensures aria-hidden elements are not focusable nor contain focusable elements",
               helpUrl: "https://dequeuniversity.com/rules/axe/4.8/aria-hidden-focus?application=axe-puppeteer"
           }
       },
       ariaMeterName: {
-          checkPasses: "incomplete",
+          check_passes: "incomplete",
           metadata: {
               description: "Ensures every ARIA meter node has an accessible name",
               helpUrl: "https://dequeuniversity.com/rules/axe/4.8/aria-meter-name?application=axe-puppeteer"
