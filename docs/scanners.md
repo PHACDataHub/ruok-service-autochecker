@@ -34,18 +34,21 @@ This checks whether GitHub (dependabot) vunerability alerts have been enabled.  
 
 Follow [these directions](https://docs.github.com/en/code-security/dependabot/dependabot-alerts/configuring-dependabot-alerts) to configure the alerts for your project repository.  
 
-
 **Data Example**
 ```jsonc
 {
     // ...
   vunerability_alerts_enabled: {
     check_passes: false,
-    metadata: {empty}
+    metadata: (empty object)
     }
   }
       // ...
 }
+
+**Pass Criteria** 
+
+Dependabot alerts are enabled.
 
 
 ### Automated Security Fixes Enabled
@@ -131,16 +134,41 @@ Include a file called `Security.md` at the root of your repository explaining ho
     // ...
     "has_security_md":{
         "check_passes": true,
-        "metadata": null,
+        "metadata": (empty object)
     }
     // ...
 }
 ```
 **Pass Criteria** 
-A SECURITY.md, txt or rtf (not-case-sensitive) file is at the root of the GitHub repository. 
+
+A SECURITY.md, txt or rtf (non-case-sensitive) file is at the root of the GitHub repository. 
 **metadata** for this will always be null.
 
-### Gitleaks Report
+### Has `dependabot.yaml`
+
+Dependabot is GitHub's dependency vunerability scanner. It uses the configuration outlined in the dependabot.yml file and usually resides in the .github folder.  
+
+**Remediation**
+
+Add the dependabot.yml. [Here's](https://docs.github.com/en/code-security/getting-started/dependabot-quickstart-guide) some documentation.  
+
+**Data Example**
+
+```jsonc
+{
+    // ...
+    "has_dependabot.yaml":{
+        "check_passes": true,
+        "metadata": (empty object)
+    }
+    // ...
+}
+```
+**Pass Criteria** 
+
+A dependabot.yml or yaml resides in your GitHub repository.  **metadata** will always be null. (Note - it is possible to turn dependabot on through the GitHub GUI - settings, security, but it's best practices to include the yml for full transparency.)
+
+### Gitleaks Report - secret scanning
 
 [Gitleaks](https://github.com/gitleaks/gitleaks) detects if secrets that have been commited at any point in the repository's history.  
 
