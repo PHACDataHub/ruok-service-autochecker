@@ -45,5 +45,13 @@ Leave this terminal open as well, open another terminal to continue.
 
 6. If you're working with the scanners, or need the database populated with a GitHub Repo scan, either re-send an event from github, or manually send one with NATS. 
 ```
-nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}
+nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}"
 ```
+
+7. Update containers with dev changes 
+Rebuid containers, push to kind (in local terminal)
+```
+make build
+make kind-push-all
+```
+Once pushed, delete pod (using k9s) in order to propagate the new changes.
