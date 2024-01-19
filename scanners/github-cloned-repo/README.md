@@ -9,7 +9,7 @@
 5) Removes Cloned Repository
 
 ## Checks 
-(The following are yet not included in the database, as they need to first be more throughly flushed out first. The checks that are included in the database can be found on the [docs site](https://phacdatahub.github.io/ruok-service-autochecker/scanners/))
+(The following are yet not included in the database, as they need to first be more throughly flushed out first. The checks that are included in the database can be found on the [docs site, scanners section](https://phacdatahub.github.io/ruok-service-autochecker/scanners/)).
 
 ### hasApiDirectory
 
@@ -33,16 +33,6 @@ Check passes if dependabot.y* (either dependabot.yaml or dependabot.yml) is in t
 
 ```bash
 "hasDependabotYaml":{"checkPasses":false,"metadata":null,"lastUpdated":1698174245826}
-```
-
-### hasSecurityMd
-
-Check passes if a Security (can have any extension) file is in the root of the repository.
-
-#### Sample hasSecurityMd
-
-```bash
-"hasSecurityMd":{"checkPasses":true,"metadata":null,"lastUpdated":1698174245826}
 ```
 
 ### dotDockerIgnoreDetails

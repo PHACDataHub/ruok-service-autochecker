@@ -65,7 +65,7 @@ Include a file called `Security.md` at the root of your repository explaining ho
 }
 ```
 **Pass Criteria** 
-A SECURITY or SECURITY.md file is at the root of the GitHub repository. 
+A SECURITY.md, txt or rtf (not-case-sensitive) file is at the root of the GitHub repository. 
 **metadata** for this will always be null.
 
 ### Gitleaks Report

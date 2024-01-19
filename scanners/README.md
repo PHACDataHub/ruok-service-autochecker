@@ -1,16 +1,21 @@
 # Scanners
 
+Please see the [docs site, scanners section](https://phacdatahub.github.io/ruok-service-autochecker/scanners/)) for the scanner check details. 
 Highly based on <https://github.com/canada-ca/tracker>
 
-Each of these 'scanners' are a contained running service with their own dependcies.  They will eventually each have their own dockerfile, and be deployed with Kubernetes, but in the meantime, each service will need to be launched separately.  To do that, change directory into that scanner service then:
 
 ## To Run Individually
+
+You will need a running database populated with the ruok database framework, a nats server and api up and running. 
 
 ```bash
 npm start
 ```
+Then trigger the the scan, the scanner's corresponding NATs message (ie. for github, nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}" )
 
-## To Test
+## To Test 
+
+(can do without db, api and nats, but will need hadolint and gitleaks installed (note - they are installed in the dev container).)
 
 ```bash
 npm t
@@ -36,34 +41,19 @@ Also listens to NATs GitHubEvents, and when it recieves a message, it will use G
 * [ ] Subdomain takeovers
 * [x] Does the .gitignore file ignore files with credentials? ie: includes **/*.env
 * [x] Does the .dockerignore files ignore files with credentials? ie: includes **/*.env
-* [ ] Is Secret scanning enabled for that repo?
+* [x] Is Secret scanning enabled for that repo?
 * [x] Is there a security.md file?
 * [ ] existence of an API (only have directory now - will use langagues to dig into libraries and languagues)
 * [ ] REST/graphql (see above)
-* [ ] vuln scanning enabled (only see dependabot.yml now... but seems like you can have without this)
+* [x] vuln scanning enabled (only see dependabot.yml now... but seems like you can have without this)
 * [ ] More from Open data products spec: <https://opendataproducts.org/>
 * [ ] PHAC data standards (also see <https://www.dublincore.org>)
 
-### Other checks that we have now (note - some not-so-useful-yet ones will be fed into more useful checks later)
 
-* [x] has dependabot.yml or yml
 
-* [x] main and all programming langagues (to be used for more later)
-* [x] main branch name (for main branch protection)
-* [x] has test directory
-* [x] has API directory
-
-#### References
-
-* <https://jestjs.io/docs/mock-function-api>
-
-If alpha.canada.ca - consider reviewing <https://alpha.canada.ca/en/instructions.html>
+<!-- If alpha.canada.ca - consider reviewing <https://alpha.canada.ca/en/instructions.html>
 
 * a “nofollow” meta tag or robots.txt file to prevent indexing by search engines (this probably fits better into the github scanner)
 * an “alpha” banner to indicate to users that it is a prototype service
-* a feedback or issue-reporting method (either email address, web form, or public issue tracker)
+* a feedback or issue-reporting method (either email address, web form, or public issue tracker) -->
 
-These are interesting resources that might be of use
-
-* <https://github.com/cds-snc/status-statut>
-* <https://github.com/cds-snc/scan-websites>
