@@ -104,9 +104,10 @@ export async function runGitleaks(clonedRepoPath) {
         details: gitleaksJson,
       };
     } else if (code === 0) {
-      results = {
-        leaksFound: false,
-      };
+      // results = {
+      //   leaksFound: false,
+      // };
+      results = null
     } else {
       results = {
         exitCode: code,
