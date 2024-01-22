@@ -10,13 +10,23 @@ import 'dotenv-safe/config.js'
 const {
   NATS_URL,
   GITHUB_TOKEN,
+  GITHUB_TOKEN_CLASSIC,
   NATS_SUB_STREAM,
   GRAPHQL_URL,
 } = process.env;
 
 // Also note - this will be appended with repo name when published. 
 // Authenicate with GitHub 
-const octokit = new Octokit({ auth: GITHUB_TOKEN, });
+const octokit = new Octokit({ auth: GITHUB_TOKEN_CLASSIC });
+// const octokit = new Octokit({ auth: GITHUB_TOKEN, });
+// let octokit;
+
+// try {
+//   octokit = new Octokit({ auth: GITHUB_TOKEN });
+// } catch (error) {
+//   console.error("An error occurred:", error);
+//   octokit = new Octokit({ auth: GITHUB_TOKEN_CLASSIC });
+// }
 
 // NATs connection 
 const nc = await connect({ servers: NATS_URL, })
@@ -94,3 +104,5 @@ await nc.closed();
 
 
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/cpho-phase2\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/it33-filtering\"}"

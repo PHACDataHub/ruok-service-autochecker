@@ -97,3 +97,4 @@ process.on('SIGINT', () => process.exit(0))
 await nc.closed();
 
 // nats pub "EventsScanner.webEndpoints" "{\"endpoint\":\"https://safeinputs.phac.alpha.canada.ca\"}"
+// nats pub "EventsScanner.webEndpoints" "{\"endpoint\":\"https://hopic-sdpac.phac-aspc.alpha.canada.ca\"}"
