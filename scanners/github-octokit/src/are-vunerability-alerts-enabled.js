@@ -21,13 +21,15 @@ export class VunerabilityAlertsEnabledStrategy extends OctokitCheckStrategy {
             const response = await this.makeOctokitRequest();
             if (response.status == 204) {
                 return {
-                    checkPasses: true 
+                    checkPasses: true, 
+                    metadata: null
                 }   
             }
         } catch (error) {
             if (error.message == 'Vulnerability alerts are disabled.'){
                 return {
                     checkPasses: false,
+                    metadata: null
                 }  
             } else {
                 throw {
