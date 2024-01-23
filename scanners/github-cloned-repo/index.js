@@ -70,11 +70,11 @@ process.on('SIGINT', () => process.exit(0))
                         repo: "${repoName}"
                         hasSecurityMd: {
                             checkPasses: ${results.hasSecurityMd.checkPasses}
-                            metadata: {}
+                            metadata: ${results.hasSecurityMd.metadata}
                         },
                         hasDependabotYaml: {
                             checkPasses: ${results.hasDependabotYaml.checkPasses}
-                            metadata: {}
+                            metadata: ${results.hasDependabotYaml.metadata}
                         },
                         gitleaks: {
                             checkPasses: ${results.gitleaks ? results.gitleaks.checkPasses : null}

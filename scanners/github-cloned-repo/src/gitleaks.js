@@ -150,7 +150,6 @@ export class Gitleaks extends CheckOnClonedRepoInterface {
           gitleaksResult = null
         }
 
-        console.log(checkPasses, gitleaksResult)
         return {
           checkPasses: checkPasses,
           metadata: gitleaksResult
