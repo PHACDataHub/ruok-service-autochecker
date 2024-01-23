@@ -85,16 +85,20 @@ export class Hadolint extends CheckOnClonedRepoInterface {
     async doRepoCheck() {
         try {
             const hadolintResult = await hadolintRepo(this.clonedRepoPath);
-            let areResults = !anyArrayNonEmpty(hadolintResult) // areResults will result in true if no dockerfiles and if no warnings or errors from linting.
+            let areResults = !anyArrayNonEmpty(hadolintResult) // areResults will result in true if there are dockerfiles and if no warnings or errors from linting.
 
             if (Object.keys(hadolintResult).length === 0){ // In the case of no Dockerfiles in repo
-              areResults = null
-            }
+              return {
+                checkPasses: null,
+                metadata: null
+              }
+            } else {
       
             return {
               checkPasses: areResults,
               metadata: hadolintResult
             }
+          }
 
         } catch (error) {
             console.error(error.message);
