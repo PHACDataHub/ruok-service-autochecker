@@ -46,8 +46,8 @@ export async function runHadolintOnDockerfile(dockerfilePath) {
 
 export async function hadolintRepo(clonedRepoPath) {
   // For each Dockerfile in Repo, runs hadolint and consolidates results 
-    const dockerfilePaths = glob.sync(path.join(clonedRepoPath, '**', '*Dockerfile*'));
-    // let results = {};
+    const dockerfilePaths = glob.sync(path.join(clonedRepoPath, '**', '*dockerfile*'), { nocase: true });
+
     let results = []; 
   
     for (const dockerfilePath of dockerfilePaths) {
