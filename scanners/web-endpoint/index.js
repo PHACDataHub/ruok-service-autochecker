@@ -3,6 +3,7 @@ import { GraphQLClient, gql } from 'graphql-request'
 import { getPages } from './src/get-url-slugs.js'
 import { isWebEndpointType } from './src/check-endpoint-type.js'
 import { evaluateAccessibility } from './src/accessibility-checks.js'
+import { processAxeReport } from './src/process-axe-report.js';
 import puppeteer from 'puppeteer';
 import 'dotenv-safe/config.js'
 
@@ -49,31 +50,34 @@ process.on('SIGINT', () => process.exit(0))
           console.log('Evaluating page: ', pageToEvaluate)
           const axeReport = await evaluateAccessibility(pageToEvaluate, pageInstance, browser)
 
-          // Process report (create camelCase key for each evaluated criterion )
-          for (let i = 0; i < axeReport.length; i++) {
-            const camelize = s => s.replace(/-./g, x => x[1].toUpperCase())
-            const criterion = axeReport[i];
-            const criterionKey = Object.keys(criterion )[0];
-            const criterionValue = criterion [criterionKey];
-            const criterionKeyCamelCase = camelize(criterionKey);
-            if (!webEndpointAxeResults[pageToEvaluate]) {
-              webEndpointAxeResults[pageToEvaluate] = {}
-            }
-            if (typeof criterionValue.checkPasses === 'boolean') {
-              criterionValue.checkPasses = criterionValue.checkPasses.toString()
-            }
-            webEndpointAxeResults[pageToEvaluate][criterionKeyCamelCase] = {
-              checkPasses: criterionValue.checkPasses,
-              metadata: criterionValue.metadata,
-            }
-          }
-        }
-        const accessibilityPages = Object.keys(webEndpointAxeResults).map(page => {
-          return {
-            url: page,
-            ...webEndpointAxeResults[page],
-          }
-        })
+          const accessibilityPages = processAxeReport(axeReport, pageToEvaluate);
+    
+
+        //   // Process report (create camelCase key for each evaluated criterion )
+        //   for (let i = 0; i < axeReport.length; i++) {
+        //     const camelize = s => s.replace(/-./g, x => x[1].toUpperCase())
+        //     const criterion = axeReport[i];
+        //     const criterionKey = Object.keys(criterion )[0];
+        //     const criterionValue = criterion [criterionKey];
+        //     const criterionKeyCamelCase = camelize(criterionKey);
+        //     if (!webEndpointAxeResults[pageToEvaluate]) {
+        //       webEndpointAxeResults[pageToEvaluate] = {}
+        //     }
+        //     if (typeof criterionValue.checkPasses === 'boolean') {
+        //       criterionValue.checkPasses = criterionValue.checkPasses.toString()
+        //     }
+        //     webEndpointAxeResults[pageToEvaluate][criterionKeyCamelCase] = {
+        //       checkPasses: criterionValue.checkPasses,
+        //       metadata: criterionValue.metadata,
+        //     }
+        //   }
+        // }
+        // const accessibilityPages = Object.keys(webEndpointAxeResults).map(page => {
+        //   return {
+        //     url: page,
+        //     ...webEndpointAxeResults[page],
+        //   }
+        // })
         const mutation = gql`
             mutation {
               webEndpoint(
