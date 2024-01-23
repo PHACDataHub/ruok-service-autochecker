@@ -104,10 +104,10 @@ export async function runGitleaks(clonedRepoPath) {
         details: gitleaksJson,
       };
     } else if (code === 0) {
-      // results = {
-      //   leaksFound: false,
-      // };
-      results = null
+      results = {
+        leaksFound: false,
+      };
+      // results = null
     } else {
       results = {
         exitCode: code,
@@ -138,7 +138,7 @@ export class Gitleaks extends CheckOnClonedRepoInterface {
     
     async doRepoCheck() {
       try {
-        const gitleaksResult = await runGitleaks(this.clonedRepoPath);
+        let gitleaksResult = await runGitleaks(this.clonedRepoPath);
         let checkPasses
 
         if (gitleaksResult.leaksFound == true) {
@@ -147,8 +147,10 @@ export class Gitleaks extends CheckOnClonedRepoInterface {
             checkPasses = null
         } else {
           checkPasses = true
+          gitleaksResult = null
         }
 
+        console.log(checkPasses, gitleaksResult)
         return {
           checkPasses: checkPasses,
           metadata: gitleaksResult

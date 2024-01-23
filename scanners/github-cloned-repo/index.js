@@ -77,16 +77,17 @@ process.on('SIGINT', () => process.exit(0))
                             metadata: {}
                         },
                         gitleaks: {
-                            checkPasses: ${JSON.stringify(results.gitleaks.checkPasses, null, 4).replace(/"([^"]+)":/g, '$1:')}
-                            metadata: ${JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+                            checkPasses: ${results.gitleaks ? results.gitleaks.checkPasses : null}
+                            metadata: ${results.gitleaks ? JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:') : {}}
                         },
                         hadolint: {
-                            checkPasses: ${results.hadolint.checkPasses}
+                            checkPasses: ${results.hadolint ? results.hadolint.checkPasses : null}
                             metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
                         }
                         trivyRepoVulnerability: {
-                            checkPasses: ${results.trivy_repo_vulnerability.checkPasses}
-                            metadata: ${JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+                            checkPasses: ${results.trivy_repo_vulnerability ? results.trivy_repo_vulnerability.checkPasses : null}
+                            metadata: ${results.trivy_repo_vulnerability ? JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:'): ''}
+
                         }                       
                     }
                 )
@@ -113,3 +114,15 @@ process.on('SIGINT', () => process.exit(0))
 await nc.closed();
 
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/acm-core\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/it33-filtering\"}"
+
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-bots\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/pelias-canada\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/safe-inputs\"}"
+
+
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/csi-projects\"}"
+// metadata: ${JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+
+// checkPasses: ${JSON.stringify(results.gitleaks.checkPasses, null, 4).replace(/"([^"]+)":/g, '$1:')}

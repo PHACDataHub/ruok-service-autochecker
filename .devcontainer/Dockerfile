@@ -66,6 +66,9 @@ RUN sudo curl -LO https://github.com/zricethezav/gitleaks/releases/download/v8.1
 RUN wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 && \
     mv hadolint-Linux-x86_64 /usr/local/bin/hadolint && \
     chmod +x /usr/local/bin/hadolint
+
+# Install trivy for repo scan
+RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin 
     
 # Start container as non-root user
 USER node
