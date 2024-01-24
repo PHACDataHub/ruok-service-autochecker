@@ -74,7 +74,7 @@ process.on('SIGINT', () => process.exit(0))
               branchProtection: {
                 checkPasses: ${payload.BranchProtectionStrategy.checkPasses}
                 metadata: {
-                  branches: ["${Array.from(payload.BranchProtectionStrategy.metadata.branches).join('", "')}"]
+                  branches: "removing this"
                   rules: ${payload.BranchProtectionStrategy.metadata.rules.length > 0 ? `["${Array.from(payload.BranchProtectionStrategy.metadata.rules).join('", "')}"]` : "null"},
 
                 }
@@ -88,6 +88,7 @@ process.on('SIGINT', () => process.exit(0))
 
       // New GraphQL client - TODO: remove hard-coded URL
       const graphqlClient = new GraphQLClient(GRAPHQL_URL);
+
       // Write mutation to GraphQL API
       const mutationResponse = await graphqlClient.request(mutation);
       console.log("GraphQL mutation submitted", mutationResponse);
@@ -104,4 +105,3 @@ await nc.closed();
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/pelias-canada\"}"
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/safe-inputs\"}"
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-dns\"}"
-//                   rules: ["${Array.from(payload.BranchProtectionStrategy.metadata.rules).join('", "')}"]

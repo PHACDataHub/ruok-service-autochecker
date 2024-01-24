@@ -65,27 +65,27 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
       graphqlVars
     )
 
-    const repoBranches = await this.octokit.graphql(
-      `query getExistingRepoBranches($orgName: String!, $repoName: String!) {
-        organization(login: $orgName) {
-          repository(name: $repoName) {
-            id
-            name
-            refs(refPrefix: "refs/heads/", first: 20) {
-              edges {
-                node {
-                  branchName:name
-                }
-              }
-              pageInfo {
-                endCursor #use this value to paginate through repos with more than 100 branches
-              }
-            }
-          }
-        }
-      }`,
-      graphqlVars,
-    )
+    // const repoBranches = await this.octokit.graphql(
+    //   `query getExistingRepoBranches($orgName: String!, $repoName: String!) {
+    //     organization(login: $orgName) {
+    //       repository(name: $repoName) {
+    //         id
+    //         name
+    //         refs(refPrefix: "refs/heads/", first: 20) {
+    //           edges {
+    //             node {
+    //               branchName:name
+    //             }
+    //           }
+    //           pageInfo {
+    //             endCursor #use this value to paginate through repos with more than 100 branches
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }`,
+    //   graphqlVars,
+    // )
 
     //   __  __      _            _       _        
     //  |  \/  | ___| |_ __ _  __| | __ _| |_ __ _ 
@@ -96,7 +96,8 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
     console.log('extracting metadata')
 
   
-   const metadata = this.extractMetadata(repoBranches, branchProtectionRules); 
+  //  const metadata = this.extractMetadata(repoBranches, branchProtectionRules); 
+   const metadata = this.extractMetadata(branchProtectionRules); 
 
     //    ____ _               _    
     //   / ___| |__   ___  ___| | __
@@ -111,11 +112,16 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
     }
   }
   
-  extractMetadata(repoBranches, branchProtectionRules) {
-    const branches = repoBranches.organization.repository.refs.edges.map(({ node }) => node.branchName)
+  // extractMetadata(repoBranches, branchProtectionRules) {
+  extractMetadata(branchProtectionRules) {
+    // const branches = repoBranches.organization.repository.refs.edges.map(({ node }) => node.branchName)
     const rules = branchProtectionRules.repository.branchProtectionRules.edges;
+
+    console.log(JSON.stringify(rules, null,4))
     
     let trueRules = []
+
+    // look for t/ f, then if non zero or non empty for these    "requiredApprovingReviewCount": 0,"requiredDeploymentEnvironments": [], use pattern for key
     
     if (rules !== undefined && rules.length !== 0) {
       // Filter out all the true values
@@ -126,7 +132,7 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
       console.log(trueRules);
     }
     return {
-      branches,
+      // branches,
       rules: trueRules,
     }
   }
