@@ -65,7 +65,7 @@ process.on('SIGINT', () => process.exit(0))
               }
               `;
 
-          // console.log('*****************************************************\n', mutation)
+          console.log('*****************************************************\n', mutation)
           // API connection 
           const graphQLClient = new GraphQLClient(GRAPHQL_URL);
           // Write mutation to GraphQL API

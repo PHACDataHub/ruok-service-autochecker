@@ -9,7 +9,7 @@
 
 import AxePuppeteer  from "@axe-core/puppeteer";
 import puppeteer from 'puppeteer'
-// import fs from 'fs'
+
 
 export async function evaluateAccessibility(url, page, browser) {
     await page.goto(url, { cache: 'no-store' })
