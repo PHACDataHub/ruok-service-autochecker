@@ -4,21 +4,21 @@ import { ProgrammingLanguagesStrategy } from "./all-langauges.js";
 import { BranchProtectionStrategy } from "./branch-protection.js"
 import { CodeContributorsStrategy } from "./code-contributors.js";
 import { VunerabilityAlertsEnabledStrategy } from "./are-vunerability-alerts-enabled.js";
-import { PullRequestProtectionStrategy } from "./pull-request-protection.js";
+// import { PullRequestProtectionStrategy } from "./pull-request-protection.js";
 
 import { OctokitCheckStrategy } from './octokit-check-strategy.js'
 
 export class AllChecksStrategy extends OctokitCheckStrategy {
-  constructor(repoName, owner, octokit, branchName = 'main') {
-    super(repoName, owner, octokit, branchName);
+  constructor(repoName, owner, octokit) {
+    super(repoName, owner, octokit);
     this.checkers = [
-        new GetRepoDetailsStrategy(repoName, owner, octokit, 'main'),
-        new AutomatedSecurityFixesStrategy(repoName, owner, octokit, 'main'),
-        new ProgrammingLanguagesStrategy(repoName, owner, octokit, 'main'), 
-        new CodeContributorsStrategy(repoName, owner, octokit, 'main'),
-        new VunerabilityAlertsEnabledStrategy(repoName, owner, octokit, 'main'),
-        new PullRequestProtectionStrategy(repoName, owner, octokit, 'main'),
-        new BranchProtectionStrategy(repoName, owner, octokit, 'main'),
+        new GetRepoDetailsStrategy(repoName, owner, octokit),
+        new AutomatedSecurityFixesStrategy(repoName, owner, octokit),
+        new ProgrammingLanguagesStrategy(repoName, owner, octokit), 
+        new CodeContributorsStrategy(repoName, owner, octokit),
+        new VunerabilityAlertsEnabledStrategy(repoName, owner, octokit),
+        // new PullRequestProtectionStrategy(repoName, owner, octokit, 'main'),
+        new BranchProtectionStrategy(repoName, owner, octokit),
       ];
     }
     async formatResponse() {

@@ -4,8 +4,8 @@
 import { OctokitCheckStrategy } from './octokit-check-strategy.js'
 
 export class AutomatedSecurityFixesStrategy extends OctokitCheckStrategy {
-  constructor(repoName, owner, octokit, branchName = 'main') {
-    super(repoName, owner, octokit, branchName);
+  constructor(repoName, owner, octokit) {
+    super(repoName, owner, octokit);
 
     this.endpoint = 'GET /repos/{owner}/{repo}/automated-security-fixes'
     this.options = {

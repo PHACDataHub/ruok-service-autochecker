@@ -17,16 +17,9 @@ const {
 
 // Also note - this will be appended with repo name when published. 
 // Authenicate with GitHub 
-const octokit = new Octokit({ auth: GITHUB_TOKEN_CLASSIC });
-// const octokit = new Octokit({ auth: GITHUB_TOKEN, });
-// let octokit;
+const octokit = new Octokit({ auth: GITHUB_TOKEN_CLASSIC, });
+// const octokit = new Octokit({ auth: GITHUB_TOKEN_FINE_GRAINED, });
 
-// try {
-//   octokit = new Octokit({ auth: GITHUB_TOKEN });
-// } catch (error) {
-//   console.error("An error occurred:", error);
-//   octokit = new Octokit({ auth: GITHUB_TOKEN_CLASSIC });
-// }
 
 // NATs connection 
 const nc = await connect({ servers: NATS_URL, })
@@ -51,7 +44,7 @@ process.on('SIGINT', () => process.exit(0))
       const repoName = prefix[2];
 
       const branchName = 'main' // TODO - come back for this after initial pass - when picked up by repodetails
-      const check = new AllChecksStrategy(repoName, orgName, octokit, branchName);
+      const check = new AllChecksStrategy(repoName, orgName, octokit);
 
       const payload = await check.formatResponse(check);
       // Mutation to add a graph for the new endpoints
@@ -82,7 +75,8 @@ process.on('SIGINT', () => process.exit(0))
                 checkPasses: ${payload.BranchProtectionStrategy.checkPasses}
                 metadata: {
                   branches: ["${Array.from(payload.BranchProtectionStrategy.metadata.branches).join('", "')}"]
-                  rules: ["${Array.from(payload.BranchProtectionStrategy.metadata.rules).join('", "')}"]
+                  rules: ${payload.BranchProtectionStrategy.metadata.rules.length > 0 ? `["${Array.from(payload.BranchProtectionStrategy.metadata.rules).join('", "')}"]` : "null"},
+
                 }
               }
             }
@@ -106,3 +100,8 @@ await nc.closed();
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}"
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/cpho-phase2\"}"
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/it33-filtering\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-bots\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/pelias-canada\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/safe-inputs\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-dns\"}"
+//                   rules: ["${Array.from(payload.BranchProtectionStrategy.metadata.rules).join('", "')}"]

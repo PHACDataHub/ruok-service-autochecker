@@ -11,12 +11,11 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
     this.options = {
       owner: this.owner,
       repo: this.repo,
-      // branch: this.branchName,
       headers: {
         'X-GitHub-Api-Version': '2022-11-28',
       },
     }
-    // this.endpoint = 'GET /repos/{owner}/{repo}/branches/main/protection'
+    this.endpoint = 'GET /repos/{owner}/{repo}/branches/main/protection'
   }
   async formatResponse() {
     //    ____                 _      ___  _     
@@ -29,6 +28,8 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
       orgName: this.owner,
       repoName: this.repo,
     }
+
+    console.log (`********************* before branch protection `)
 
     const branchProtectionRules = await this.octokit.graphql(
       `query MyQuery($orgName: String!, $repoName: String!)  {
@@ -65,13 +66,16 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
       graphqlVars
     )
 
+    console.log (`********************* after branch protection `)
+    console.log (`********************* before branches `)
+
     const repoBranches = await this.octokit.graphql(
       `query getExistingRepoBranches($orgName: String!, $repoName: String!) {
         organization(login: $orgName) {
           repository(name: $repoName) {
             id
             name
-            refs(refPrefix: "refs/heads/", first: 20) {
+            refs(refPrefix: "refs/heads/", first: 10) {
               edges {
                 node {
                   branchName:name
@@ -87,6 +91,7 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
       graphqlVars,
     )
 
+    console.log (`********************* after branches `)
     //   __  __      _            _       _        
     //  |  \/  | ___| |_ __ _  __| | __ _| |_ __ _ 
     //  | |\/| |/ _ \ __/ _` |/ _` |/ _` | __/ _` |
@@ -110,31 +115,26 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
       metadata, 
     }
   }
-  
   extractMetadata(repoBranches, branchProtectionRules) {
     const branches = repoBranches.organization.repository.refs.edges.map(({ node }) => node.branchName)
     const rules = branchProtectionRules.repository.branchProtectionRules.edges;
-    
-    let trueRules = []
-    
     if (rules !== undefined && rules.length !== 0) {
-      // Filter out all the true values
-      trueRules = Object.entries(rules[0].node)
-        .filter(([key, value]) => value === true)
-        .map(([key]) => key);
-
-      console.log(trueRules);
+      rules
+        .map(({ node }) => ({ [node.pattern]: node }))
+        .reduce((obj, item) => {
+          return {
+            ...obj,
+            [item[key]]: item,
+          };
+        });
     }
     return {
       branches,
-      rules: trueRules,
+      rules,
     }
   }
-
-
   passesCheck(metadata) {
     // At least one protected branch rule matches branch in repository
-    // return metadata.branches.map(branch => branch in metadata.rules).includes(true)
-    return metadata.rules.length > 0;
+    return metadata.branches.map(branch => branch in metadata.rules).includes(true)
   }
 }

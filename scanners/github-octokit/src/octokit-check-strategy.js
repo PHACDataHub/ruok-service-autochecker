@@ -2,11 +2,12 @@
 
 
 export class OctokitCheckStrategy {
-    constructor(repoName, owner, octokit, branchName='main') {
+    constructor(repoName, owner, octokit) {
+    // constructor(repoName, owner, octokit, branchName='main') {
         this.repo = repoName
         this.owner = owner
         this.octokit = octokit
-        this.branch = branchName
+        // this.branch = branchName
     }
 
     async makeOctokitRequest() {
@@ -14,7 +15,7 @@ export class OctokitCheckStrategy {
           const response = await this.octokit.request(this.endpoint, this.options);
           return response
         } catch (error) {
-          console.error("An error occurred:", error.message);
+          console.error("An error occurred with :", this.endpoint, error.message);
           throw error
         }
       }
