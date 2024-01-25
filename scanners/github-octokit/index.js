@@ -73,13 +73,9 @@ process.on('SIGINT', () => process.exit(0))
               },
               branchProtection: {
                 checkPasses: ${payload.BranchProtectionStrategy.checkPasses}
-                metadata: {
-                  branches: "removing this"
-                  rules: ${payload.BranchProtectionStrategy.metadata.rules.length > 0 ? `["${Array.from(payload.BranchProtectionStrategy.metadata.rules).join('", "')}"]` : "null"},
-
+                metadata:  ${JSON.stringify(payload.BranchProtectionStrategy.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
                 }
               }
-            }
           )
         }
         `;
@@ -105,3 +101,4 @@ await nc.closed();
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/pelias-canada\"}"
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/safe-inputs\"}"
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-dns\"}"
+// rules: ${payload.BranchProtectionStrategy.metadata.rules.length > 0 ? `["${Array.from(payload.BranchProtectionStrategy.metadata.rules).join('", "')}"]` : "null"},

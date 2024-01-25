@@ -112,35 +112,54 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
     }
   }
   
-  // extractMetadata(repoBranches, branchProtectionRules) {
   extractMetadata(branchProtectionRules) {
-    // const branches = repoBranches.organization.repository.refs.edges.map(({ node }) => node.branchName)
+    // picks out branch ('pattern'), rules that are set to true, requiredApprovingReviewCount if <0 and requiredDeploymentEnvironments if non-empty
+    
+    // Get branch protection rules (octokit graphql query)
     const rules = branchProtectionRules.repository.branchProtectionRules.edges;
-
-    console.log(JSON.stringify(rules, null,4))
-    
-    let trueRules = []
-
-    // look for t/ f, then if non zero or non empty for these    "requiredApprovingReviewCount": 0,"requiredDeploymentEnvironments": [], use pattern for key
-    
+  
+    console.log(JSON.stringify(rules, null, 4));
+  
+    // transform rules to pick out only relevant ones
+    let transformedRules = [];
+  
     if (rules !== undefined && rules.length !== 0) {
-      // Filter out all the true values
-      trueRules = Object.entries(rules[0].node)
-        .filter(([key, value]) => value === true)
-        .map(([key]) => key);
-
-      console.log(trueRules);
+      transformedRules = rules.map(({ node }) => {
+        const trueKeys = Object.entries(node) 
+          .filter(([key, value]) => value === true)
+          .map(([key]) => key);
+  
+        const { pattern, requiredApprovingReviewCount, requiredDeploymentEnvironments } = node; // keys that don't have boolean values 
+  
+        const transformedRule = {
+          branch: pattern,
+          ...trueKeys.reduce((acc, key) => {
+            acc[key] = true;
+            return acc;
+          }, {}),
+        };
+  
+        // Include requiredApprovingReviewCount only if it's greater than 0
+        if (requiredApprovingReviewCount > 0) {
+          transformedRule.requiredApprovingReviewCount = requiredApprovingReviewCount;
+        }
+  
+        // Include requiredDeploymentEnvironments only if it's non-empty
+        if (requiredDeploymentEnvironments && requiredDeploymentEnvironments.length > 0) {
+          transformedRule.requiredDeploymentEnvironments = requiredDeploymentEnvironments;
+        }
+  
+        return transformedRule; // add to transformed rules array (note don;t have an example with more than one branch with protection, imagine this will need to be modified in the future to accomidate)
+      });
+  
+      console.log(transformedRules);
     }
-    return {
-      // branches,
-      rules: trueRules,
-    }
+  
+    return {rules: transformedRules};
   }
-
-
+    
   passesCheck(metadata) {
     // At least one protected branch rule matches branch in repository
-    // return metadata.branches.map(branch => branch in metadata.rules).includes(true)
     return metadata.rules.length > 0;
   }
 }
