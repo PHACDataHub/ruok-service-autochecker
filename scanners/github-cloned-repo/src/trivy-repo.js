@@ -90,11 +90,12 @@ async function parseScanResults(scanResultsFilePath){
             // console.log('*****************')
             // console.log(results)
             return results
+        } else if (json && !json.Results) {
+            return []
         }
-
     } catch (error) {
         console.error('Error reading or parsing JSON file:', error);
-        return []
+        return null
     }
 }
 
@@ -113,7 +114,7 @@ export class TrivyRepo extends CheckOnClonedRepoInterface {
       
             return {
               checkPasses: (trivyRepoResult == 0),
-              metadata: trivyRepoResult
+              metadata: trivyRepoResult.length > 0 ? trivyRepoResult : null
             }
 
         } catch (error) {

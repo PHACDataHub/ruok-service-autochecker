@@ -28,7 +28,7 @@ export class HasApiDirectory extends CheckOnClonedRepoInterface {
         const hasApiDirectoryResult = await hasApiDirectory(this.clonedRepoPath);
         return {
             checkPasses: hasApiDirectoryResult,
-            metadata: null,
+            metadata: "Note - not a fully flushed out check yet.",
             // lastUpdated: Date.now()
         }
     }
