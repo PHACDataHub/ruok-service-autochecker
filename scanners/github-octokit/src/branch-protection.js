@@ -65,28 +65,6 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
       graphqlVars
     )
 
-    // const repoBranches = await this.octokit.graphql(
-    //   `query getExistingRepoBranches($orgName: String!, $repoName: String!) {
-    //     organization(login: $orgName) {
-    //       repository(name: $repoName) {
-    //         id
-    //         name
-    //         refs(refPrefix: "refs/heads/", first: 20) {
-    //           edges {
-    //             node {
-    //               branchName:name
-    //             }
-    //           }
-    //           pageInfo {
-    //             endCursor #use this value to paginate through repos with more than 100 branches
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }`,
-    //   graphqlVars,
-    // )
-
     //   __  __      _            _       _        
     //  |  \/  | ___| |_ __ _  __| | __ _| |_ __ _ 
     //  | |\/| |/ _ \ __/ _` |/ _` |/ _` | __/ _` |
@@ -96,7 +74,6 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
     console.log('extracting metadata')
 
   
-  //  const metadata = this.extractMetadata(repoBranches, branchProtectionRules); 
    const metadata = this.extractMetadata(branchProtectionRules); 
 
     //    ____ _               _    
@@ -155,6 +132,9 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
       // console.log(transformedRules);
     }
   
+    // if (transformedRules == []){
+    //   transformedRules = null;
+    // }
     return {rules: transformedRules};
   }
     
