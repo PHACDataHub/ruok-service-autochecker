@@ -1,3 +1,4 @@
+// don't think this is needed anymore, given that we have branch-protection in place (with requiresApprovingReviews)
 import { OctokitCheckStrategy } from './octokit-check-strategy.js'
 
 export class PullRequestProtectionStrategy extends OctokitCheckStrategy {

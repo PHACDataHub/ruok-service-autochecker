@@ -118,7 +118,7 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
     // Get branch protection rules (octokit graphql query)
     const rules = branchProtectionRules.repository.branchProtectionRules.edges;
   
-    console.log(JSON.stringify(rules, null, 4));
+    // console.log(JSON.stringify(rules, null, 4));
   
     // transform rules to pick out only relevant ones
     let transformedRules = [];
@@ -152,7 +152,7 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
         return transformedRule; // add to transformed rules array (note don;t have an example with more than one branch with protection, imagine this will need to be modified in the future to accomidate)
       });
   
-      console.log(transformedRules);
+      // console.log(transformedRules);
     }
   
     return {rules: transformedRules};

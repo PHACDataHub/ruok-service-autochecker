@@ -9,13 +9,12 @@ import 'dotenv-safe/config.js'
 
 const {
   NATS_URL,
-  GITHUB_TOKEN,
+  GITHUB_TOKEN_FINE_GRAINED,
   GITHUB_TOKEN_CLASSIC,
   NATS_SUB_STREAM,
   GRAPHQL_URL,
 } = process.env;
 
-// Also note - this will be appended with repo name when published. 
 // Authenicate with GitHub 
 const octokit = new Octokit({ auth: GITHUB_TOKEN_CLASSIC, });
 // const octokit = new Octokit({ auth: GITHUB_TOKEN_FINE_GRAINED, });
@@ -43,11 +42,11 @@ process.on('SIGINT', () => process.exit(0))
       const orgName = prefix[1];
       const repoName = prefix[2];
 
-      const branchName = 'main' // TODO - come back for this after initial pass - when picked up by repodetails
       const check = new AllChecksStrategy(repoName, orgName, octokit);
+      const result = await check.formatResponse(check);
 
-      const payload = await check.formatResponse(check);
-      // Mutation to add a graph for the new endpoints
+      console.log(result)
+
       // TODO: refactor this into a testable query builder function
       const mutation = gql`
         mutation {
@@ -57,23 +56,27 @@ process.on('SIGINT', () => process.exit(0))
               kind: "Github"
               owner: "${orgName}"
               repo: "${repoName}"
-              license: "${payload.GetRepoDetailsStrategy.metadata.license}"
-              visibility: "${payload.GetRepoDetailsStrategy.metadata.visibility}"
-              programmingLanguage: ["${Array.from(Object.keys(payload.ProgrammingLanguagesStrategy.metadata)).join('", "')}"]
-              automatedSecurityFixes: {
-                checkPasses: ${payload.AutomatedSecurityFixesStrategy.checkPasses}
+              description: ${result.GetRepoDetailsStrategy.metadata.description ? JSON.stringify(result.GetRepoDetailsStrategy.metadata.description) :  null}
+              visibility: ${JSON.stringify(result.GetRepoDetailsStrategy.metadata.visibility)}
+              license: ${result.GetRepoDetailsStrategy.metadata.license ? JSON.stringify(result.GetRepoDetailsStrategy.metadata.license) :  null}
+              programmingLanguage: ${
+                Array.from(Object.keys(result.ProgrammingLanguagesStrategy.metadata)).length > 0
+                  ? `["${Array.from(Object.keys(result.ProgrammingLanguagesStrategy.metadata)).join('", "')}"]`
+                  : null
+              }              automatedSecurityFixes: {
+                checkPasses: ${result.AutomatedSecurityFixesStrategy.checkPasses}
                 metadata: {
-                  enabled: ${payload.AutomatedSecurityFixesStrategy.metadata.enabled}
-                  paused: ${payload.AutomatedSecurityFixesStrategy.metadata.paused}
+                  enabled: ${result.AutomatedSecurityFixesStrategy.metadata.enabled}
+                  paused: ${result.AutomatedSecurityFixesStrategy.metadata.paused}
                 }
               },
               vulnerabilityAlerts: {
-                checkPasses: ${payload.VunerabilityAlertsEnabledStrategy.checkPasses}
-                metadata: ${JSON.stringify(payload.VunerabilityAlertsEnabledStrategy.metadata)}
+                checkPasses: ${result.VunerabilityAlertsEnabledStrategy.checkPasses}
+                metadata: ${JSON.stringify(result.VunerabilityAlertsEnabledStrategy.metadata)}
               },
               branchProtection: {
-                checkPasses: ${payload.BranchProtectionStrategy.checkPasses}
-                metadata:  ${JSON.stringify(payload.BranchProtectionStrategy.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+                checkPasses: ${result.BranchProtectionStrategy.checkPasses}
+                metadata:  ${JSON.stringify(result.BranchProtectionStrategy.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
                 }
               }
           )
@@ -101,4 +104,8 @@ await nc.closed();
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/pelias-canada\"}"
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/safe-inputs\"}"
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-dns\"}"
+
+// securityAndAnalysis: "${JSON.stringify(result.GetRepoDetailsStrategy.metadata.security_and_analysis, null, 4).replace(/"([^"]+)":/g, '$1:')}"
+
 // rules: ${payload.BranchProtectionStrategy.metadata.rules.length > 0 ? `["${Array.from(payload.BranchProtectionStrategy.metadata.rules).join('", "')}"]` : "null"},
+// programmingLanguage: ["${Array.from(Object.keys(result.ProgrammingLanguagesStrategy.metadata)).join('", "')}"]       
