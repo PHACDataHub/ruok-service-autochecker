@@ -1,8 +1,8 @@
 import { OctokitCheckStrategy } from './octokit-check-strategy.js'
 
 export class GetRepoDetailsStrategy extends OctokitCheckStrategy {
-  constructor(repoName, owner, octokit, branchName = 'main') {
-    super(repoName, owner, octokit, branchName);
+  constructor(repoName, owner, octokit) {
+    super(repoName, owner, octokit);
 
     this.endpoint = 'GET /repos/{owner}/{repo}'
     this.options = {
@@ -21,19 +21,15 @@ export class GetRepoDetailsStrategy extends OctokitCheckStrategy {
       return {
         checkPasses: null,
         metadata: {
-          'description': response.data.description,
           "name": response.data.name,
-          "repo_description": response.data.description,
+          "description": response.data.description || null,
           "main_language": response.data.language, //TODO - if python - timeout re luc message cpho, react robot.txt...
           "visibility": response.data.visibility,
-          "updated_at": response.data.updated_at, //TODO - there's also pushed out, but think this is for push to main - time since updated - re followups, tech debt, security
-          "updated_at": response.data.updated_at,
-          "pushed_at": response.data.pushed_at,
-          "default_branch": response.data.default_branch, // TODO - use in branch protection checks...
-          "html_url": response.data.html_url, // this is same as source code repository - not sure if needed or need to rename...
+          "main_branch_updated_at": response.data.updated_at, //TODO - there's also pushed out, but think this is for push to main - time since updated - re followups, tech debt, security
+          "any_branch_pushed_at": response.data.pushed_at,
           "license": response.data.license ? response.data.license.spdx_id : null,
           "has_github_pages": response.data.has_pages,
-          'security_and_analysis': response.data.security_and_analysis, // this only works if 
+          'security_and_analysis': response.data.security_and_analysis || null, // this only works for public repos at the moment!
         }
       };
     } catch (error) {

@@ -24,8 +24,11 @@ class GithubEndpointInput:
     kind: str
     owner: str
     repo: str
-    license: Optional[str] = None
+    description: Optional[str] = None
     visibility: Optional[str] = None
+    license: Optional[str] = None
+    api: Optional[bool] = None
+    security_and_analysis: Optional[str] = None
     programming_language: Optional[List[str]] = None
     automated_security_fixes: Optional[CheckPassesInput] = None
     vulnerability_alerts: Optional[CheckPassesInput] = None

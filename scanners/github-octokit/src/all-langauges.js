@@ -1,8 +1,8 @@
 import { OctokitCheckStrategy } from './octokit-check-strategy.js'
 
 export class ProgrammingLanguagesStrategy extends OctokitCheckStrategy {
-  constructor(repoName, owner, octokit, branchName = 'main') {
-    super(repoName, owner, octokit, branchName);
+  constructor(repoName, owner, octokit) {
+    super(repoName, owner, octokit);
 
     this.endpoint = 'GET /repos/{owner}/{repo}/languages'
     this.options = {

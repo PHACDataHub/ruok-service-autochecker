@@ -3,8 +3,8 @@
 import { OctokitCheckStrategy } from './octokit-check-strategy.js'
 
 export class VunerabilityAlertsEnabledStrategy extends OctokitCheckStrategy {
-    constructor(repoName, owner, octokit, branchName = 'main') {
-        super(repoName, owner, octokit, branchName);
+    constructor(repoName, owner, octokit) {
+        super(repoName, owner, octokit);
 
         this.endpoint = '/repos/{owner}/{repo}/vulnerability-alerts'
         this.options = {

@@ -53,7 +53,7 @@ process.on('SIGINT', () => process.exit(0))
             const check = await initializeChecker(checkName, repoName, repoPath)
             const results = await check.doRepoCheck()
 
-            // console.log('Scan Results:',results)
+            console.log('Scan Results:',results)
  
             // Mutation to add a graph for the new endpoints
             // TODO: refactor this into a testable query builder function
@@ -68,6 +68,7 @@ process.on('SIGINT', () => process.exit(0))
                         kind: "Github"
                         owner: "${orgName}"
                         repo: "${repoName}"
+                        api: ${results.hasApiDirectory.checkPasses? results.hasApiDirectory.checkPasses : null}
                         hasSecurityMd: {
                             checkPasses: ${results.hasSecurityMd.checkPasses}
                             metadata: ${results.hasSecurityMd.metadata}
@@ -86,8 +87,11 @@ process.on('SIGINT', () => process.exit(0))
                         }
                         trivyRepoVulnerability: {
                             checkPasses: ${results.trivy_repo_vulnerability ? results.trivy_repo_vulnerability.checkPasses : null}
-                            metadata: ${results.trivy_repo_vulnerability ? JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:'): ''}
 
+                            metadata: ${results.trivy_repo_vulnerability && results.trivy_repo_vulnerability.metadata !== undefined ?
+                                JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:') :
+                                null
+                            }
                         }                       
                     }
                 )

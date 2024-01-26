@@ -5,18 +5,18 @@
 import { OctokitCheckStrategy } from './octokit-check-strategy.js'
 
 export class BranchProtectionStrategy extends OctokitCheckStrategy {
-  constructor(repoName, owner, octokit, branchName = 'main') {
-    super(repoName, owner, octokit, branchName);
+  constructor(repoName, owner, octokit) {
+    super(repoName, owner, octokit);
 
     this.options = {
       owner: this.owner,
       repo: this.repo,
-      branch: this.branchName,
+      // branch: this.branchName,
       headers: {
         'X-GitHub-Api-Version': '2022-11-28',
       },
     }
-    this.endpoint = 'GET /repos/{owner}/{repo}/branches/main/protection'
+    // this.endpoint = 'GET /repos/{owner}/{repo}/branches/main/protection'
   }
   async formatResponse() {
     //    ____                 _      ___  _     
@@ -29,6 +29,7 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
       orgName: this.owner,
       repoName: this.repo,
     }
+
     const branchProtectionRules = await this.octokit.graphql(
       `query MyQuery($orgName: String!, $repoName: String!)  {
         repository(name: $repoName, owner: $orgName) {
@@ -63,34 +64,17 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
       }`,
       graphqlVars
     )
-    const repoBranches = await this.octokit.graphql(
-      `query getExistingRepoBranches($orgName: String!, $repoName: String!) {
-        organization(login: $orgName) {
-          repository(name: $repoName) {
-            id
-            name
-            refs(refPrefix: "refs/heads/", first: 10) {
-              edges {
-                node {
-                  branchName:name
-                }
-              }
-              pageInfo {
-                endCursor #use this value to paginate through repos with more than 100 branches
-              }
-            }
-          }
-        }
-      }`,
-      graphqlVars,
-    )
+
     //   __  __      _            _       _        
     //  |  \/  | ___| |_ __ _  __| | __ _| |_ __ _ 
     //  | |\/| |/ _ \ __/ _` |/ _` |/ _` | __/ _` |
     //  | |  | |  __/ || (_| | (_| | (_| | || (_| |
     //  |_|  |_|\___|\__\__,_|\__,_|\__,_|\__\__,_|
 
-   const metadata = this.extractMetadata(repoBranches, branchProtectionRules); 
+    console.log('extracting metadata')
+
+  
+   const metadata = this.extractMetadata(branchProtectionRules); 
 
     //    ____ _               _    
     //   / ___| |__   ___  ___| | __
@@ -104,26 +88,58 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
       metadata, 
     }
   }
-  extractMetadata(repoBranches, branchProtectionRules) {
-    const branches = repoBranches.organization.repository.refs.edges.map(({ node }) => node.branchName)
+  
+  extractMetadata(branchProtectionRules) {
+    // picks out branch ('pattern'), rules that are set to true, requiredApprovingReviewCount if <0 and requiredDeploymentEnvironments if non-empty
+    
+    // Get branch protection rules (octokit graphql query)
     const rules = branchProtectionRules.repository.branchProtectionRules.edges;
+  
+    // console.log(JSON.stringify(rules, null, 4));
+  
+    // transform rules to pick out only relevant ones
+    let transformedRules = [];
+  
     if (rules !== undefined && rules.length !== 0) {
-      rules
-        .map(({ node }) => ({ [node.pattern]: node }))
-        .reduce((obj, item) => {
-          return {
-            ...obj,
-            [item[key]]: item,
-          };
-        });
+      transformedRules = rules.map(({ node }) => {
+        const trueKeys = Object.entries(node) 
+          .filter(([key, value]) => value === true)
+          .map(([key]) => key);
+  
+        const { pattern, requiredApprovingReviewCount, requiredDeploymentEnvironments } = node; // keys that don't have boolean values 
+  
+        const transformedRule = {
+          branch: pattern,
+          ...trueKeys.reduce((acc, key) => {
+            acc[key] = true;
+            return acc;
+          }, {}),
+        };
+  
+        // Include requiredApprovingReviewCount only if it's greater than 0
+        if (requiredApprovingReviewCount > 0) {
+          transformedRule.requiredApprovingReviewCount = requiredApprovingReviewCount;
+        }
+  
+        // Include requiredDeploymentEnvironments only if it's non-empty
+        if (requiredDeploymentEnvironments && requiredDeploymentEnvironments.length > 0) {
+          transformedRule.requiredDeploymentEnvironments = requiredDeploymentEnvironments;
+        }
+  
+        return transformedRule; // add to transformed rules array (note don;t have an example with more than one branch with protection, imagine this will need to be modified in the future to accomidate)
+      });
+  
+      // console.log(transformedRules);
     }
-    return {
-      branches,
-      rules,
-    }
+  
+    // if (transformedRules == []){
+    //   transformedRules = null;
+    // }
+    return {rules: transformedRules};
   }
+    
   passesCheck(metadata) {
     // At least one protected branch rule matches branch in repository
-    return metadata.branches.map(branch => branch in metadata.rules).includes(true)
+    return metadata.rules.length > 0;
   }
 }
