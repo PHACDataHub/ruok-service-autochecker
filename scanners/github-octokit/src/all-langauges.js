@@ -50,8 +50,10 @@ export class ProgrammingLanguagesStrategy extends OctokitCheckStrategy {
       return {
         ...obj,
         [item.node.name]: item.node.color,
+        // TODO - change colour to size/ percentage (https://docs.github.com/en/graphql/reference/objects#languageconnection)
       };
     }, {});
+  
 
     return {
       checkPasses: null,
