@@ -69,6 +69,7 @@ process.on('SIGINT', () => process.exit(0))
                         owner: "${orgName}"
                         repo: "${repoName}"
                         api: ${results.hasApiDirectory.checkPasses}
+                        
                         hasSecurityMd: {
                             checkPasses: ${results.hasSecurityMd.checkPasses}
                             metadata: ${results.hasSecurityMd.metadata}

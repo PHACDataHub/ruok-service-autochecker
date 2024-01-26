@@ -59,11 +59,8 @@ process.on('SIGINT', () => process.exit(0))
               description: ${result.GetRepoDetailsStrategy.metadata.description ? JSON.stringify(result.GetRepoDetailsStrategy.metadata.description) :  null}
               visibility: ${JSON.stringify(result.GetRepoDetailsStrategy.metadata.visibility)}
               license: ${result.GetRepoDetailsStrategy.metadata.license ? JSON.stringify(result.GetRepoDetailsStrategy.metadata.license) :  null}
-              programmingLanguage: ${
-                Array.from(Object.keys(result.ProgrammingLanguagesStrategy.metadata)).length > 0
-                  ? `["${Array.from(Object.keys(result.ProgrammingLanguagesStrategy.metadata)).join('", "')}"]`
-                  : null
-              }              automatedSecurityFixes: {
+              programmingLanguage: ["${Array.from(Object.keys(result.ProgrammingLanguagesStrategy.metadata)).join('", "')}"]
+              automatedSecurityFixes: {
                 checkPasses: ${result.AutomatedSecurityFixesStrategy.checkPasses}
                 metadata: {
                   enabled: ${result.AutomatedSecurityFixesStrategy.metadata.enabled}
@@ -107,3 +104,9 @@ await nc.closed();
 
 // securityAndAnalysis: "${JSON.stringify(result.GetRepoDetailsStrategy.metadata.security_and_analysis, null, 4).replace(/"([^"]+)":/g, '$1:')}"
 
+
+// programmingLanguage: ${
+//   Object.keys(result.ProgrammingLanguagesStrategy.metadata).length > 0
+//     ? `["${Object.keys(result.ProgrammingLanguagesStrategy.metadata).join('", "')}"]`
+//     : '[]'   
+// }   
