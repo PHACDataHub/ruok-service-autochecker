@@ -68,8 +68,7 @@ process.on('SIGINT', () => process.exit(0))
                         kind: "Github"
                         owner: "${orgName}"
                         repo: "${repoName}"
-                        api: ${results.hasApiDirectory.checkPasses}
-                        
+                        api: ${results.hasApiDirectory.checkPasses}                       
                         hasSecurityMd: {
                             checkPasses: ${results.hasSecurityMd.checkPasses}
                             metadata: ${results.hasSecurityMd.metadata}
@@ -125,6 +124,7 @@ await nc.closed();
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-bots\"}"
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/pelias-canada\"}"
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/safe-inputs\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/data-catalog\"}"
 
 
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/csi-projects\"}"

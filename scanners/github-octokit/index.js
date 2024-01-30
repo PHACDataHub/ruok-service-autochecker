@@ -58,7 +58,7 @@ process.on('SIGINT', () => process.exit(0))
               repo: "${repoName}"
               description: ${result.GetRepoDetailsStrategy.metadata.description ? JSON.stringify(result.GetRepoDetailsStrategy.metadata.description) :  null}
               visibility: ${JSON.stringify(result.GetRepoDetailsStrategy.metadata.visibility)}
-              license: ${result.GetRepoDetailsStrategy.metadata.license ? JSON.stringify(result.GetRepoDetailsStrategy.metadata.license) :  null}
+              license: ${result.GetRepoDetailsStrategy.metadata.license ? JSON.stringify(result.GetRepoDetailsStrategy.metadata.license) :  false}
               programmingLanguage: ["${Array.from(Object.keys(result.ProgrammingLanguagesStrategy.metadata)).join('", "')}"]
               automatedSecurityFixes: {
                 checkPasses: ${result.AutomatedSecurityFixesStrategy.checkPasses}

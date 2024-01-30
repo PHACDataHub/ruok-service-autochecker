@@ -26,4 +26,3 @@ export function processAxeReport(axeReport, pageToEvaluate) {
       ...webEndpointAxeResults[page],
     }));
   }
-  
