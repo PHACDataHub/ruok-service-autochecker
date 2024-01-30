@@ -6,26 +6,28 @@ This folder contains documentation for the GraphQL API component of the ruok-ser
 
 Run `make` to create a local `venv` folder (`.gitignore`d) and `pip install` all of the `requirements.txt` dependencies into the `venv` folder. The default target in the `Makefile` also activates the virtual environment.
 
-### Sample Queries
+### Sample AQL Queries to start from 
+TODO - add to src/query.py
+
+#### All endpoints
 ```
 FOR doc in endpointNodes
     FILTER doc.kind == "Github"
     RETURN {"url": doc.url, "visibility": doc.visibility, "Kind": doc.kind}
 ```
-
 ```
 FOR doc in endpointNodes
     RETURN doc
 ```
 
-Products with api
+#### GitHub Endpoints with API
 ```
 FOR doc IN endpointNodes
   FILTER doc.kind == 'Github' && doc.api == true
   RETURN {"endpoint":doc.url}
 ```
 
-failing checks per repo
+#### All failing checks for all GitHub Repos
 ```
 FOR doc IN endpointNodes
   FILTER doc.kind == 'Github'
@@ -39,7 +41,7 @@ FOR doc IN endpointNodes
   }
 ```
 
-vulerabilities (high/ critical)
+#### All Trivy vulerabilities (with high/ critical status)
 ```
 FOR doc IN endpointNodes
   FILTER doc.kind == 'Github' && doc.trivy_repo_vulnerability.metadata
@@ -52,7 +54,7 @@ FOR doc IN endpointNodes
   RETURN { "endpoint": doc.url, "high_critical_vulnerabilities": filtered_vulnerabilities }
 ```
 
-Failing web checks
+#### Filter for failing web checks
 ```
 FOR doc IN endpointNodes
   FILTER doc.kind == 'Web'
