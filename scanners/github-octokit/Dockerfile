@@ -4,7 +4,7 @@ ENV NODE_ENV production
 
 WORKDIR /app
 
-RUN apk --no-cache add curl
+RUN apk --no-cache add curl=8.6.0
 
 COPY package*.json ./
 
