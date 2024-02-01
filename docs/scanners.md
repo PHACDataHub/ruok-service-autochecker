@@ -39,6 +39,7 @@ The following items are extracted with the GitHub Octokit API during each scan:
     kind: "Github"
     owner: "PHACDataHub"
     repo: "ruok-service-autochecker"
+    description: "Automatically scans existing PHAC (GCP) services to provide visibility on endpoints and standards." 
     license: "MIT"
     visibility: "public"
     programmingLanguage: ["JavaScript", "Dockerfile", "Makefile", "HTML", "TypeScript", "CSS", "Python"]
@@ -48,6 +49,22 @@ The following items are extracted with the GitHub Octokit API during each scan:
 ```
 
 Note - the programming languages are ordered most to least frequently occuring, and the plan is to use this for future language specific checks. 
+
+### API
+
+Note, this 'check' will need to be further developed in the future. At the moment, it searches a cloned GitHub repository for the presence of a directory containing case-insensitive 'api' anywhere in the string. Though this check collects the check_passes or metadata feilds at the moment it returns only a boolean, as some of these services aren't intended to have APIs.
+
+This field can be used in the future to evaluate a segment of interoperability.
+
+**Data Example**
+```jsonc
+{
+  // ...
+  api: true
+  // ...
+}
+```
+
 
 ### Vulnerability (Dependabot) Alerts Enabled
 
@@ -63,7 +80,7 @@ Follow [these directions](https://docs.github.com/en/code-security/dependabot/de
   // ...
   vunerability_alerts: {
     check_passes: false,
-    metadata: (empty object)
+    metadata: null
     }
   }
   // ...
@@ -95,9 +112,15 @@ Dependabot can be configured to automatically pull request to resolve dependabot
 
 [Configure Dependabot](https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/configuring-dependabot-security-updates) to automaticallly create pull requests. 
 
+**Pass Criteria** 
+
+Automated security fixes alerts are enabled.
+
 ### Branch Protection Enabled
 
 Particular branches (generally master or main) can have [protection](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) through rules defined to restrict how code can be pushed to that branch. For example, this could require pull request reviews before merging.
+
+This pulls out all the rules set to true, rrequiredDeploymentEnvironments if non-empty, requiredApprovingReviewCount if greater than 0, and pattern - which is the branch to which the rules are applied. 
 
 **Remediation**
 
@@ -108,19 +131,31 @@ Particular branches (generally master or main) can have [protection](https://doc
 ```jsonc
 {
   // ...
-  branchProtection: {
-    checkPasses: false
-    metadata: {
-      branches: ["clean-octokit-webendpoint", "container-trivy-scan", "feat-trivy", "gh-pages", "main", "moving-services", "ui", "ui-server"]
-      rules: [""]
+    branchProtection: {
+      checkPasses: true
+      metadata:  {
+        rules: [
+          {
+            branch: "main",
+            dismissesStaleReviews: true,
+            requiresApprovingReviews: true,
+            requiresCommitSignatures: true,
+            requiresConversationResolution: true,
+            requiresLinearHistory: true,
+            requiresStatusChecks: true,
+            requiresStrictStatusChecks: true,
+            restrictsPushes: true,
+            requiredApprovingReviewCount: 1
+          }
+        ]
+      }
     }
-    // ...
-  }
+    // ... 
 }
 ```
 **Pass Criteria** 
 
-A branch protection rule has been found.
+At least one branch protection rule has been found.
 
 ## Repository Content Checks
 
@@ -129,7 +164,7 @@ A number of checks are performed by scanning a deep clone of the repository's co
 
 ### Has `Security.md`
 
-A best practice with any open source code repository is to provide instructions via a `Security.md` file at the project root for how security vulnerabilities should be reported (see [GitHub's code security documentation](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) for more information). This check verifies whether a repository contains a `Security` file.
+A best practice with any open source code repository is to provide instructions via a `Security` file at the project root for how security vulnerabilities should be reported (see [GitHub's code security documentation](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) for more information). This check verifies whether a repository contains a `Security` file.
 
 **Remediation**
 
@@ -167,7 +202,7 @@ Add the dependabot.yml. [Here's](https://docs.github.com/en/code-security/gettin
   // ...
   "has_dependabot.yaml":{
       "check_passes": true,
-      "metadata": (empty object)
+      "metadata": null
   }
   // ...
 }
@@ -269,7 +304,7 @@ Follow the guidelines outlined in the results message to update the Dockerfiles.
 
 **Pass Criteria** 
 
-No linting rules broken for all Dockerfiles within the repository. 
+No linting rules broken for any of the Dockerfiles within the repository. 
 
 ### `Trivy` Repository Vunerability Scanning
 

@@ -100,7 +100,9 @@ await nc.closed();
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-bots\"}"
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/pelias-canada\"}"
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/safe-inputs\"}"
-// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-dns\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-dns\"}" 
+
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/django-phac_aspc-helpers\"}" 
 
 // securityAndAnalysis: "${JSON.stringify(result.GetRepoDetailsStrategy.metadata.security_and_analysis, null, 4).replace(/"([^"]+)":/g, '$1:')}"
 
