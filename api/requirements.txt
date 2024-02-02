@@ -7,7 +7,7 @@ certifi==2023.7.22
 cffi==1.15.1
 charset-normalizer==2.0.4
 click==8.1.7
-cryptography==41.0.3
+cryptography==41.0.6
 fastapi==0.104.1
 graphql-core==3.2.3
 h11==0.14.0
@@ -45,7 +45,7 @@ starlette==0.27.0
 strawberry-graphql==0.211.1
 tqdm==4.65.0
 typing_extensions==4.8.0
-urllib3==1.26.16
+urllib3==1.26.18
 uvicorn==0.23.2
 wheel==0.41.2
 zipp==3.17.0
