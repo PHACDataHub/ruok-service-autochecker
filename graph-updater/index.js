@@ -24,6 +24,19 @@ const GITHUB_ENDPOINT_QUEUE = "EventsScanner.githubEndpoints"
 const nc = await connect({ servers: NATS_URL, })
 const jc = JSONCodec();
 
+// NATs jetStream manager
+const jsm = await nc.jetstreamManager();
+const cfg = {
+  name: "EVENTS",
+  subjects: ["EventsUpdate"],
+};
+
+await jsm.streams.add(cfg)
+console.log("created the stream")
+
+// JetStream Client
+const js = nc.jetstream();
+
 const sub = nc.subscribe(NATS_SUB_STREAM)
 console.log('🚀 Connected to NATS server - listening on ...', sub.subject, "channel...");
 
