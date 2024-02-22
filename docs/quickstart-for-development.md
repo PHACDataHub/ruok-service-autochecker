@@ -2,9 +2,11 @@
 
 After [development environment](./development-environment.md) has been set up: 
 
-1. If k8s is running on your machine with the ruok containers, skip to step 2, else:
+1. If k8s is running on your machine with the ruok containers (and .env files populated), skip to step 2, else:
 
-In local terminal (ctrl, shift, p -> new integrated terminal):
+a)  Populate the .env files
+
+b) In local terminal (ctrl, shift, p -> new integrated terminal):
 
 ```
 make build
@@ -29,11 +31,10 @@ Do not close this terminal - open a new one to continue.
 
 4. Populate the database
 ```
-cd api/src
-python initialize_db.py
+cd api
+pip install -r requirements.txt
+python src/initialize_db.py
 ```
-
-5. Populate the .env files
 
 6. Spin up webhook server (listening for events from github)
 ```

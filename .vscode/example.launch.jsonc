@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node",
+            "type": "python",
             "request": "launch",
             "name": "Debug ruok API",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/api/index.js",
+            // "skipFiles": [
+            //     "<node_internals>/**"
+            // ],
+            "program": "${workspaceFolder}/api/src/main.py",
             "cwd": "${workspaceFolder}/api"
         },
         {
@@ -44,16 +44,7 @@
             "program": "${workspaceFolder}/scanners/web-endpoint-puppeteer-checks/index.js",
             "cwd": "${workspaceFolder}/scanners/web-endpoint-puppeteer-checks/"
         },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Debug REST API",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/rest-api/index.js",
-            "cwd": "${workspaceFolder}/rest-api/"
-        },
+
         {
             "type": "firefox",
             "request": "launch",

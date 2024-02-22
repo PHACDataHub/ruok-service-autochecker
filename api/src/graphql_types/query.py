@@ -18,28 +18,65 @@ class Query:
 
         # Example
 
-        ```graphql
-        query {
-            githubEndpoint(url: "https://github.com/someOrg/someRepo") {
-                url
-                kind
-                license
-                visibility
-                automatedSecurityFixes {
-                    checkPasses
-                    metadata
-                }
+    ```graphql
+    query {
+        githubEndpoint(url: "https://github.com/someOrg/someRepo") {
+            url
+            kind
+            owner
+            repo
+            description
+            visibility
+            license
+            api
+            securityAndAnalysis
+            programmingLanguage
+            automatedSecurityFixes {
+                checkPasses
+                metadata
+            }
+            vulnerabilityAlerts {
+                checkPasses
+                metadata
+            }
+            branchProtection {
+                checkPasses
+                metadata
+            }
+            hasSecurityMd {
+                checkPasses
+                metadata
+            }
+            hasDependabotYaml {
+                checkPasses
+                metadata
+            }
+            gitleaks {
+                checkPasses
+                metadata
+            }
+            hadolint {
+                checkPasses
+                metadata
+            }
+            trivyRepoVulnerability {
+                checkPasses
+                metadata
             }
         }
-        ```
-        """
+    }
+    ```
+    """
         client = GraphDB()
         endpoint = client.get_scanner_endpoint(url)
         client.close()
-        # Remove unecessary db fields from the endpoint dict
+
+
+        # Remove unnecessary db fields from the endpoint dict
         endpoint.pop("_id", None)
         endpoint.pop("_rev", None)
         return GithubEndpoint(**endpoint)
+
 
     @strawberry.field
     def github_endpoints(self, limit: int) -> List[GithubEndpoint]:

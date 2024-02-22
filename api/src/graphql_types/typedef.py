@@ -18,8 +18,8 @@ JSON = strawberry.scalar(
 
 @strawberry.type
 class CheckPasses:
-    check_passes: Optional[bool]
-    metadata: Optional[JSON]
+    check_passes: Optional[bool] = None
+    metadata: Optional[JSON] = None
 
 @strawberry.type
 class AccessibilityCheckPasses:
@@ -33,17 +33,37 @@ class GithubEndpoint(Endpoint):
     _key: str
     owner: str
     repo: str
-    license: str
-    visibility: str
-    programming_language: List[str]
+    license: Optional[str] = None
+    description: Optional[str] = None
+    visibility: Optional[str] = None
+    api: Optional[bool]= None
+    programming_language: Optional[List[str]] = None
     automated_security_fixes: CheckPasses
-    vulnerability_alerts: CheckPasses
-    branch_protection: CheckPasses
-    has_security_md: CheckPasses
-    has_dependabot_yaml: CheckPasses
-    gitleaks: CheckPasses
-    hadolint: CheckPasses
-    trivy_repo_vulnerability: CheckPasses
+    vulnerability_alerts: Optional[CheckPasses] = None
+    branch_protection: Optional[CheckPasses] = None
+    has_security_md: Optional[CheckPasses] = None
+    has_dependabot_yaml: Optional[CheckPasses] = None
+    gitleaks: Optional[CheckPasses] = None  
+    hadolint: Optional[CheckPasses] = None 
+    trivy_repo_vulnerability: Optional[CheckPasses] = None
+# class GithubEndpoint(Endpoint):
+#     url: str
+#     kind: str
+#     _key: str
+#     owner: str
+#     repo: str
+#     license: str
+#     visibility: str
+#     programming_language: List[str]
+#     automated_security_fixes: CheckPasses
+#     vulnerability_alerts: CheckPasses
+#     branch_protection: CheckPasses
+#     has_security_md: CheckPasses
+#     has_dependabot_yaml: CheckPasses
+#     gitleaks: CheckPasses
+#     hadolint: CheckPasses
+#     trivy_repo_vulnerability: CheckPasses
+  
 
 @strawberry.type
 class Accessibility:
