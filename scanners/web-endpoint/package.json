@@ -18,7 +18,7 @@
     "dotenv-safe": "^8.2.0",
     "graphql-request": "^6.1.0",
     "nats": "^2.16.0",
-    "npm": "^10.2.1",
+    "npm": "^10.5.2",
     "puppeteer": "^21.4.1"
   }
 }

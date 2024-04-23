@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "dotenv": "^16.3.1",
-    "express": "^4.18.2",
+    "express": "^4.19.2",
     "nats": "^2.17.0",
-    "smee-client": "^1.2.3"
+    "smee-client": "^2.0.1"
   },
   "scripts": {
     "webhook-forward": "smee --url https://smee.io/0sRl0du2R9tpGD6w --port 3000",
