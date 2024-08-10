@@ -51,10 +51,17 @@ async function runTrivyScan(clonedRepoPath) {
             return results;
         } else {
             console.error('Trivy scan failed.');
+            // remove temp dir with results
+            await rm(tempDir, { recursive: true });
+            console.log(`Temporary directory ${tempDir} removed.`);
             throw new Error('trivy failed');
         }
     } catch (error) {
         console.error(`Error in runTrivyScan: ${error.message}`);
+
+        // remove temp dir with results
+        await rm(tempDir, { recursive: true });
+        console.log(`Temporary directory ${tempDir} removed.`);
         throw error;
     }
 }
