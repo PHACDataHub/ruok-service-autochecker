@@ -10,7 +10,8 @@ import 'dotenv-safe/config.js'
 const {
     NATS_URL,
     GRAPHQL_URL,
-    NATS_SUB_STREAM
+    NATS_SUB_STREAM,
+    GITHUB_TOKEN_CLASSIC
 } = process.env;
 
 
@@ -45,7 +46,7 @@ process.on('SIGINT', () => process.exit(0))
             console.log('repoName', repoName)
 
             // Clone repository
-            const repoPath = await cloneRepository(gitHubEventPayload.endpoint, repoName)
+            const repoPath = await cloneRepository(gitHubEventPayload.endpoint, repoName, GITHUB_TOKEN_CLASSIC)
             console.log ('repoPath', repoPath, '\n')
 
             // Instantiate and do the check(s)

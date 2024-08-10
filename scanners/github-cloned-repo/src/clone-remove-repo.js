@@ -3,8 +3,7 @@ import { simpleGit } from "simple-git"
 import os  from 'os'
 import path from 'path'
 
-
-export async function cloneRepository(clone_url, repoName) {
+export async function cloneRepository(clone_url, repoName, GITHUB_TOKEN_CLASSIC) {
   // Clones Repository into tmp directory - returns path
   try {
     const tempDir = os.tmpdir();
@@ -19,6 +18,9 @@ export async function cloneRepository(clone_url, repoName) {
       await removeClonedRepository(repoPath);
       console.log('Repository removed successfully.');
     }
+
+    clone_url = `https://${GITHUB_TOKEN_CLASSIC}@${clone_url.split("https://")[1]}`
+    console.log(clone_url)
 
     // Clone the repository
     await simpleGit().clone(clone_url, repoPath);

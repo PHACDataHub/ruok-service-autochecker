@@ -4,9 +4,9 @@ ENV NODE_ENV production
 
 WORKDIR /app
 
-RUN apk --no-cache add \
-    curl=8.5.0-r0 \
-    git=2.43.0-r0
+RUN apk --no-cache add git curl
+    #curl=8.5.0-r0 \
+    #git=2.43.0-r0
 
 # Install gitleaks
 RUN curl -LO https://github.com/zricethezav/gitleaks/releases/download/v8.18.0/gitleaks_8.18.0_linux_x64.tar.gz && \
