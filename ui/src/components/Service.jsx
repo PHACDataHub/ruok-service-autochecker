@@ -1,9 +1,9 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Flex, Box, Text, Heading, DataList, Badge } from '@radix-ui/themes'
+import { Flex, Box, Text, Heading, DataList } from '@radix-ui/themes'
 import { DoubleArrowRightIcon } from '@radix-ui/react-icons'
 import { servicesData } from '../assets/dummyData'
-
+import CheckPasses from './CheckPasses'
 const Service = () => {
   const { serviceName } = useParams()
   const service = servicesData.allServices.find(
@@ -11,106 +11,79 @@ const Service = () => {
   )
 
   if (!service) {
-    return <Text>Service not found</Text>
+    return <Text>The service could not be found.</Text>
   }
 
-  const renderVulnerabilities = () => (
-    <Box
-      margintop="4"
-      padding="4"
-      borderwidth="1"
-      borderradius="md"
-      bordercolor="red"
-      backgroundcolor="red.50"
-    >
-      <Text fontSize="lg" fontWeight="bold" color="red.600">
-        Vulnerabilities & Issues:
-      </Text>
-      {service.hadolint && !service.hadolint.checkPasses && (
-        <Text fontSize="sm" color="red.600">
-          <Badge colorscheme="red">Hadolint Issues</Badge>:{' '}
-          {service.hadolint.metadata.vulnerabilities.join(', ')}
-        </Text>
-      )}
-      {service.vulnerabilityAlerts &&
-        !service.vulnerabilityAlerts.checkPasses && (
-          <Text fontSize="sm" color="red.600">
-            <Badge colorscheme="red">Vulnerability Alerts</Badge>:{' '}
-            {service.vulnerabilityAlerts.metadata.vulnerabilities.join(', ')}
-          </Text>
-        )}
-      {service.automatedSecurityFixes &&
-        !service.automatedSecurityFixes.checkPasses && (
-          <Text fontSize="sm" color="red.600">
-            <Badge colorscheme="red">Automated Security Fixes</Badge>: Issues
-            detected
-          </Text>
-        )}
-      {service.hasDependabotYaml && !service.hasDependabotYaml.checkPasses && (
-        <Text fontSize="sm" color="red.600">
-          <Badge colorscheme="red">Dependabot YAML</Badge>: Issues detected
-        </Text>
-      )}
-      {service.hasSecurityMd && !service.hasSecurityMd.checkPasses && (
-        <Text fontSize="sm" color="red.600">
-          <Badge colorscheme="red">Security MD</Badge>: Issues detected
-        </Text>
-      )}
-    </Box>
-  )
-
   return (
-    <Box padding="4">
-      <Heading size="4" margintop="4" marginbottom="4">
+    <Box style={{ padding: '24px' }}>
+      <Heading
+        size="8"
+        style={{
+          marginTop: '16px',
+          marginBottom: '24px',
+          textAlign: 'center',
+          fontWeight: 'bold',
+        }}
+      >
         {service.name}
       </Heading>
 
-      {service.webUrl && (
-        <Box
-          margintop="4"
-          padding="3"
-          borderwidth="1"
-          borderradius="md"
-          backgroundcolor="blue.50"
-        >
-          <Text fontSize="lg" fontWeight="bold" color="blue.600">
-            <Link
-              to={`/${service.name}/${service.webUrlId}`}
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              Web URL: {service.webUrl}
-            </Link>
-          </Text>
-        </Box>
-      )}
+      <Box
+        style={{
+          marginBottom: '24px',
+          padding: '20px',
+          borderWidth: '1px',
+          borderRadius: '8px',
+          backgroundColor: 'rgba(0, 0, 255, 0.1)',
+        }}
+      >
+        <DataList.Root>
+          <DataList.Item>
+            <DataList.Label style={{ minWidth: '150px' }}>
+              Description
+            </DataList.Label>
+            <DataList.Value>{service.description}</DataList.Value>
+          </DataList.Item>
+          <DataList.Item>
+            <DataList.Label style={{ minWidth: '150px' }}>
+              Web URL
+            </DataList.Label>
+            <DataList.Value>
+              <Link
+                to={service.webUrl}
+                style={{ color: 'blue', textDecoration: 'underline' }}
+              >
+                {service.webUrl}
+              </Link>
+            </DataList.Value>
+          </DataList.Item>
+          <DataList.Item>
+            <DataList.Label style={{ minWidth: '150px' }}>
+              Programming Language
+            </DataList.Label>
+            <DataList.Value>{service.programmingLanguage}</DataList.Value>
+          </DataList.Item>
+          <DataList.Item>
+            <DataList.Label style={{ minWidth: '150px' }}>
+              License
+            </DataList.Label>
+            <DataList.Value>{service.license || 'N/A'}</DataList.Value>
+          </DataList.Item>
+          <DataList.Item>
+            <DataList.Label style={{ minWidth: '150px' }}>
+              Visibility
+            </DataList.Label>
+            <DataList.Value>{service.visibility || 'N/A'}</DataList.Value>
+          </DataList.Item>
+        </DataList.Root>
+      </Box>
 
-      <DataList.Root orientation="vertical" size="2">
-        <DataList.Item>
-          <DataList.Label minwidth="120px">Description</DataList.Label>
-          <DataList.Value>{service.description}</DataList.Value>
-        </DataList.Item>
-        <DataList.Item>
-          <DataList.Label minwidth="120px">Programming Language</DataList.Label>
-          <DataList.Value>{service.programmingLanguage}</DataList.Value>
-        </DataList.Item>
-        <DataList.Item>
-          <DataList.Label minwidth="120px">License</DataList.Label>
-          <DataList.Value>{service.license || 'N/A'}</DataList.Value>
-        </DataList.Item>
-        <DataList.Item>
-          <DataList.Label minwidth="120px">Visibility</DataList.Label>
-          <DataList.Value>{service.visibility || 'N/A'}</DataList.Value>
-        </DataList.Item>
-      </DataList.Root>
-
-      {renderVulnerabilities()}
-
-      <Heading size="3" margintop="6" marginbottom="4">
+      <Heading size="3" style={{ marginTop: '24px', marginBottom: '16px' }}>
         Referencing Endpoints
       </Heading>
-      <ul style={{ listStyleType: 'none', paddingLeft: '0px' }}>
+      <ul style={{ listStyleType: 'none', paddingLeft: '0' }}>
         {service.referencingEndpoints.map((endpoint, i) => (
-          <li key={i} style={{ marginBottom: '1rem' }}>
+          <li key={i} style={{ marginBottom: '16px' }}>
             <Link
               to={`/${service.name}/${endpoint.id}`}
               style={{ textDecoration: 'none', color: 'inherit' }}
@@ -118,10 +91,12 @@ const Service = () => {
               <Flex
                 align="center"
                 justify="between"
-                padding="3"
-                backgroundcolor="gray"
-                borderradius="md"
-                boxshadow="sm"
+                style={{
+                  padding: '12px',
+                  backgroundColor: '#f0f0f0',
+                  borderRadius: '8px',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                }}
               >
                 <Text>{endpoint.url}</Text>
                 <DoubleArrowRightIcon />
@@ -130,6 +105,30 @@ const Service = () => {
           </li>
         ))}
       </ul>
+
+      <CheckPasses title="Hadolint Issues" checkPasses={service.hadolint} />
+      <CheckPasses
+        title="Vulnerability Alerts"
+        checkPasses={service.vulnerabilityAlerts}
+      />
+      <CheckPasses
+        title="Automated Security Fixes"
+        checkPasses={service.automatedSecurityFixes}
+      />
+      <CheckPasses
+        title="Dependabot YAML"
+        checkPasses={service.hasDependabotYaml}
+      />
+      <CheckPasses title="Security MD" checkPasses={service.hasSecurityMd} />
+      <CheckPasses title="Gitleaks" checkPasses={service.gitleaks} />
+      <CheckPasses
+        title="Trivy Repo Vulnerability"
+        checkPasses={service.trivyRepoVulnerability}
+      />
+      <CheckPasses
+        title="Branch Protection"
+        checkPasses={service.branchProtection}
+      />
     </Box>
   )
 }
