@@ -39,3 +39,17 @@
   text-decoration: underline;
   font-weight: bold;
 }
+
+.title {
+  font-size: 1.5rem;
+  margin: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333333;
+}
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+}
