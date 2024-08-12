@@ -26,13 +26,13 @@ JSON = strawberry.scalar(
 @strawberry.type
 class CheckPasses:
     check_passes: Optional[bool]
-    metadata: Optional[JSON]
+    metadata: Optional[JSON] = None
 
 @strawberry.type
 class AccessibilityCheckPasses:
     check_passes: Optional[str]  # true, false, incomplete, or null
-    metadata: Optional[JSON]
-
+    metadata: Optional[JSON] = None
+ 
 @strawberry.type
 class GithubEndpoint(Endpoint):
     url: str
@@ -124,3 +124,11 @@ class WebEndpoint(Endpoint):
     kind: str
     _key: str
     accessibility: Optional[List[Accessibility]]
+
+@strawberry.type
+class Service(Endpoint):
+    url: str
+    kind: str
+    _key: str
+    webEndpoint : Optional[WebEndpoint] = None
+    githubEndpoint : Optional[GithubEndpoint] = None

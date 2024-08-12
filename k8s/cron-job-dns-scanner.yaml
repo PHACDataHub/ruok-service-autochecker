@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dns-scanner
+spec:
+  schedule: "*/15 * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 3600
+      template:
+        spec:
+          containers:
+          - name: dns-scanner
+            image: vader404/ruok-dns-scanner:0.0.1
+            imagePullPolicy: IfNotPresent
+          restartPolicy: OnFailure

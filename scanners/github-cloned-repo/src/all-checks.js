@@ -34,7 +34,6 @@ export class AllChecks extends CheckOnClonedRepoInterface {
           return result;
         })
       )
-  
       const allResults = {
         hasApiDirectory: checkResults[0],
         hasDependabotYaml: checkResults[1],

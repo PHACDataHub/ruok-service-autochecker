@@ -12,6 +12,7 @@ resources:
 - ./svc-nats.yaml
 - ./svc-ruok-api.yaml
 - ./svc-webhook-server.yaml
+- ./cron-job-dns-scanner.yaml
 - ./ui-revived/deployment-ruok-ui.yaml
 - ./ui-revived/svc-ruok-ui.yaml
 - ./istio/gateway.yaml
@@ -24,7 +25,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-graphql-api:0.0.3
+      value: vader404/ruok-graphql-api:0.0.9
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -52,7 +53,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-graph-updater:0.0.1
+      value: vader404/ruok-graph-updater:0.0.3
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -67,7 +68,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-cloned-repo-scanner:0.0.1
+      value: vader404/ruok-cloned-repo-scanner:0.0.2
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -82,7 +83,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-octokit-scanner:0.0.1
+      value: vader404/ruok-octokit-scanner:0.0.2
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -113,6 +114,23 @@ patches:
     - op: replace
       path: /spec/template/spec/containers/0/image
       value: vader404/ruok-ui:0.0.1
+- target:
+    version: v1
+    kind: CronJob
+    name: dns-scanner
+  patch: |-
+    - op: replace
+      path: /spec/jobTemplate/spec/template/spec/containers/0/image
+      value: vader404/ruok-dns-scanner:0.0.8
+    - op: add
+      path: /spec/jobTemplate/spec/template/spec/containers/0/env
+      value:
+        - name: NATS_URL
+          value: nats:4222
+        - name: GRAPHQL_URL
+          value: http://graphql-api:4000/graphql
+        - name: DNS_REPOSITORY
+          value: https://github.com/PHACDataHub/phac-dns.git
 - target:
     group: networking.istio.io
     version: v1beta1

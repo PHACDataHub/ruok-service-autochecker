@@ -10,7 +10,8 @@ from graphql_types.typedef import Edge, \
                                   CheckPasses, \
                                   WebEndpoint, \
                                   Accessibility, \
-                                  AccessibilityCheckPasses
+                                  AccessibilityCheckPasses, \
+                                  Service
 
 from graphql_types.input_types import FilterCriteriaInput                                  
 
@@ -229,8 +230,35 @@ class Query:
         client = GraphDB()
         endpoints = client.get_endpoints(urls)
         client.close()
-        return [Endpoint(url=vertex) for vertex in endpoints]
+        return [Endpoint(url=vertex['url'],
+                         kind=vertex['kind']) for vertex in endpoints]
 
+    @strawberry.field
+    def referenced_endpoints(self, url: str) -> List[Endpoint]:
+        """
+        # Get Multiple Endpoints
+
+        Given a subset of URLs, retrieves all URLs assocaited with any
+        URLs in the subset. Note that the purpose of this query is to get information
+        on which URLs are related to eachother, not to get detailed information about
+        any specific kind of endpoint.
+
+        # Example
+
+        ```graphql
+        query {
+            endpoints(urls:["https://some-webapp.canada.ca"]) {
+                url
+            }
+        }
+        ```
+
+        """
+        client = GraphDB()
+        endpoints = client.get_referenced_endpoints(url)
+        client.close()
+        return [Endpoint(url=vertex['url'],
+                         kind=vertex['kind']) for vertex in endpoints]
     @strawberry.field
     def all_edges(self) -> List[Edge]:
         """
@@ -293,8 +321,9 @@ class Query:
 
         ```graphql
         query {
-            allEndpoints {
+            filter(criteria: {kind: "Service"}) {
                 url
+                kind
             }
         }
         ```
@@ -307,6 +336,90 @@ class Query:
                          kind=endpoint['kind']) for endpoint in endpoints]
 
     @strawberry.field
-    def product(self, name: str) -> str:
-        # TODO: implement product
-        return name
+    def service(self, name: str) -> Service:
+        client = GraphDB()
+        """
+        # Fetch a Service
+
+        Returns a Service that contains its related Github Repo and Web URL
+
+        # Example
+
+        ```graphql
+        query{
+            service(name : "observatory-alpha-phac-gc-ca"){
+                url
+                kind
+                githubEndpoint {
+                    url
+                    kind
+                    programmingLanguage
+                    license
+                    visibility
+                    hasSecurityMd {
+                        metadata
+                        checkPasses
+                    }
+                    hasDependabotYaml {
+                        metadata
+                        checkPasses
+                    }
+                }
+                webEndpoint {
+                    url
+                    kind
+                    accessibility {
+                        areaAlt {
+                        metadata 
+                        checkPasses
+                        }
+                    }
+                }
+            }
+        }
+        ```
+
+        """
+        result = client.get_service(name)
+        client.close()
+        service = result['Service']
+        githubEndpoint = result['Github']
+        githubEndpoint.pop("_id", None)
+        githubEndpoint.pop("_rev", None)
+
+        webEndpoint = result['Web']
+        webEndpoint.pop("_id", None)
+        webEndpoint.pop("_rev", None)
+
+        if 'accessibility' not in webEndpoint:
+            webEndpoint['accessibility'] = []
+
+        return Service(url = service['url'],
+                       kind = service['kind'],
+                       _key = service['_key'],
+                       webEndpoint =  WebEndpoint(
+                                        url=webEndpoint['url'],
+                                        kind=webEndpoint['kind'],
+                                        _key=webEndpoint['_key'],
+                                        accessibility=[
+                                            Accessibility(**{
+                                                k: AccessibilityCheckPasses(**v)
+                                                for k, v in ep.items()
+                                                if type(v) is not str
+                                            },
+                                            url=ep['url'])
+                                            for ep in webEndpoint['accessibility']
+                                        ]
+                                    ),
+                        githubEndpoint = GithubEndpoint(
+                                        **{
+                                            k: CheckPasses(**v)
+                                            for k, v in githubEndpoint.items()
+                                            if type(v) is dict
+                                        },
+                                        **{
+                                            k: v
+                                            for k, v in githubEndpoint.items()
+                                            if type(v) is not dict
+                                        }
+                    ))

@@ -121,3 +121,10 @@ class WebEndpointInput:
     kind: str
     accessibility: Optional[List[AccessibilityInput]] = None
 
+@strawberry.input
+class ServiceInput:
+    url: str
+    kind: str = "Service"
+    repoEndpoint : Optional[str] = None
+    webEndpoint : Optional[str] = None
+

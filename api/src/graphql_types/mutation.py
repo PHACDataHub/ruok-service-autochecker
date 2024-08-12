@@ -146,11 +146,11 @@ class Mutation:
         return list(map(lambda url:strawberry.asdict(url)["url"],urls))
 
     @strawberry.mutation
-    def product(self, name: str, urls: List[str]) -> str:
+    def product(self, product: EndpointInput, urls: List[EndpointInput]) -> str:
         """
         Attaches a product label to a list of URLs.
         """
         client = GraphDB()
-        client.insert_product(name, urls)
+        client.insert_product(product, urls)
         client.close()
-        return name
+        return product.url

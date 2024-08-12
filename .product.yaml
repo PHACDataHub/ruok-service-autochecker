@@ -1,5 +1,6 @@
 productName: Observatory
-webEndpoints:
-  - https://observatory.alpha.phac.gc.ca
-
+githubEndpoints:
+  - https://github.com/PHACDataHub/phacronyms
+  - https://github.com/PHACDataHub/ruok-tester
+  - https://github.com/PHACDataHub/org-chart
 

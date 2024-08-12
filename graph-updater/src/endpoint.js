@@ -39,7 +39,7 @@ export function getEndpointKind(url) {
   if (url.includes("docker.pkg.dev")) {
     matches.push(containerEndpoint);
   }
-  if (url.includes("canada.ca")) {
+  if (url.includes("canada.ca") || url.includes("gc.ca")) {
     matches.push(webEndpoint);
   }
   if (url.includes("github.com")) {

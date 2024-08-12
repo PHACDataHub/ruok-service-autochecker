@@ -32,10 +32,56 @@ process.on('SIGINT', () => process.exit(0))
   ; (async () => {
 
     for await (const message of sub) {
-      const endpointEventPayload = await jc.decode(message.data)
+      let endpointEventPayload = await jc.decode(message.data)
 
       console.log('\n**************************************************************')
       console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(endpointEventPayload)}`)
+
+      let githubEndpoints = [], webEndpoints = [], containerEndpoints = [];
+
+      if(endpointEventPayload.endpoint.payloadType && 
+          endpointEventPayload.endpoint.payloadType == 'service'){
+        // Insert this Service and it's WebURL(s) & Repository URL(s) into the graphDB.
+        // Also build a graph with the Service as root and the URLs as its children.
+        let payload = endpointEventPayload.endpoint;
+
+        const product = `{url : "${payload.serviceName}", kind : "Service"}`
+
+        payload.webEndpoint = (payload.webEndpoint).includes("https") ? payload.webEndpoint : "https://" + payload.webEndpoint
+        const l = payload.webEndpoint.length;
+        payload.webEndpoint = payload.webEndpoint.substring(0, l-1)
+        console.log(payload.webEndpoint)
+
+        let urls = [];
+
+        urls.push(`{url : "${payload.repoEndpoint}", kind : "Github"}`);
+
+        urls.push(`{url : "${payload.webEndpoint}", kind : "Web"}`);
+
+        urls = `[${Array.from(urls).join(',')}]`
+
+        const mutation = gql`
+         mutation {
+            product(product : ${product},
+                    urls : ${urls})
+         }
+        `
+
+        // New GraphQL client - TODO: remove hard-coded URL
+        const graphqlClient = new GraphQLClient(GRAPHQL_URL);
+        // Write mutation to GraphQL API
+        const mutationResponse = await graphqlClient.request(mutation);
+        console.log(mutationResponse);
+        
+        // Change the original endpointEventPayload to conform with the code 
+        // that follows this if block. Also append the web URL for the service
+        // to the webEndpoints list, such that it can be scanned.
+        endpointEventPayload.endpoint = payload.repoEndpoint;
+
+        // Append the web URL for the service
+        // to the webEndpoints list, such that it can be scanned.
+        webEndpoints.push(payload.webEndpoint);
+      }
 
       // Every endpoint handler knows how to get its own graph metadata
       // from its endpoint.
@@ -88,9 +134,9 @@ process.on('SIGINT', () => process.exit(0))
       const queryResponse = await graphqlClient.request(query);
 
       const endpointDispatch = {
-        githubEndpoint: [],
-        webEndpoint: [],
-        containerEndpoint: [],
+        githubEndpoint: githubEndpoints,
+        webEndpoint: webEndpoints,
+        containerEndpoint: containerEndpoints,
       }
 
       // TODO :also graph relation updater needs to know how to figure out what kind of

@@ -3,10 +3,12 @@ import { simpleGit } from "simple-git"
 import os  from 'os'
 import path from 'path'
 
-export async function cloneRepository(clone_url, repoName, GITHUB_TOKEN_CLASSIC) {
+
+export async function cloneRepository(clone_url, repoName) {
   // Clones Repository into tmp directory - returns path
   try {
-    const tempDir = os.tmpdir();
+    // const tempDir = os.tmpdir();
+    const tempDir = './repo-scans';
     const repoPath = path.join(tempDir, `${repoName}-${Date.now()}`);
 
     // Check if the repository directory already exists
@@ -19,10 +21,8 @@ export async function cloneRepository(clone_url, repoName, GITHUB_TOKEN_CLASSIC)
       console.log('Repository removed successfully.');
     }
 
-    clone_url = `https://${GITHUB_TOKEN_CLASSIC}@${clone_url.split("https://")[1]}`
-    console.log(clone_url)
-
     // Clone the repository
+    console.log(repoPath)
     await simpleGit().clone(clone_url, repoPath);
     console.log('Repository cloned successfully.');
     
