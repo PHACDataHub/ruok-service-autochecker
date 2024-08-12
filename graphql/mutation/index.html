@@ -970,14 +970,14 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">url</span><span class="p">:</span><span class="n">strawberry</span><span class="o">.</span><span class="n">asdict</span><span class="p">(</span><span class="n">url</span><span class="p">)[</span><span class="s2">&quot;url&quot;</span><span class="p">],</span><span class="n">urls</span><span class="p">))</span>
 
     <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
-    <span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">product</span><span class="p">:</span> <span class="n">EndpointInput</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EndpointInput</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Attaches a product label to a list of URLs.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">client</span> <span class="o">=</span> <span class="n">GraphDB</span><span class="p">()</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">insert_product</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">urls</span><span class="p">)</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">insert_product</span><span class="p">(</span><span class="n">product</span><span class="p">,</span> <span class="n">urls</span><span class="p">)</span>
         <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">name</span>
+        <span class="k">return</span> <span class="n">product</span><span class="o">.</span><span class="n">url</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1257,7 +1257,7 @@ fields will be updated with the values provided in the mutation.</p>
 
 
 <h2 id="graphql_types.mutation.Mutation.product" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">product</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">urls</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">product</span><span class="p">(</span><span class="n">product</span><span class="p">,</span> <span class="n">urls</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1277,14 +1277,14 @@ fields will be updated with the values provided in the mutation.</p>
 <span class="normal">154</span>
 <span class="normal">155</span>
 <span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
-<span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">product</span><span class="p">:</span> <span class="n">EndpointInput</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EndpointInput</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attaches a product label to a list of URLs.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">GraphDB</span><span class="p">()</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">insert_product</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">urls</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">insert_product</span><span class="p">(</span><span class="n">product</span><span class="p">,</span> <span class="n">urls</span><span class="p">)</span>
     <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">name</span>
+    <span class="k">return</span> <span class="n">product</span><span class="o">.</span><span class="n">url</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
