@@ -1,17 +1,17 @@
-import React from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { Flex, Box, Text, Heading, DataList } from '@radix-ui/themes'
-import { DoubleArrowRightIcon } from '@radix-ui/react-icons'
-import { servicesData } from '../assets/dummyData'
-import CheckPasses from './CheckPasses'
+import React from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { Flex, Box, Text, Heading, DataList } from '@radix-ui/themes';
+import { DoubleArrowRightIcon } from '@radix-ui/react-icons';
+import { servicesData } from '../assets/dummyData';
+import CheckPasses from './CheckPasses';
 const Service = () => {
-  const { serviceName } = useParams()
+  const { serviceName } = useParams();
   const service = servicesData.allServices.find(
     (service) => service.name === serviceName,
-  )
+  );
 
   if (!service) {
-    return <Text>The service could not be found.</Text>
+    return <Text>The service could not be found.</Text>;
   }
 
   return (
@@ -130,7 +130,7 @@ const Service = () => {
         checkPasses={service.branchProtection}
       />
     </Box>
-  )
-}
+  );
+};
 
-export default Service
+export default Service;

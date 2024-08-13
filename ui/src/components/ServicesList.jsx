@@ -1,11 +1,11 @@
-import React from 'react'
-import { Flex, Box, Text, Card, CardContent } from '@radix-ui/themes'
-import { Link } from 'react-router-dom'
-import { DoubleArrowRightIcon } from '@radix-ui/react-icons'
-import { servicesData } from '../assets/dummyData.js'
+import React from 'react';
+import { Flex, Box, Text, Card } from '@radix-ui/themes';
+import { Link } from 'react-router-dom';
+import { DoubleArrowRightIcon } from '@radix-ui/react-icons';
+import { servicesData } from '../assets/dummyData.js';
 
 const ServicesList = () => {
-  const data = servicesData
+  const data = servicesData;
 
   return (
     <Box padding="20px">
@@ -36,7 +36,7 @@ const ServicesList = () => {
         ))}
       </Flex>
     </Box>
-  )
-}
+  );
+};
 
-export default ServicesList
+export default ServicesList;

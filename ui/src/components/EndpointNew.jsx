@@ -1,13 +1,13 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
-import { Box, Text, Heading, Link, Badge, DataList } from '@radix-ui/themes'
-import { endpointData } from '../assets/dummyData'
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { Box, Text, Heading, Link, Badge, DataList } from '@radix-ui/themes';
+import { endpointData } from '../assets/dummyData';
 
 const containerStyle = {
   padding: '16px',
   margin: '1rem',
   borderWidth: '1px',
-}
+};
 
 const renderAccessibilityCheck = (checkPasses) => {
   if (!checkPasses) {
@@ -17,7 +17,7 @@ const renderAccessibilityCheck = (checkPasses) => {
           No scanner result for service
         </Badge>
       </Box>
-    )
+    );
   }
   if (!checkPasses.checkPasses) {
     return (
@@ -42,21 +42,21 @@ const renderAccessibilityCheck = (checkPasses) => {
           )}
         </Box>
       </Box>
-    )
+    );
   }
   return (
     <Badge color="green" variant="solid">
       All Okay
     </Badge>
-  )
-}
+  );
+};
 
 const EndpointDetails = () => {
-  const { endpointId } = useParams()
-  const endpoint = endpointData[endpointId]
+  const { endpointId } = useParams();
+  const endpoint = endpointData[endpointId];
 
   if (!endpoint) {
-    return <Text>Endpoint not found</Text>
+    return <Text>Endpoint not found</Text>;
   }
 
   const accessibilityFields = {
@@ -120,7 +120,7 @@ const EndpointDetails = () => {
     metaViewport: 'Meta Viewport',
     nestedInteractive: 'Nested Interactive',
     bypass: 'Bypass',
-  }
+  };
 
   return (
     <Box style={containerStyle}>
@@ -170,7 +170,7 @@ const EndpointDetails = () => {
         </Box>
       )}
     </Box>
-  )
-}
+  );
+};
 
-export default EndpointDetails
+export default EndpointDetails;
