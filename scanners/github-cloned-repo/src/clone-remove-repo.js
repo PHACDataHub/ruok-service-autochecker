@@ -30,7 +30,7 @@ export async function cloneRepository(clone_url, repoName, GITHUB_TOKEN_CLASSIC)
   } catch (error) {
     // console.error('Error cloning repository:', error);
     console.log('Error cloning repository:', error);
-    // throw error;
+    throw error;
   }
 }
 

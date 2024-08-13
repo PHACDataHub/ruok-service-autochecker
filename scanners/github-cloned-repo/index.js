@@ -46,73 +46,79 @@ process.on('SIGINT', () => process.exit(0))
             console.log('repoName', repoName)
 
             // Clone repository
-            const repoPath = await cloneRepository(gitHubEventPayload.endpoint, repoName, GITHUB_TOKEN_CLASSIC)
-            console.log ('repoPath', repoPath, '\n')
+            try{
+                const repoPath = await cloneRepository(gitHubEventPayload.endpoint, repoName, GITHUB_TOKEN_CLASSIC)
+                console.log ('repoPath', repoPath, '\n')
 
-            // Instantiate and do the check(s)
-            const checkName = 'allChecks'
-            const check = await initializeChecker(checkName, repoName, repoPath)
-            const results = await check.doRepoCheck()
+                // Instantiate and do the check(s)
+                const checkName = 'allChecks'
+                const check = await initializeChecker(checkName, repoName, repoPath)
+                const results = await check.doRepoCheck()
 
-            console.log('Scan Results:',results)
- 
-            // Mutation to add a graph for the new endpoints
-            // TODO: refactor this into a testable query builder function
-
-            // TODO: figure out why this only works with 'trivyRepoVulnerability', where it's coded as 'trivy_repo_vulnerability'
-            //      in api, etc
-            const mutation = gql`
-            mutation {
-                githubEndpoint(
-                    endpoint: {
-                        url: "${gitHubEventPayload.endpoint}"
-                        kind: "Github"
-                        owner: "${orgName}"
-                        repo: "${repoName}"
-                        api: ${results.hasApiDirectory.checkPasses}                       
-                        hasSecurityMd: {
-                            checkPasses: ${results.hasSecurityMd.checkPasses}
-                            metadata: ${results.hasSecurityMd.metadata}
-                        },
-                        hasDependabotYaml: {
-                            checkPasses: ${results.hasDependabotYaml.checkPasses}
-                            metadata: ${results.hasDependabotYaml.metadata}
-                        },
-                        gitleaks: {
-                            checkPasses: ${results.gitleaks ? results.gitleaks.checkPasses : null}
-                            metadata: ${results.gitleaks ? JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:') : {}}
-                        },
-                        hadolint: {
-                            checkPasses: ${results.hadolint ? results.hadolint.checkPasses : null}
-                            metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
-                        }
-                        trivyRepoVulnerability: {
-                            checkPasses: ${results.trivy_repo_vulnerability ? results.trivy_repo_vulnerability.checkPasses : null}
-
-                            metadata: ${results.trivy_repo_vulnerability && results.trivy_repo_vulnerability.metadata !== undefined ?
-                                JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:') :
-                                null
-                            }
-                        }                       
-                    }
-                )
-            }`;
-            console.log('*************************\n',mutation,'\n*************************\n')
+                console.log('Scan Results:',results)
     
-            // New GraphQL client - TODO: remove hard-coded URL
-            try {
-                const graphqlClient = new GraphQLClient(GRAPHQL_URL);
+                // Mutation to add a graph for the new endpoints
+                // TODO: refactor this into a testable query builder function
 
-                // Write mutation to GraphQL API
-                const mutationResponse = await graphqlClient.request(mutation);
-                console.log('Scan results saved to database.')
+                // TODO: figure out why this only works with 'trivyRepoVulnerability', where it's coded as 'trivy_repo_vulnerability'
+                //      in api, etc
+                const mutation = gql`
+                mutation {
+                    githubEndpoint(
+                        endpoint: {
+                            url: "${gitHubEventPayload.endpoint}"
+                            kind: "Github"
+                            owner: "${orgName}"
+                            repo: "${repoName}"
+                            api: ${results.hasApiDirectory.checkPasses}                       
+                            hasSecurityMd: {
+                                checkPasses: ${results.hasSecurityMd.checkPasses}
+                                metadata: ${results.hasSecurityMd.metadata}
+                            },
+                            hasDependabotYaml: {
+                                checkPasses: ${results.hasDependabotYaml.checkPasses}
+                                metadata: ${results.hasDependabotYaml.metadata}
+                            },
+                            gitleaks: {
+                                checkPasses: ${results.gitleaks ? results.gitleaks.checkPasses : null}
+                                metadata: ${results.gitleaks ? JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:') : {}}
+                            },
+                            hadolint: {
+                                checkPasses: ${results.hadolint ? results.hadolint.checkPasses : null}
+                                metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+                            }
+                            trivyRepoVulnerability: {
+                                checkPasses: ${results.trivy_repo_vulnerability ? results.trivy_repo_vulnerability.checkPasses : null}
 
-            } catch (error) {
-                console.error("An error occurred - unable to save to the database.", error);
+                                metadata: ${results.trivy_repo_vulnerability && results.trivy_repo_vulnerability.metadata !== undefined ?
+                                    JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:') :
+                                    null
+                                }
+                            }                       
+                        }
+                    )
+                }`;
+                console.log('*************************\n',mutation,'\n*************************\n')
+        
+                // New GraphQL client - TODO: remove hard-coded URL
+                try {
+                    const graphqlClient = new GraphQLClient(GRAPHQL_URL);
+
+                    // Write mutation to GraphQL API
+                    const mutationResponse = await graphqlClient.request(mutation);
+                    console.log('Scan results saved to database.')
+
+                } catch (error) {
+                    console.error("An error occurred - unable to save to the database.", error);
+                }
+                
+                // Remove temp repository
+                await removeClonedRepository(repoPath)
+            }
+            catch(error){
+                                    
             }
             
-            // Remove temp repository
-            await removeClonedRepository(repoPath)
         }
     })();
 
