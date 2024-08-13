@@ -1,12 +1,12 @@
-import React from 'react'
-import { Box, Heading, Text, Badge } from '@radix-ui/themes'
+import React from 'react';
+import { Box, Heading, Text, Badge } from '@radix-ui/themes';
 
 const CheckPasses = ({ title, checkPasses }) => {
   const renderHadolintIssues = (issues) => {
     const filteredIssues = issues.filter(
       (issue) => issue.rules_violated.length > 0,
-    )
-    if (filteredIssues.length === 0) return null
+    );
+    if (filteredIssues.length === 0) return null;
 
     return (
       <Box
@@ -42,8 +42,8 @@ const CheckPasses = ({ title, checkPasses }) => {
           </Box>
         ))}
       </Box>
-    )
-  }
+    );
+  };
 
   const renderGitleaksDetails = (details) => (
     <Box
@@ -65,7 +65,7 @@ const CheckPasses = ({ title, checkPasses }) => {
         </Box>
       ))}
     </Box>
-  )
+  );
 
   const renderTrivyVulnerabilities = (vulnerabilities) => (
     <Box
@@ -105,7 +105,7 @@ const CheckPasses = ({ title, checkPasses }) => {
         </Box>
       ))}
     </Box>
-  )
+  );
 
   const renderBranchProtection = (metadata) => (
     <Box
@@ -128,7 +128,7 @@ const CheckPasses = ({ title, checkPasses }) => {
         </Text>
       )}
     </Box>
-  )
+  );
 
   const renderSecurityMD = () => (
     <Box
@@ -146,7 +146,7 @@ const CheckPasses = ({ title, checkPasses }) => {
         Security documentation file is missing.
       </Text>
     </Box>
-  )
+  );
 
   const renderDependabotYAML = () => (
     <Box
@@ -164,7 +164,7 @@ const CheckPasses = ({ title, checkPasses }) => {
         Dependabot configuration file is missing.
       </Text>
     </Box>
-  )
+  );
 
   const renderAutomatedSecurityFixes = () => (
     <Box
@@ -178,13 +178,13 @@ const CheckPasses = ({ title, checkPasses }) => {
     >
       <Text fontSize="sm">Automated Security fixes are disabled</Text>
     </Box>
-  )
+  );
 
   const renderDefault = () => (
     <Badge color="green" variant="solid">
       All Okay
     </Badge>
-  )
+  );
 
   const renderIssues = (checkPasses) => {
     if (!checkPasses) {
@@ -192,9 +192,9 @@ const CheckPasses = ({ title, checkPasses }) => {
         <Badge color="red" variant="solid">
           No scanner result for service
         </Badge>
-      )
+      );
     }
-    const metadata = checkPasses.metadata
+    const metadata = checkPasses.metadata;
     if (!checkPasses.checkPasses && metadata)
       return (
         <Box>
@@ -211,10 +211,10 @@ const CheckPasses = ({ title, checkPasses }) => {
           {title === 'Automated Security Fixes' &&
             renderAutomatedSecurityFixes(metadata)}
         </Box>
-      )
+      );
 
-    return renderDefault()
-  }
+    return renderDefault();
+  };
 
   return (
     <Box mb="4">
@@ -223,6 +223,6 @@ const CheckPasses = ({ title, checkPasses }) => {
       </Heading>
       {renderIssues(checkPasses)}
     </Box>
-  )
-}
-export default CheckPasses
+  );
+};
+export default CheckPasses;

@@ -20,6 +20,9 @@ module.exports = () => {
     resolve: {
       extensions: ['.js', '.ts', '.tsx', '.jsx'],
     },
+    output: {
+      publicPath: '/',
+    },
     module: {
       rules: [
         {
@@ -57,12 +60,12 @@ module.exports = () => {
     plugins: [
       new rspack.HtmlRspackPlugin({
         template: './index.html',
-        favicon: "./src/assets/favicon_canadaFlag.ico",
+        favicon: './src/assets/favicon_canadaFlag.ico',
       }),
       new Dotenv({
-        path: finalPath,// Path to .env file (this is the default)
+        path: finalPath, // Path to .env file (this is the default)
         safe: true, // load .env.example (defaults to "false" which does not use dotenv-safe)
       }),
     ],
-  }
-}
+  };
+};
