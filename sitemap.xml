@@ -2,72 +2,72 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/architecture/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/configuration/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/data-contracts/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/deployment/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/development-environment/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/github-webhooks/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/quickstart-for-development/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/register-repository/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/scanners/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/graphql/graphql-api/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/graphql/mutation/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/graphql/query/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/graphql/typedef/</loc>
-         <lastmod>2024-08-12</lastmod>
+         <lastmod>2024-08-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
