@@ -65,7 +65,6 @@ export async function runGitleaks(clonedRepoPath) {
     const gitleaksProcess = spawn('gitleaks', [
       'detect',
       '--source', clonedRepoPath,
-      '-v',
       '--redact',
       '--no-banner',
       '--exit-code', 95,
@@ -80,16 +79,17 @@ export async function runGitleaks(clonedRepoPath) {
     gitleaksProcess.stderr.on('data', (data) => {
       errorOutput += data.toString();
     });
+    console.log('awaiting close')
 
     const [code] = await once(gitleaksProcess, 'close');
-
+    console.log(code)
     // Get details from the report output as json file
     const gitleaksJson = await readGitleaksOutputFile(reportFilePath);
 
     // Remove temp dir
     try {
       await rm(tempDir, { recursive: true });
-      // console.log(`Temporary directory ${tempDir} removed.`);
+      console.log(`Temporary directory ${tempDir} removed.`);
     } catch (removeError) {
       console.error(`Error removing temporary directory ${tempDir}: ${removeError.message}`);
     }
@@ -139,6 +139,7 @@ export class Gitleaks extends CheckOnClonedRepoInterface {
     async doRepoCheck() {
       try {
         let gitleaksResult = await runGitleaks(this.clonedRepoPath);
+        console.log(gitleaksResult)
         let checkPasses
 
         if (gitleaksResult.leaksFound == true) {

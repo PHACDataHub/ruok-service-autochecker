@@ -7,6 +7,7 @@ import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
 import { Gitleaks } from './gitleaks.js'
 import { Hadolint } from './hadolint.js'
 import { TrivyRepo } from './trivy-repo.js'
+import { ConsumerOptsBuilderImpl } from 'nats/lib/jetstream/types.js'
 
 
 export class AllChecks extends CheckOnClonedRepoInterface {

@@ -11,6 +11,7 @@ import { mkdtemp, rm } from 'fs/promises';
 import os from 'os';
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
 import fs from 'fs'
+import { ConsumerOptsBuilderImpl } from 'nats/lib/jetstream/types.js';
 
 
 async function runTrivyScan(clonedRepoPath) {
@@ -118,10 +119,19 @@ export class TrivyRepo extends CheckOnClonedRepoInterface {
     async doRepoCheck() {
         try {
             const trivyRepoResult = await runTrivyScan(this.clonedRepoPath); 
-      
-            return {
-              checkPasses: (trivyRepoResult == 0),
-              metadata: trivyRepoResult.length > 0 ? trivyRepoResult : null
+            if(trivyRepoResult){
+                return {
+                checkPasses: (trivyRepoResult == 0),
+                metadata: trivyRepoResult.length > 0 ? trivyRepoResult : null
+                }
+            }
+            else{
+                return{
+                checkPasses: null,
+                metadata: {
+                errorMessage: 'An unexpected error occurred with trivy check.',
+                },
+                }
             }
 
         } catch (error) {
