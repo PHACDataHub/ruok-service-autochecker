@@ -7,6 +7,7 @@ import strawberry
 class Endpoint:
     url: str
     kind: Optional[str] = None
+    _key: Optional[str] = None
 
 @strawberry.type
 class Edge:
@@ -25,7 +26,7 @@ JSON = strawberry.scalar(
 
 @strawberry.type
 class CheckPasses:
-    check_passes: Optional[bool]
+    check_passes: Optional[str] = None
     metadata: Optional[JSON] = None
 
 @strawberry.type
@@ -123,7 +124,7 @@ class WebEndpoint(Endpoint):
     url: str
     kind: str
     _key: str
-    accessibility: Optional[List[Accessibility]]
+    accessibility: Optional[List[Accessibility]] = None
 
 @strawberry.type
 class Service(Endpoint):

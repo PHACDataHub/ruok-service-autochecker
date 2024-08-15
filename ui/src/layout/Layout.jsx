@@ -17,7 +17,7 @@ export default function Layout() {
           <GcdsContainer size="xl" centered color="black">
             <div className="nav-bar">
               <Link href="/" className="title">
-                Observatory - R U OK
+                Observatory
               </Link>
             </div>
           </GcdsContainer>
