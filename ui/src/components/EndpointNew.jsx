@@ -1,7 +1,9 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Box, Text, Heading, Link, Badge, DataList } from '@radix-ui/themes';
+import { useParams,useLocation } from 'react-router-dom';
+import { Box, Text, Heading, Link, Badge, DataList, Spinner } from '@radix-ui/themes';
 import { endpointData } from '../assets/dummyData';
+import { FETCH_GITHUB_URL_QUERY,FETCH_WEB_URL_QUERY,FETCH_RELATED_ENDPOINTS_QUERY } from '../GraphQL/queries';
+import { useQuery, gql, NetworkStatus } from "@apollo/client";
 
 const containerStyle = {
   padding: '16px',
@@ -53,7 +55,21 @@ const renderAccessibilityCheck = (checkPasses) => {
 
 const EndpointDetails = () => {
   const { endpointId } = useParams();
-  const endpoint = endpointData[endpointId];
+  const { url, kind } = useLocation().state;
+  console.log(`URL in EndpointNew component : ${url} of kind : ${kind}`)
+  // const endpoint = endpointData[endpointId];
+  const endpoint = { endpointId, url, kind };
+
+  const query = endpoint.kind == "Web" ? FETCH_WEB_URL_QUERY : FETCH_GITHUB_URL_QUERY
+  const endpointDetails = useQuery(query,
+                          {
+                              variables : { url: endpoint.url },
+                              fetchPolicy : "network-only"
+                          });
+  
+  if (endpointDetails.networkStatus === NetworkStatus.refetch) return <Spinner/>;
+  if (endpointDetails.loading) return <Spinner/>;
+  if (endpointDetails.error) return <pre>{error.message}</pre>
 
   if (!endpoint) {
     return <Text>Endpoint not found</Text>;
@@ -159,14 +175,24 @@ const EndpointDetails = () => {
           <Heading size="5" style={{ marginBottom: '8px' }}>
             Accessibility Details
           </Heading>
-          {Object.entries(accessibilityFields).map(([fieldKey, fieldTitle]) => (
-            <Box key={fieldKey} mb="4">
-              <Heading size="3" mb="2">
-                {fieldTitle}
-              </Heading>
-              {renderAccessibilityCheck(endpoint.accessibility[fieldKey])}
-            </Box>
-          ))}
+          {endpointDetails.data.webEndpoint.accessibility.length > 0 ? 
+            endpointDetails.data.webEndpoint.accessibility.map((accessibility) => {
+            return (
+              <Box key={accessibility.url} mb="4">
+                <Heading size="4">
+                  URL : {accessibility.url}
+                </Heading>
+                {Object.entries(accessibilityFields).map(([fieldKey, fieldTitle]) => (
+                  <Box key={fieldKey} mb="4">
+                    <Heading size="3" mb="2">
+                      {fieldTitle}
+                    </Heading>
+                    {renderAccessibilityCheck(accessibility[fieldKey])}
+                  </Box>
+                ))}
+              </Box>
+            )
+          }) : <Heading size="3">N/A</Heading>}
         </Box>
       )}
     </Box>

@@ -195,7 +195,7 @@ const CheckPasses = ({ title, checkPasses }) => {
       );
     }
     const metadata = checkPasses.metadata;
-    if (!checkPasses.checkPasses && metadata)
+    if (!(checkPasses.checkPasses === "true") && metadata)
       return (
         <Box>
           <Badge color="red" variant="solid">

@@ -25,7 +25,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-graphql-api:0.0.9
+      value: vader404/ruok-graphql-api:0.0.10
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -68,7 +68,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-cloned-repo-scanner:0.0.3
+      value: vader404/ruok-cloned-repo-scanner:0.0.4
     - op: add
       path: /spec/template/spec/containers/0/env
       value:

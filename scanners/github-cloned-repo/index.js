@@ -55,7 +55,11 @@ process.on('SIGINT', () => process.exit(0))
                 const check = await initializeChecker(checkName, repoName, repoPath)
                 const results = await check.doRepoCheck()
 
+                console.log("===========================TESTING=======================")
+
                 console.log('Scan Results:',results)
+
+                console.log("===========================TESTING 2=======================")
     
                 // Mutation to add a graph for the new endpoints
                 // TODO: refactor this into a testable query builder function
@@ -98,7 +102,7 @@ process.on('SIGINT', () => process.exit(0))
                         }
                     )
                 }`;
-                console.log('*************************\n',mutation,'\n*************************\n')
+                //console.log('*************************\n',mutation,'\n*************************\n')
         
                 // New GraphQL client - TODO: remove hard-coded URL
                 try {

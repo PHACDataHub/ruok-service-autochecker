@@ -135,6 +135,10 @@ class Query:
         # Remove unecessary db fields from the endpoint dict
         endpoint.pop("_id", None)
         endpoint.pop("_rev", None)
+
+        if 'accessibility' not in endpoint:
+            endpoint['accessibility'] = []
+        
         # Strawberry doesn't recursively resolve fields. The code below
         # is a workaround to recursively resolve the accessibility field
         # and the "check passes" fields contained within.
@@ -258,7 +262,9 @@ class Query:
         endpoints = client.get_referenced_endpoints(url)
         client.close()
         return [Endpoint(url=vertex['url'],
-                         kind=vertex['kind']) for vertex in endpoints]
+                         kind=vertex['kind'],
+                         _key=vertex['_key']) for vertex in endpoints]
+
     @strawberry.field
     def all_edges(self) -> List[Edge]:
         """
