@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-08-23 14:57-0400\n"
+"POT-Creation-Date: 2024-09-03 09:46-0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,66 +13,415 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/Inbox.js:30
-#~ msgid "{messagesCount, plural, one {There's # message in your inbox.} other {There are # messages in your inbox.}}"
-#~ msgstr "{messagesCount, plural, one {There's # message in your inbox.} other {There are # messages in your inbox.}}"
+#: src/components/EndpointDetails.jsx:46
+msgid "'No description available.'"
+msgstr "'No description available.'"
 
-#: src/App.js:52
-#~ msgid "Access and update your documents."
-#~ msgstr "Access and update your documents."
+#: src/components/CheckPasses.jsx:37
+msgid "{0} Line {1}"
+msgstr "{0} Line {1}"
 
-#: src/App.js:33
-#~ msgid "Account"
-#~ msgstr "Account"
+#: src/components/EndpointDetails.jsx:195
+msgid "Accessibility Details"
+msgstr "Accessibility Details"
 
-#: src/components/EnpointsList.jsx:61
-#~ msgid "All Endpoints"
-#~ msgstr "All Endpoints"
+#: src/components/CheckPasses.jsx:200
+#: src/components/EndpointDetails.jsx:65
+msgid "All Okay"
+msgstr "All Okay"
 
-#: src/App.js:37
-msgid "Dashboard"
-msgstr "Dashboard"
+#: src/components/EndpointDetails.jsx:98
+msgid "Area Alt"
+msgstr "Area Alt"
 
-#: src/App.js:36
-#~ msgid "Documents"
-#~ msgstr "Documents"
+#: src/components/EndpointDetails.jsx:138
+msgid "Aria Allowed Attr"
+msgstr "Aria Allowed Attr"
 
-#: src/App.js:58
-#~ msgid "Edit your profile or update contact information."
-#~ msgstr "Edit your profile or update contact information."
+#: src/components/EndpointDetails.jsx:99
+msgid "Aria Braille Equivalent"
+msgstr "Aria Braille Equivalent"
 
-#: src/Inbox.js:38
-#~ msgid "Last login on {0}."
-#~ msgstr "Last login on {0}."
+#: src/components/EndpointDetails.jsx:100
+msgid "Aria Command Name"
+msgstr "Aria Command Name"
 
-#: src/App.js:46
-#~ msgid "Make changes to your account."
-#~ msgstr "Make changes to your account."
+#: src/components/EndpointDetails.jsx:139
+msgid "Aria Conditional Attr"
+msgstr "Aria Conditional Attr"
 
-#: src/Inbox.js:20
-#~ msgid "Message Inbox"
-#~ msgstr "Message Inbox"
+#: src/components/EndpointDetails.jsx:140
+msgid "Aria Deprecated Role"
+msgstr "Aria Deprecated Role"
 
-#: src/components/Endpoint.jsx:95
-msgid "Metadata"
-msgstr "Metadata"
+#: src/components/EndpointDetails.jsx:141
+msgid "Aria Hidden Body"
+msgstr "Aria Hidden Body"
+
+#: src/components/EndpointDetails.jsx:101
+msgid "Aria Hidden Focus"
+msgstr "Aria Hidden Focus"
+
+#: src/components/EndpointDetails.jsx:102
+msgid "Aria Input Field Name"
+msgstr "Aria Input Field Name"
+
+#: src/components/EndpointDetails.jsx:103
+msgid "Aria Meter Name"
+msgstr "Aria Meter Name"
+
+#: src/components/EndpointDetails.jsx:104
+msgid "Aria Progressbar Name"
+msgstr "Aria Progressbar Name"
+
+#: src/components/EndpointDetails.jsx:142
+msgid "Aria Prohibited Attr"
+msgstr "Aria Prohibited Attr"
+
+#: src/components/EndpointDetails.jsx:143
+msgid "Aria Required Attr"
+msgstr "Aria Required Attr"
+
+#: src/components/EndpointDetails.jsx:105
+msgid "Aria Required Children"
+msgstr "Aria Required Children"
+
+#: src/components/EndpointDetails.jsx:106
+msgid "Aria Required Parent"
+msgstr "Aria Required Parent"
+
+#: src/components/EndpointDetails.jsx:107
+msgid "Aria Roledescription"
+msgstr "Aria Roledescription"
+
+#: src/components/EndpointDetails.jsx:144
+msgid "Aria Roles"
+msgstr "Aria Roles"
+
+#: src/components/EndpointDetails.jsx:108
+msgid "Aria Toggle Field Name"
+msgstr "Aria Toggle Field Name"
+
+#: src/components/EndpointDetails.jsx:109
+msgid "Aria Tooltip Name"
+msgstr "Aria Tooltip Name"
+
+#: src/components/EndpointDetails.jsx:146
+msgid "Aria Valid Attr"
+msgstr "Aria Valid Attr"
+
+#: src/components/EndpointDetails.jsx:145
+msgid "Aria Valid Attr Value"
+msgstr "Aria Valid Attr Value"
+
+#: src/components/EndpointDetails.jsx:110
+msgid "Audio Caption"
+msgstr "Audio Caption"
+
+#: src/components/Service.jsx:172
+msgid "Automated Security Fixes"
+msgstr "Automated Security Fixes"
+
+#: src/components/CheckPasses.jsx:193
+msgid "Automated Security fixes are disabled"
+msgstr "Automated Security fixes are disabled"
+
+#: src/components/EndpointDetails.jsx:111
+msgid "Blink"
+msgstr "Blink"
+
+#: src/components/Service.jsx:197
+msgid "Branch Protection"
+msgstr "Branch Protection"
+
+#: src/components/EndpointDetails.jsx:147
+msgid "Button Name"
+msgstr "Button Name"
+
+#: src/components/EndpointDetails.jsx:157
+msgid "Bypass"
+msgstr "Bypass"
+
+#: src/components/EndpointDetails.jsx:148
+msgid "Color Contrast"
+msgstr "Color Contrast"
+
+#: src/components/EndpointDetails.jsx:112
+msgid "Definition List"
+msgstr "Definition List"
+
+#: src/components/CheckPasses.jsx:177
+msgid "Dependabot configuration file is missing."
+msgstr "Dependabot configuration file is missing."
+
+#: src/components/Service.jsx:177
+msgid "Dependabot YAML"
+msgstr "Dependabot YAML"
+
+#: src/components/Service.jsx:74
+msgid "Description"
+msgstr "Description"
+
+#: src/components/EndpointDetails.jsx:113
+msgid "Dlitem"
+msgstr "Dlitem"
+
+#: src/components/EndpointDetails.jsx:149
+msgid "Document Title"
+msgstr "Document Title"
+
+#: src/components/EndpointDetails.jsx:114
+msgid "Duplicate Id Aria"
+msgstr "Duplicate Id Aria"
+
+#: src/components/EndpointDetails.jsx:163
+msgid "Endpoint Details"
+msgstr "Endpoint Details"
+
+#: src/components/EndpointDetails.jsx:92
+msgid "Endpoint not found"
+msgstr "Endpoint not found"
+
+#: src/components/CheckPasses.jsx:67
+#~ msgid ""
+#~ "File: {0}\n"
+#~ "Line: {1} - {2}\n"
+#~ "Commit: {3}"
+#~ msgstr ""
+#~ "File: {0}\n"
+#~ "Line: {1} - {2}\n"
+#~ "Commit: {3}"
+
+#: src/components/CheckPasses.jsx:69
+msgid ""
+"File: {0} \n"
+" Line: {1} - {2} \n"
+" Commit: {3}"
+msgstr ""
+"File: {0} \n"
+" Line: {1} - {2} \n"
+" Commit: {3}"
+
+#: src/components/CheckPasses.jsx:65
+#~ msgid "File: {0}, Line: {1}-{2}, Commit: {3}"
+#~ msgstr "File: {0}, Line: {1}-{2}, Commit: {3}"
+
+#: src/components/CheckPasses.jsx:67
+#~ msgid "File: {0}Line: {1} - {2}Commit: {3}"
+#~ msgstr "File: {0}Line: {1} - {2}Commit: {3}"
+
+#: src/components/EndpointDetails.jsx:150
+msgid "Form Field Multiple Labels"
+msgstr "Form Field Multiple Labels"
+
+#: src/components/EndpointDetails.jsx:115
+msgid "Frame Focusable Content"
+msgstr "Frame Focusable Content"
+
+#: src/components/EndpointDetails.jsx:117
+msgid "Frame Title"
+msgstr "Frame Title"
+
+#: src/components/EndpointDetails.jsx:116
+msgid "Frame Title Unique"
+msgstr "Frame Title Unique"
+
+#: src/components/Service.jsx:187
+msgid "Gitleaks"
+msgstr "Gitleaks"
+
+#: src/components/Service.jsx:162
+msgid "Hadolint Issues"
+msgstr "Hadolint Issues"
+
+#: src/components/Breadcrumbs.jsx:27
+msgid "Home"
+msgstr "Home"
+
+#: src/components/EndpointDetails.jsx:151
+msgid "HTML Has Lang"
+msgstr "HTML Has Lang"
+
+#: src/components/EndpointDetails.jsx:152
+msgid "HTML Lang Valid"
+msgstr "HTML Lang Valid"
+
+#: src/components/EndpointDetails.jsx:118
+msgid "Html Xml Lang Mismatch"
+msgstr "Html Xml Lang Mismatch"
+
+#: src/components/EndpointDetails.jsx:119
+msgid "Image Alt"
+msgstr "Image Alt"
+
+#: src/components/EndpointDetails.jsx:120
+msgid "Input Button Name"
+msgstr "Input Button Name"
+
+#: src/components/EndpointDetails.jsx:121
+msgid "Input Image Alt"
+msgstr "Input Image Alt"
+
+#: src/components/CheckPasses.jsx:217
+msgid "Issues detected"
+msgstr "Issues detected"
+
+#: src/components/EndpointDetails.jsx:40
+msgid "Issues Detected"
+msgstr "Issues Detected"
+
+#: src/components/EndpointDetails.jsx:153
+msgid "Label"
+msgstr "Label"
+
+#: src/components/EndpointDetails.jsx:56
+msgid "Learn more"
+msgstr "Learn more"
+
+#: src/components/Service.jsx:103
+msgid "License"
+msgstr "License"
+
+#: src/components/CheckPasses.jsx:37
+#~ msgid "Line"
+#~ msgstr "Line"
+
+#: src/components/EndpointDetails.jsx:122
+msgid "Link In Text Block"
+msgstr "Link In Text Block"
+
+#: src/components/EndpointDetails.jsx:154
+msgid "Link Name"
+msgstr "Link Name"
+
+#: src/components/EndpointDetails.jsx:123
+msgid "List"
+msgstr "List"
+
+#: src/components/EndpointDetails.jsx:124
+msgid "Listitem"
+msgstr "Listitem"
+
+#: src/components/EndpointDetails.jsx:125
+msgid "Marquee"
+msgstr "Marquee"
+
+#: src/components/EndpointDetails.jsx:126
+msgid "Meta Refresh"
+msgstr "Meta Refresh"
+
+#: src/components/EndpointDetails.jsx:155
+msgid "Meta Viewport"
+msgstr "Meta Viewport"
+
+#: src/components/CheckPasses.jsx:112
+msgid "More info"
+msgstr "More info"
+
+#: src/components/EndpointDetails.jsx:156
+msgid "Nested Interactive"
+msgstr "Nested Interactive"
+
+#: src/components/EndpointDetails.jsx:137
+msgid "No Autoplay Audio"
+msgstr "No Autoplay Audio"
+
+#: src/components/CheckPasses.jsx:140
+msgid "No protection rules are configured."
+msgstr "No protection rules are configured."
+
+#: src/components/CheckPasses.jsx:208
+msgid "No scanner result for service"
+msgstr "No scanner result for service"
+
+#: src/components/EndpointDetails.jsx:127
+msgid "Object Alt"
+msgstr "Object Alt"
+
+#: src/components/Service.jsx:95
+msgid "Programming Language(s)"
+msgstr "Programming Language(s)"
+
+#: src/components/CheckPasses.jsx:136
+msgid "Protection rules are correctly applied."
+msgstr "Protection rules are correctly applied."
+
+#: src/components/Service.jsx:123
+msgid "Referencing Endpoints"
+msgstr "Referencing Endpoints"
 
 #: src/components/Controls.jsx:97
 msgid "Refresh"
 msgstr "Refresh"
 
-#: src/components/Endpoint.jsx:86
-msgid "Related Endpoints"
-msgstr "Related Endpoints"
+#: src/components/EndpointDetails.jsx:128
+msgid "Role Img Alt"
+msgstr "Role Img Alt"
 
 #: src/components/Controls.jsx:72
 msgid "Scanned Endpoints"
 msgstr "Scanned Endpoints"
 
-#: src/Inbox.js:23
-#~ msgid "See all <0>unread messages </0>or <1>mark them</1> as read."
-#~ msgstr "See all <0>unread messages </0>or <1>mark them</1> as read."
+#: src/components/EndpointDetails.jsx:129
+msgid "Scrollable Region Focusable"
+msgstr "Scrollable Region Focusable"
 
-#: src/App.js:39
-#~ msgid "Settings"
-#~ msgstr "Settings"
+#: src/components/CheckPasses.jsx:159
+msgid "Security documentation file is missing."
+msgstr "Security documentation file is missing."
+
+#: src/components/Service.jsx:182
+msgid "Security MD"
+msgstr "Security MD"
+
+#: src/components/EndpointDetails.jsx:130
+msgid "Select Name"
+msgstr "Select Name"
+
+#: src/components/EndpointDetails.jsx:131
+msgid "Server Side Image Map"
+msgstr "Server Side Image Map"
+
+#: src/components/EndpointDetails.jsx:132
+msgid "SVG Image Alt"
+msgstr "SVG Image Alt"
+
+#: src/components/EndpointDetails.jsx:133
+msgid "TD Headers Attr"
+msgstr "TD Headers Attr"
+
+#: src/components/EndpointDetails.jsx:134
+msgid "TH Has Data Cells"
+msgstr "TH Has Data Cells"
+
+#: src/components/Service.jsx:192
+msgid "Trivy Repo Vulnerability"
+msgstr "Trivy Repo Vulnerability"
+
+#: src/components/CheckPasses.jsx:101
+msgid "Upgrade version {0} to {1}"
+msgstr "Upgrade version {0} to {1}"
+
+#: src/components/CheckPasses.jsx:101
+#~ msgid "Upgrade version ${0} to ${1}"
+#~ msgstr "Upgrade version ${0} to ${1}"
+
+#: src/components/EndpointDetails.jsx:135
+msgid "Valid Lang"
+msgstr "Valid Lang"
+
+#: src/components/EndpointDetails.jsx:136
+msgid "Video Caption"
+msgstr "Video Caption"
+
+#: src/components/Service.jsx:113
+msgid "Visibility"
+msgstr "Visibility"
+
+#: src/components/Service.jsx:167
+msgid "Vulnerability Alerts"
+msgstr "Vulnerability Alerts"
+
+#: src/components/Service.jsx:82
+msgid "Web URL"
+msgstr "Web URL"
