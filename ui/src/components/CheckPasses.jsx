@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, Heading, Text, Badge } from '@radix-ui/themes';
+import { Trans } from '@lingui/macro';
 
-const CheckPasses = ({ title, checkPasses }) => {
+const CheckPasses = ({ title, titleElement, checkPasses }) => {
   const renderHadolintIssues = (issues) => {
     const filteredIssues = issues.filter(
       (issue) => issue.rules_violated.length > 0,
@@ -33,7 +34,9 @@ const CheckPasses = ({ title, checkPasses }) => {
                 {issue.rules_violated.map((rule, ruleIndex) => (
                   <Box key={ruleIndex} style={{ marginBottom: '8px' }}>
                     <Text color="red.800" fontSize="sm">
-                      {rule.message} (Line {rule.line})
+                      <Trans>
+                        {rule.message} Line {rule.line}
+                      </Trans>
                     </Text>
                   </Box>
                 ))}
@@ -56,11 +59,17 @@ const CheckPasses = ({ title, checkPasses }) => {
       }}
     >
       {details.map((leak, index) => (
-        <Box key={index} style={{ marginBottom: '8px' }}>
-          <Text fontWeight="bold">{leak.Description}</Text>
-          <Text fontSize="sm">
-            File: {leak.File}, Line: {leak.StartLine}-{leak.EndLine}, Commit:{' '}
-            {leak.Commit}
+        <Box key={index} style={{ marginBottom: '16px' }}>
+          <Box>
+            <Text whiteSpace="pre-line" fontWeight="bold" marginBottom="4px">
+              {leak.Description}
+            </Text>
+          </Box>
+          <Text fontSize="sm" whiteSpace="pre-line">
+            <Trans>
+              \n File: {leak.File} \n Line: {leak.StartLine} - {leak.EndLine} \n
+              Commit: {leak.Commit}
+            </Trans>
           </Text>
         </Box>
       ))}
@@ -89,7 +98,9 @@ const CheckPasses = ({ title, checkPasses }) => {
           </Text>
           <Box style={{ marginBottom: '8px' }}>
             <Text fontSize="sm" mb="1">
-              {`Upgrade version ${vuln.installed_version} to ${vuln.fixed_version}`}
+              <Trans>
+                Upgrade version {vuln.installed_version} to {vuln.fixed_version}
+              </Trans>
             </Text>
             <Box>
               <a
@@ -98,7 +109,7 @@ const CheckPasses = ({ title, checkPasses }) => {
                 rel="noopener noreferrer"
                 style={{ color: '#007bff', textDecoration: 'underline' }}
               >
-                More info
+                <Trans>More info</Trans>
               </a>
             </Box>
           </Box>
@@ -121,10 +132,12 @@ const CheckPasses = ({ title, checkPasses }) => {
       }}
     >
       {metadata.rules.length > 0 ? (
-        <Text fontSize="sm">Protection rules are correctly applied.</Text>
+        <Text fontSize="sm">
+          <Trans>Protection rules are correctly applied.</Trans>
+        </Text>
       ) : (
         <Text fontSize="sm" color="red.600">
-          No protection rules are configured.
+          <Trans>No protection rules are configured.</Trans>
         </Text>
       )}
     </Box>
@@ -143,7 +156,7 @@ const CheckPasses = ({ title, checkPasses }) => {
       }}
     >
       <Text fontSize="sm" color="red.600">
-        Security documentation file is missing.
+        <Trans>Security documentation file is missing.</Trans>
       </Text>
     </Box>
   );
@@ -161,7 +174,7 @@ const CheckPasses = ({ title, checkPasses }) => {
       }}
     >
       <Text fontSize="sm" color="red.600">
-        Dependabot configuration file is missing.
+        <Trans>Dependabot configuration file is missing.</Trans>
       </Text>
     </Box>
   );
@@ -176,13 +189,15 @@ const CheckPasses = ({ title, checkPasses }) => {
         marginTop: '8px',
       }}
     >
-      <Text fontSize="sm">Automated Security fixes are disabled</Text>
+      <Text fontSize="sm">
+        <Trans>Automated Security fixes are disabled</Trans>
+      </Text>
     </Box>
   );
 
   const renderDefault = () => (
     <Badge color="green" variant="solid">
-      All Okay
+      <Trans>All Okay</Trans>
     </Badge>
   );
 
@@ -190,16 +205,16 @@ const CheckPasses = ({ title, checkPasses }) => {
     if (!checkPasses) {
       return (
         <Badge color="red" variant="solid">
-          No scanner result for service
+          <Trans>No scanner result for service</Trans>
         </Badge>
       );
     }
     const metadata = checkPasses.metadata;
-    if (!(checkPasses.checkPasses === "true") && metadata)
+    if (!(checkPasses.checkPasses === 'true') && metadata)
       return (
         <Box>
           <Badge color="red" variant="solid">
-            Issues detected
+            <Trans>Issues detected</Trans>
           </Badge>
           {title === 'Hadolint Issues' && renderHadolintIssues(metadata)}
           {title === 'Gitleaks' && renderGitleaksDetails(metadata.details)}
@@ -219,7 +234,7 @@ const CheckPasses = ({ title, checkPasses }) => {
   return (
     <Box mb="4">
       <Heading size="5" mb="2">
-        {title}
+        {titleElement}
       </Heading>
       {renderIssues(checkPasses)}
     </Box>

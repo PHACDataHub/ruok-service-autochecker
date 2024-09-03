@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { Trans } from '@lingui/macro';
 
 const BreadCrumb = () => {
   const location = useLocation();
@@ -22,7 +23,9 @@ const BreadCrumb = () => {
     <nav aria-label="breadcrumb">
       <ol className="breadcrumb">
         <li className="breadcrumb-item">
-          <Link to="/">Home</Link>
+          <Link to="/">
+            <Trans>Home</Trans>
+          </Link>
         </li>
         {pathnames.map((value, index) => {
           const to = `/${pathnames.slice(0, index + 1).join('/')}`;
