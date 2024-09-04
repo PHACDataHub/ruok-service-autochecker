@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { Theme } from '@radix-ui/themes';
 import './styles.css';
 
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
@@ -17,7 +17,6 @@ import Service from './components/Service';
 import EndpointDetails from './components/EndpointDetails';
 import Layout from './layout/Layout';
 
-console.log(process.env.GRAPHQL_UI_URI);
 const client = new ApolloClient({
   //  uri: `${process.env.GRAPHQL_HOST_UI}:${process.env.GRAPHQL_PORT_UI}/graphql`,
   uri: `${process.env.GRAPHQL_UI_URI}`,

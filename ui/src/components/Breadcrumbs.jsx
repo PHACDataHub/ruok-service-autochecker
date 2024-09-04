@@ -3,7 +3,6 @@ import { Trans } from '@lingui/macro';
 
 const BreadCrumb = () => {
   const location = useLocation();
-  console.log(location.pathname);
   const pathnames = location.pathname
     .split('/')
     .filter((x) => x && x.toLowerCase() !== 'home');

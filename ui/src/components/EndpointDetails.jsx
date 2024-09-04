@@ -69,8 +69,7 @@ const renderAccessibilityCheck = (checkPasses) => {
 const EndpointDetails = () => {
   const { endpointId } = useParams();
   const { url, kind } = useLocation().state;
-  console.log(`URL in EndpointNew component : ${url} of kind : ${kind}`);
-  // const endpoint = endpointData[endpointId];
+
   const endpoint = { endpointId, url, kind };
 
   const query =

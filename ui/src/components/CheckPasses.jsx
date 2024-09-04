@@ -240,8 +240,6 @@ const CheckPasses = ({ title, titleElement, checkPasses }) => {
 
     return renderDefault();
   };
-  console.log(title);
-  console.log(checkPasses);
   return (
     <Box mb="4">
       <Heading size="5" mb="2">
