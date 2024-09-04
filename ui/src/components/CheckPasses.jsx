@@ -20,7 +20,7 @@ const CheckPasses = ({ title, titleElement, checkPasses }) => {
         }}
       >
         {filteredIssues.map((issue, index) => (
-          <Box key={index} style={{ marginBottom: '16px' }}>
+          <Box key={index} style={{ marginbottom: '16px' }}>
             <Text
               fontWeight="bold"
               fontSize="md"
@@ -32,7 +32,7 @@ const CheckPasses = ({ title, titleElement, checkPasses }) => {
             {issue.rules_violated.length > 0 && (
               <Box style={{ paddingLeft: '16px' }}>
                 {issue.rules_violated.map((rule, ruleIndex) => (
-                  <Box key={ruleIndex} style={{ marginBottom: '8px' }}>
+                  <Box key={ruleIndex} style={{ marginbottom: '8px' }}>
                     <Text color="red.800" fontSize="sm">
                       <Trans>
                         {rule.message} Line {rule.line}
@@ -59,13 +59,13 @@ const CheckPasses = ({ title, titleElement, checkPasses }) => {
       }}
     >
       {details.map((leak, index) => (
-        <Box key={index} style={{ marginBottom: '16px' }}>
+        <Box key={index} style={{ marginbottom: '16px' }}>
           <Box>
-            <Text whiteSpace="pre-line" fontWeight="bold" marginBottom="4px">
+            <Text whitespace="pre-line" fontWeight="bold" marginbottom="4px">
               {leak.Description}
             </Text>
           </Box>
-          <Text fontSize="sm" whiteSpace="pre-line">
+          <Text fontSize="sm" whitespace="pre-line">
             <Trans>
               \n File: {leak.File} \n Line: {leak.StartLine} - {leak.EndLine} \n
               Commit: {leak.Commit}
@@ -87,7 +87,7 @@ const CheckPasses = ({ title, titleElement, checkPasses }) => {
       }}
     >
       {vulnerabilities.map((vuln, index) => (
-        <Box key={index} style={{ marginBottom: '16px' }}>
+        <Box key={index} style={{ marginbottom: '16px' }}>
           <Text
             fontWeight="bold"
             fontSize="md"
@@ -96,7 +96,7 @@ const CheckPasses = ({ title, titleElement, checkPasses }) => {
           >
             {vuln.library} ({vuln.severity}): {vuln.title}
           </Text>
-          <Box style={{ marginBottom: '8px' }}>
+          <Box style={{ marginbottom: '8px' }}>
             <Text fontSize="sm" mb="1">
               <Trans>
                 Upgrade version {vuln.installed_version} to {vuln.fixed_version}
@@ -118,40 +118,29 @@ const CheckPasses = ({ title, titleElement, checkPasses }) => {
     </Box>
   );
 
-  const renderBranchProtection = (metadata) => (
+  const renderBranchProtection = () => (
     <Box
       style={{
-        backgroundColor:
-          metadata.rules.length > 0
-            ? 'rgba(0, 255, 0, 0.1)'
-            : 'rgba(255, 0, 0, 0.1)',
+        backgroundColor: 'rgba(255, 0, 0, 0.1)',
         padding: '16px',
         borderRadius: '8px',
-        border: `1px solid ${metadata.rules.length > 0 ? 'rgba(0, 255, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)'}`,
+        border: '1px solid rgba(255, 0, 0, 0.2)',
         marginTop: '8px',
       }}
     >
-      {metadata.rules.length > 0 ? (
-        <Text fontSize="sm">
-          <Trans>Protection rules are correctly applied.</Trans>
-        </Text>
-      ) : (
-        <Text fontSize="sm" color="red.600">
-          <Trans>No protection rules are configured.</Trans>
-        </Text>
-      )}
+      <Text fontSize="sm" color="red.600">
+        <Trans>No protection rules are configured.</Trans>
+      </Text>
     </Box>
   );
 
   const renderSecurityMD = () => (
     <Box
       style={{
-        backgroundColor: metadata
-          ? 'rgba(0, 255, 0, 0.1)'
-          : 'rgba(255, 0, 0, 0.1)',
+        backgroundColor: 'rgba(255, 0, 0, 0.1)',
         padding: '16px',
         borderRadius: '8px',
-        border: `1px solid ${metadata ? 'rgba(0, 255, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)'}`,
+        border: '1px solid rgba(255, 0, 0, 0.2)',
         marginTop: '8px',
       }}
     >
@@ -161,15 +150,29 @@ const CheckPasses = ({ title, titleElement, checkPasses }) => {
     </Box>
   );
 
+  const renderVulnerabilityAlerts = () => (
+    <Box
+      style={{
+        backgroundColor: 'rgba(255, 0, 0, 0.1)',
+        padding: '16px',
+        borderRadius: '8px',
+        border: '1px solid rgba(255, 0, 0, 0.2)',
+        marginTop: '8px',
+      }}
+    >
+      <Text fontSize="sm" color="red.600">
+        <Trans>Vulnerability alerts are not configured.</Trans>
+      </Text>
+    </Box>
+  );
+
   const renderDependabotYAML = () => (
     <Box
       style={{
-        backgroundColor: metadata
-          ? 'rgba(0, 255, 0, 0.1)'
-          : 'rgba(255, 0, 0, 0.1)',
+        backgroundColor: 'rgba(255, 0, 0, 0.1)',
         padding: '16px',
         borderRadius: '8px',
-        border: `1px solid ${metadata ? 'rgba(0, 255, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)'}`,
+        border: 'rgba(255, 0, 0, 0.2)',
         marginTop: '8px',
       }}
     >
@@ -210,27 +213,35 @@ const CheckPasses = ({ title, titleElement, checkPasses }) => {
       );
     }
     const metadata = checkPasses.metadata;
-    if (!(checkPasses.checkPasses === 'true') && metadata)
+    if (!(checkPasses.checkPasses === 'true')) {
       return (
         <Box>
           <Badge color="red" variant="solid">
             <Trans>Issues detected</Trans>
           </Badge>
-          {title === 'Hadolint Issues' && renderHadolintIssues(metadata)}
-          {title === 'Gitleaks' && renderGitleaksDetails(metadata.details)}
+          {title === 'Hadolint Issues' &&
+            metadata &&
+            renderHadolintIssues(metadata)}
+          {title === 'Gitleaks' &&
+            metadata &&
+            renderGitleaksDetails(metadata.details)}
           {title === 'Trivy Repo Vulnerability' &&
+            metadata &&
             renderTrivyVulnerabilities(metadata)}
-          {title === 'Branch Protection' && renderBranchProtection(metadata)}
-          {title === 'Security.md' && renderSecurityMD(checkPasses)}
+          {title === 'Branch Protection' && renderBranchProtection()}
+          {title === 'Security MD' && renderSecurityMD()}
           {title === 'Dependabot YAML' && renderDependabotYAML()}
           {title === 'Automated Security Fixes' &&
             renderAutomatedSecurityFixes(metadata)}
+          {title === 'Vulnerability Alerts' && renderVulnerabilityAlerts()}
         </Box>
       );
+    }
 
     return renderDefault();
   };
-
+  console.log(title);
+  console.log(checkPasses);
   return (
     <Box mb="4">
       <Heading size="5" mb="2">
