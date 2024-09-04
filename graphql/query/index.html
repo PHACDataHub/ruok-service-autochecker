@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://phacdatahub.github.io/ruok-service-autochecker/graphql/query/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-8.3.9">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-8.3.9">
     
     
       
@@ -1427,7 +1427,13 @@
 <span class="normal">422</span>
 <span class="normal">423</span>
 <span class="normal">424</span>
-<span class="normal">425</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
 <span class="k">class</span> <span class="nc">Query</span><span class="p">:</span>
     <span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
     <span class="k">def</span> <span class="nf">github_endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GithubEndpoint</span><span class="p">:</span>
@@ -1546,6 +1552,10 @@
         <span class="c1"># Remove unecessary db fields from the endpoint dict</span>
         <span class="n">endpoint</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">endpoint</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_rev&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;accessibility&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">endpoint</span><span class="p">:</span>
+            <span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;accessibility&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="c1"># Strawberry doesn&#39;t recursively resolve fields. The code below</span>
         <span class="c1"># is a workaround to recursively resolve the accessibility field</span>
         <span class="c1"># and the &quot;check passes&quot; fields contained within.</span>
@@ -1669,7 +1679,9 @@
         <span class="n">endpoints</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_referenced_endpoints</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Endpoint</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">vertex</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
-                         <span class="n">kind</span><span class="o">=</span><span class="n">vertex</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">endpoints</span><span class="p">]</span>
+                         <span class="n">kind</span><span class="o">=</span><span class="n">vertex</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">],</span>
+                         <span class="n">_key</span><span class="o">=</span><span class="n">vertex</span><span class="p">[</span><span class="s1">&#39;_key&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">endpoints</span><span class="p">]</span>
+
     <span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
     <span class="k">def</span> <span class="nf">all_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Edge</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1860,7 +1872,7 @@
 
     <div class="doc doc-contents ">
 
-      <h3 id="graphql_types.query.Query.all_edges--get-all-edges">Get All Edges</h3>
+        <h3 id="graphql_types.query.Query.all_edges--get-all-edges">Get All Edges</h3>
 <p>Returns all existing edges within the Arango Graph</p>
 <h3 id="graphql_types.query.Query.all_edges--example">Example</h3>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
@@ -1876,13 +1888,7 @@
 
             <details class="quote">
               <summary>Source code in <code>api/src/graphql_types/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">262</span>
-<span class="normal">263</span>
-<span class="normal">264</span>
-<span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">268</span>
 <span class="normal">269</span>
 <span class="normal">270</span>
 <span class="normal">271</span>
@@ -1900,7 +1906,13 @@
 <span class="normal">283</span>
 <span class="normal">284</span>
 <span class="normal">285</span>
-<span class="normal">286</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
 <span class="k">def</span> <span class="nf">all_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Edge</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    # Get All Edges</span>
@@ -1942,7 +1954,7 @@
 
     <div class="doc doc-contents ">
 
-      <h3 id="graphql_types.query.Query.all_endpoints--get-all-endpoints">Get All Endpoints</h3>
+        <h3 id="graphql_types.query.Query.all_endpoints--get-all-endpoints">Get All Endpoints</h3>
 <p>Returns all existing endpoints within the Arango Graph </p>
 <h3 id="graphql_types.query.Query.all_endpoints--example">Example</h3>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
@@ -1958,13 +1970,7 @@
 
             <details class="quote">
               <summary>Source code in <code>api/src/graphql_types/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">288</span>
-<span class="normal">289</span>
-<span class="normal">290</span>
-<span class="normal">291</span>
-<span class="normal">292</span>
-<span class="normal">293</span>
-<span class="normal">294</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">294</span>
 <span class="normal">295</span>
 <span class="normal">296</span>
 <span class="normal">297</span>
@@ -1981,7 +1987,13 @@
 <span class="normal">308</span>
 <span class="normal">309</span>
 <span class="normal">310</span>
-<span class="normal">311</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
 <span class="k">def</span> <span class="nf">all_endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Endpoint</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    # Get All Endpoints</span>
@@ -2022,7 +2034,7 @@
 
     <div class="doc doc-contents ">
 
-      <h3 id="graphql_types.query.Query.endpoints--get-multiple-endpoints">Get Multiple Endpoints</h3>
+        <h3 id="graphql_types.query.Query.endpoints--get-multiple-endpoints">Get Multiple Endpoints</h3>
 <p>Given a subset of URLs, retrieves all URLs assocaited with any
 URLs in the subset. Note that the purpose of this query is to get information
 on which URLs are related to eachother, not to get detailed information about
@@ -2041,11 +2053,7 @@ any specific kind of endpoint.</p>
 
             <details class="quote">
               <summary>Source code in <code>api/src/graphql_types/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">213</span>
 <span class="normal">214</span>
 <span class="normal">215</span>
 <span class="normal">216</span>
@@ -2066,7 +2074,11 @@ any specific kind of endpoint.</p>
 <span class="normal">231</span>
 <span class="normal">232</span>
 <span class="normal">233</span>
-<span class="normal">234</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
 <span class="k">def</span> <span class="nf">endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Endpoint</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    # Get Multiple Endpoints</span>
@@ -2109,7 +2121,7 @@ any specific kind of endpoint.</p>
 
     <div class="doc doc-contents ">
 
-      <h3 id="graphql_types.query.Query.filter--filter-endpoints">Filter Endpoints</h3>
+        <h3 id="graphql_types.query.Query.filter--filter-endpoints">Filter Endpoints</h3>
 <p>Returns all existing endpoints within the Arango Graph that match the filter cirteria</p>
 <h3 id="graphql_types.query.Query.filter--example">Example</h3>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
@@ -2127,13 +2139,7 @@ any specific kind of endpoint.</p>
 
             <details class="quote">
               <summary>Source code in <code>api/src/graphql_types/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">313</span>
-<span class="normal">314</span>
-<span class="normal">315</span>
-<span class="normal">316</span>
-<span class="normal">317</span>
-<span class="normal">318</span>
-<span class="normal">319</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">319</span>
 <span class="normal">320</span>
 <span class="normal">321</span>
 <span class="normal">322</span>
@@ -2150,7 +2156,13 @@ any specific kind of endpoint.</p>
 <span class="normal">333</span>
 <span class="normal">334</span>
 <span class="normal">335</span>
-<span class="normal">336</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
 <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">criteria</span> <span class="p">:</span> <span class="n">FilterCriteriaInput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Endpoint</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    # Filter Endpoints</span>
@@ -2191,7 +2203,7 @@ any specific kind of endpoint.</p>
 
     <div class="doc doc-contents ">
 
-      <h3 id="graphql_types.query.Query.github_endpoint--get-properties-of-a-single-github-endpoint">Get Properties of a Single Github Endpoint</h3>
+        <h3 id="graphql_types.query.Query.github_endpoint--get-properties-of-a-single-github-endpoint">Get Properties of a Single Github Endpoint</h3>
 <p>Given a url, retrieves the properties of a single Github Endpoint.</p>
 <h3 id="graphql_types.query.Query.github_endpoint--example">Example</h3>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
@@ -2321,7 +2333,7 @@ any specific kind of endpoint.</p>
 
     <div class="doc doc-contents ">
 
-      <h3 id="graphql_types.query.Query.github_endpoints--get-multiple-github-endpoints">Get Multiple Github Endpoints</h3>
+        <h3 id="graphql_types.query.Query.github_endpoints--get-multiple-github-endpoints">Get Multiple Github Endpoints</h3>
 <p>Retrieves a list of Github Endpoints. The number of endpoints returned is
 determined by the <code>limit</code> parameter.</p>
 <h3 id="graphql_types.query.Query.github_endpoints--example">Example</h3>
@@ -2442,7 +2454,7 @@ determined by the <code>limit</code> parameter.</p>
 
     <div class="doc doc-contents ">
 
-      <h3 id="graphql_types.query.Query.referenced_endpoints--get-multiple-endpoints">Get Multiple Endpoints</h3>
+        <h3 id="graphql_types.query.Query.referenced_endpoints--get-multiple-endpoints">Get Multiple Endpoints</h3>
 <p>Given a subset of URLs, retrieves all URLs assocaited with any
 URLs in the subset. Note that the purpose of this query is to get information
 on which URLs are related to eachother, not to get detailed information about
@@ -2461,11 +2473,7 @@ any specific kind of endpoint.</p>
 
             <details class="quote">
               <summary>Source code in <code>api/src/graphql_types/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">240</span>
 <span class="normal">241</span>
 <span class="normal">242</span>
 <span class="normal">243</span>
@@ -2486,7 +2494,12 @@ any specific kind of endpoint.</p>
 <span class="normal">258</span>
 <span class="normal">259</span>
 <span class="normal">260</span>
-<span class="normal">261</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
 <span class="k">def</span> <span class="nf">referenced_endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Endpoint</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    # Get Multiple Endpoints</span>
@@ -2511,7 +2524,8 @@ any specific kind of endpoint.</p>
     <span class="n">endpoints</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_referenced_endpoints</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">Endpoint</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">vertex</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
-                     <span class="n">kind</span><span class="o">=</span><span class="n">vertex</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">endpoints</span><span class="p">]</span>
+                     <span class="n">kind</span><span class="o">=</span><span class="n">vertex</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">],</span>
+                     <span class="n">_key</span><span class="o">=</span><span class="n">vertex</span><span class="p">[</span><span class="s1">&#39;_key&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">endpoints</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2529,7 +2543,7 @@ any specific kind of endpoint.</p>
 
     <div class="doc doc-contents ">
 
-      <h3 id="graphql_types.query.Query.web_endpoint--get-properties-of-a-single-web-endpoint">Get Properties of a Single Web Endpoint</h3>
+        <h3 id="graphql_types.query.Query.web_endpoint--get-properties-of-a-single-web-endpoint">Get Properties of a Single Web Endpoint</h3>
 <p>Given a url, retrieves the properties of a single Web Endpoint.</p>
 <h3 id="graphql_types.query.Query.web_endpoint--example">Example</h3>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
@@ -2605,7 +2619,11 @@ any specific kind of endpoint.</p>
 <span class="normal">151</span>
 <span class="normal">152</span>
 <span class="normal">153</span>
-<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
 <span class="k">def</span> <span class="nf">web_endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WebEndpoint</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    # Get Properties of a Single Web Endpoint</span>
@@ -2635,6 +2653,10 @@ any specific kind of endpoint.</p>
     <span class="c1"># Remove unecessary db fields from the endpoint dict</span>
     <span class="n">endpoint</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">endpoint</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_rev&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;accessibility&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">endpoint</span><span class="p">:</span>
+        <span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;accessibility&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
     <span class="c1"># Strawberry doesn&#39;t recursively resolve fields. The code below</span>
     <span class="c1"># is a workaround to recursively resolve the accessibility field</span>
     <span class="c1"># and the &quot;check passes&quot; fields contained within.</span>
@@ -2669,7 +2691,7 @@ any specific kind of endpoint.</p>
 
     <div class="doc doc-contents ">
 
-      <h3 id="graphql_types.query.Query.web_endpoints--get-multiple-web-endpoints">Get Multiple Web Endpoints</h3>
+        <h3 id="graphql_types.query.Query.web_endpoints--get-multiple-web-endpoints">Get Multiple Web Endpoints</h3>
 <p>Retrieves a list of Web Endpoints. The number of endpoints returned is
 determined by the <code>limit</code> parameter.</p>
 <h3 id="graphql_types.query.Query.web_endpoints--example">Example</h3>
@@ -2700,11 +2722,7 @@ determined by the <code>limit</code> parameter.</p>
 
             <details class="quote">
               <summary>Source code in <code>api/src/graphql_types/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">160</span>
 <span class="normal">161</span>
 <span class="normal">162</span>
 <span class="normal">163</span>
@@ -2751,7 +2769,11 @@ determined by the <code>limit</code> parameter.</p>
 <span class="normal">204</span>
 <span class="normal">205</span>
 <span class="normal">206</span>
-<span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span>
 <span class="k">def</span> <span class="nf">web_endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">WebEndpoint</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    # Get Multiple Web Endpoints</span>
