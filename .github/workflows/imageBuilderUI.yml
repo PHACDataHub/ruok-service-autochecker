@@ -2,7 +2,7 @@ name: imageBuilderUI
 
 on:
   push:
-    branches: ui-revived
+    branches: main
     paths:
       - 'ui/**'
 
