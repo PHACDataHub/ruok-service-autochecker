@@ -13,6 +13,7 @@ import {
 const Service = () => {
   const { serviceName } = useParams();
   const [ uptime,setUptime ] = useState([]);
+  const [ responseTimeKind,setResponseTimeKind ] = useState(2);
   const [ uptimeKind,setUptimeKind ] = useState(2);
   const { data, loading, error, networkStatus } = useQuery(
     FETCH_SERVICE_QUERY,
@@ -45,20 +46,24 @@ const Service = () => {
         let parser = new DOMParser();
         doc =  parser.parseFromString(html, 'text/html');
         let trs = doc.getElementsByTagName("table")[1].tBodies[0].getElementsByTagName("tr");
+        console.log(trs);
         Array.prototype.slice.call(trs).forEach(tr => {
             let statusString = tr.children[1].innerText;
             let serviceName = tr.children[2].innerText.split(/\.y.*ml/)[0];
             let responseTimes = [];
+            let upTimes = [];
             let url = `https://raw.githubusercontent.com/niranjan-ramesh/upptime/master/graphs/${serviceName}/response-time`;
             for(let idx = 1;idx <= 5;idx++){
               let responseTime = tr.children[3].getElementsByTagName("a")[idx].firstChild.alt.split(" ").slice(-1)[0]; 
               responseTimes.push([responseTime,url+respTimeMap[idx-1]+'.png']);
+              let upTime = tr.children[4].getElementsByTagName("a")[idx].firstChild.alt.split(" ").slice(-1)[0]; 
+              upTimes.push(upTime);
             }
             // console.table(statusString,serviceName,responseTimes);
-            data.push([statusString,serviceName,responseTimes]);
+            data.push([statusString,serviceName,responseTimes,upTimes]);
         });
-        // console.log(data);
         let uptimeData = data.filter(el => el[1] === serviceName);
+        console.log(uptimeData)
         setUptime((prevUptime) => uptimeData);
       }).catch(function (err) {
         // There was an error
@@ -67,7 +72,6 @@ const Service = () => {
   }
 
   useEffect(() => {
-      console.log("inside use effect",uptime);
       fetchUptime();
       const interval = setInterval(() => {
         fetchUptime();
@@ -183,22 +187,47 @@ const Service = () => {
           </DataList.Item>
           <DataList.Item>
             <DataList.Label style={{ minWidth: '150px' }}>
-              <Trans> Response Time</Trans>
+              <Trans>Average Response Time</Trans>
             </DataList.Label>
             <DataList.Value>
               <Flex gap="3" align="center">
                 <Link
-                  to="https://niranjan-ramesh.github.io/upptime/"
+                  to={`https://niranjan-ramesh.github.io/upptime/history/${serviceName}`}
                   style={{ color: 'blue', textDecoration: 'underline' }}
                 >
-                  <img height="30" src={uptime.length > 0 ? uptime[0][2][uptimeKind][1] : ""}></img>
+                  <img height="50" src={uptime.length > 0 ? uptime[0][2][responseTimeKind][1] : ""}></img>
                 </Link>
                 <Separator  orientation="vertical"/>
                 <Link
-                  to="https://niranjan-ramesh.github.io/upptime/"
+                  to={`https://niranjan-ramesh.github.io/upptime/history/${serviceName}`}
                   style={{ color: 'blue', textDecoration: 'underline' }}
                 >
-                  {uptime.length > 0 ? uptime[0][2][uptimeKind][0]+'ms' : "NA"}
+                  {uptime.length > 0 ? uptime[0][2][responseTimeKind][0]+'ms' : "NA"}
+                </Link>
+                <Separator  orientation="vertical"/>
+                <Select.Root size="2" defaultValue="2" onValueChange={(e) => setResponseTimeKind(Number(e))}>
+                  <Select.Trigger />
+                  <Select.Content>
+                    <Select.Item value="1">Day</Select.Item>
+                    <Select.Item value="2">Week</Select.Item>
+                    <Select.Item value="3">Month</Select.Item>
+                    <Select.Item value="4">Year</Select.Item>
+                  </Select.Content>
+                </Select.Root>
+              </Flex>
+            </DataList.Value>
+          </DataList.Item>
+          <DataList.Item>
+            <DataList.Label style={{ minWidth: '150px' }}>
+              <Trans>Uptime</Trans>
+            </DataList.Label>
+            <DataList.Value>
+              <Flex gap="3" align="center">
+                <Link
+                  to={`https://niranjan-ramesh.github.io/upptime/history/${serviceName}`}
+                  style={{ color: 'blue', textDecoration: 'underline' }}
+                >
+                  {uptime.length > 0 ? uptime[0][3][uptimeKind] : "NA"}
                 </Link>
                 <Separator  orientation="vertical"/>
                 <Select.Root size="2" defaultValue="2" onValueChange={(e) => setUptimeKind(Number(e))}>
