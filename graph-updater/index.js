@@ -149,12 +149,12 @@ process.on('SIGINT', () => process.exit(0))
       }
 
       // Queue up new endpoints to be analyzed by the appropriate scanners
-      await publishToNats(nc, jc, CONTAINER_ENDPOINT_QUEUE, endpointDispatch["containerEndpoint"]);
-      console.log("published container endpoint events");
-      await publishToNats(nc, jc, WEB_ENDPOINT_QUEUE, endpointDispatch["webEndpoint"]);
-      console.log("published web endpoint events");
-      await publishToNats(nc, jc, GITHUB_ENDPOINT_QUEUE, endpointDispatch["githubEndpoint"])
-      console.log("published github endpoint event");
+      // await publishToNats(nc, jc, CONTAINER_ENDPOINT_QUEUE, endpointDispatch["containerEndpoint"]);
+      // console.log("published container endpoint events");
+      // await publishToNats(nc, jc, WEB_ENDPOINT_QUEUE, endpointDispatch["webEndpoint"]);
+      // console.log("published web endpoint events");
+      // await publishToNats(nc, jc, GITHUB_ENDPOINT_QUEUE, endpointDispatch["githubEndpoint"])
+      // console.log("published github endpoint event");
 
       // TODO: anything under event collectors should not include any extra metadata beyond
       // the URL itself, because any given event endpoint won't necessarily include info about

@@ -61,10 +61,9 @@ async function processFile(filePath) {
 }
 
 async function findPatternsInRepo(repoPath) {
-  const filePaths = glob.sync(path.join(repoPath, '**/*'), {
-    nocase: true,
-    dot: true,
-    ignore: [
+
+  repoPath = path.join(repoPath, '**/*');
+  let ignore = [
       '**/node_modules/**',
       '**/*.lock',
       '**/package-lock.json',
@@ -77,7 +76,13 @@ async function findPatternsInRepo(repoPath) {
       '**/*.svg',
       '**/*.ico',
       '**/.git/**',
-    ],
+  ];
+  ignore = ignore.map(ignoredPath => path.join(repoPath,ignoredPath));
+
+  const filePaths = glob.sync(path.join(repoPath, '**/*'), {
+    nocase: true,
+    dot: true,
+    ignore: ignore,
   });
   console.log(filePaths);
   await fs.writeFileSync('test', JSON.stringify(filePaths, null, 2));
