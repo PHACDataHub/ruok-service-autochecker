@@ -6,9 +6,13 @@ COPY package.json /app/
 
 RUN npm install
 
-COPY [".env",".env.example","index.html","rspack.config.js","lingui.config.js","/app/"] /app/
+RUN npm list
+
+COPY [".env",".env.example","index.html","rspack.config.js","lingui.config.js","/app/"]
 
 COPY src /app/src/
+
+RUN ls -la
 
 RUN npm run build
 

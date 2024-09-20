@@ -18,7 +18,7 @@ module.exports = () => {
       main: './src/main.js',
     },
     resolve: {
-      extensions: ['.js', '.ts', '.tsx', '.jsx'],
+      extensions: ['.js', '.ts', '.tsx', '.jsx','.css'],
     },
     output: {
       publicPath: '/',
