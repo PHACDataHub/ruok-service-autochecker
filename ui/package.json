@@ -29,9 +29,9 @@
   "devDependencies": {
     "@lingui/cli": "^4.10.1",
     "@lingui/macro": "^4.10.1",
-    "@lingui/swc-plugin": "^4.0.7",
-    "@rspack/cli": "^0.6.5",
-    "@rspack/core": "^0.6.5",
+    "@lingui/swc-plugin": "^4.0.10",
+    "@rspack/cli": "^1.0.5",
+    "@rspack/core": "^1.0.5",
     "@testing-library/react": "^15.0.7",
     "@types/react": "^18.3.2",
     "@types/react-dom": "18.3.0",
