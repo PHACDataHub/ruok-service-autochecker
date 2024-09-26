@@ -27,6 +27,8 @@ export async function publishToNats(
 
 export async function cloneRepository(clone_url, repoName, GITHUB_TOKEN) {
   // Clones Repository into tmp directory - returns path
+  console.log(`Clone url is ${clone_url}`);
+  
   try {
     const tempDir = os.tmpdir();
     const repoPath = path.join(tempDir, `${repoName}-${Date.now()}`);

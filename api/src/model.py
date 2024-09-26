@@ -31,7 +31,7 @@ class GraphDB:
         return True
 
     def _key_safe_url(self, url: str) -> str:
-        return url.replace("://", "-").replace("/", "-")
+        return url.replace("://", "-").replace("/", "-").replace("{","(").replace("}",")")
 
     def insert_endpoint(self, endpoint):
         endpoint_dict = strawberry.asdict(endpoint)

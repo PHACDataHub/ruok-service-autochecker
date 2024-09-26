@@ -3,7 +3,7 @@ import { Octokit } from 'octokit';
 import 'dotenv-safe/config.js';
 
 import { getEndpointKind } from './endpoint.js';
-import { cloneRepository } from './utils.js';
+import { cloneRepository,removeClonedRepository } from './utils.js';
 import { ScanEndpoints } from './scan-endpoints.js';
 
 const { GITHUB_TOKEN } = process.env;
@@ -23,29 +23,42 @@ export class GithubEndpoint {
     const prefix = new URL(payload.endpoint).pathname.split('/');
     const repoName = prefix[2];
 
-    const clonedRepoPath = cloneRepository(
-      (clone_url = payload.endpoint),
-      (repoName = repoName),
-      (GITHUB_TOKEN = GITHUB_TOKEN),
-    );
+    console.log(`Github end point Payload: ${JSON.stringify(payload)}, ${payload.endpoint}`);
 
-    const endPointsScanner = new ScanEndpoints(
-      (repoName = repoName),
-      (clonedRepoPath = clonedRepoPath),
-    );
+    try {
+      const clonedRepoPath = await cloneRepository(
+        payload.endpoint,
+        repoName,
+        GITHUB_TOKEN,
+      );
+  
+      const endPointsScanner = new ScanEndpoints(
+        repoName,
+        clonedRepoPath,
+      );
+  
+      const extraEndpoints = await endPointsScanner.doRepoCheck();
+      
+      await removeClonedRepository(clonedRepoPath);
 
-    const extraEndpoints = await endPointsScanner.doRepoCheck();
+      const payloadEndpointKind = getEndpointKind(payload.endpoint)[0];
+      var kind = payloadEndpointKind.split('E')[0];
+      console.log(kind);
+      kind = kind[0].toUpperCase() + kind.substring(1);
+      console.log(extraEndpoints)
+      var newEndpoints = new Set([
+        {url : payload.endpoint, kind : kind},
+        ...extraEndpoints.map(endpoint =>  {return {url : endpoint.url.replace(/\x00/g, ''), kind :endpoint.kind}})
+        //`{url : "${payload.endpoint}", kind : "${kind}"}`,
+       // ...extraEndpoints.map(endpoint => `{url : "${endpoint.url}", kind : "${endpoint.kind}"}`),
+      ]);
+      
+      return newEndpoints;
+    }
+    catch(error){
+      throw error;
+    }
 
-    const payloadEndpointKind = getEndpointKind(payload.endpoint)[0];
-    var kind = payloadEndpointKind.split('E')[0];
-    console.log(kind);
-    kind = kind[0].toUpperCase() + kind.substring(1);
-    var newEndpoints = new Set([
-      `{url : "${payload.endpoint}", kind : "${kind}"}`,
-      ...extraEndpoints,
-    ]);
-    console.log('New endpoints: ', newEndpoints);
-    return newEndpoints;
   }
 
   /**

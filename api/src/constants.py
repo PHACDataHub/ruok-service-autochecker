@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env")
 
     GRAPHQL_HOST: str = Field("127.0.0.1")
+    GRAPHQL_HOST: str = Field("0.0.0.0")
     GRAPHQL_PORT: int = Field(4000)
 
     DB_HOST: str = Field("http://127.0.0.1:8529")
