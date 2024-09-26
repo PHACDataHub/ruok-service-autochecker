@@ -79,7 +79,6 @@ async function findPatternsInRepo(repoPath) {
       '**/.txt/**',
     ],
   });
-  //await fs.writeFileSync('test', JSON.stringify(filePaths, null, 2));
   
   const allResults = [];
   for (const filePath of filePaths) {

@@ -43,14 +43,10 @@ export class GithubEndpoint {
 
       const payloadEndpointKind = getEndpointKind(payload.endpoint)[0];
       var kind = payloadEndpointKind.split('E')[0];
-      console.log(kind);
       kind = kind[0].toUpperCase() + kind.substring(1);
-      console.log(extraEndpoints)
       var newEndpoints = new Set([
         {url : payload.endpoint, kind : kind},
         ...extraEndpoints.map(endpoint =>  {return {url : endpoint.url.replace(/\x00/g, ''), kind :endpoint.kind}})
-        //`{url : "${payload.endpoint}", kind : "${kind}"}`,
-       // ...extraEndpoints.map(endpoint => `{url : "${endpoint.url}", kind : "${endpoint.kind}"}`),
       ]);
       
       return newEndpoints;
