@@ -42,7 +42,7 @@ export function getEndpointKind(url) {
   if (url.includes("canada.ca") || url.includes("gc.ca")) {
     matches.push(webEndpoint);
   }
-  if (url.includes("github.com")) {
+  if (url.includes("github.com") || url.includes(".git")) {
     matches.push(githubEndpoint);
   }
 

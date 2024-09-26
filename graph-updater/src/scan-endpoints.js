@@ -1,23 +1,22 @@
 import fs from 'fs';
 import path from 'path';
 import { glob } from 'glob';
+import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js';
 
 const patterns = {
-  database:
+  Database:
     /(?:mongodb|postgresql|mysql|arangodb|couchdb|redis|mariadb):\/\/[^\s"'<>]+/gi,
-  cloudStorage: /(?:s3:\/\/|gs:\/\/|azure:\/\/)[^\s"'<>]+/gi,
+  CloudStorage: /(?:s3:\/\/|gs:\/\/|azure:\/\/)[^\s"'<>]+/gi,
   docker:
     /(?:FROM\s+)((?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(?::[0-9]+)?\/)?[a-z0-9]+(?:[._-][a-z0-9]+)*(?:\/[a-z0-9]+(?:[._-][a-z0-9]+)*)*(?::[.\w-]+)?(?:@sha256:[a-fA-F0-9]{64})?)/g,
-  messageBroker: /(?:kafka:\/\/|amqp:\/\/|mqtt:\/\/|pulsar:\/\/)[^\s"'<>]+/gi,
-  emailService: /(?:smtp:\/\/|smtps:\/\/|imap:\/\/|pop3:\/\/)[^\s"'<>]+/gi,
-  gitRepository:
+  MessageBroker: /(?:kafka:\/\/|amqp:\/\/|mqtt:\/\/|pulsar:\/\/)[^\s"'<>]+/gi,
+  EmailService: /(?:smtp:\/\/|smtps:\/\/|imap:\/\/|pop3:\/\/)[^\s"'<>]+/gi,
+  Github:
     /(?:git@|https?:\/\/)([^\s"'<>]+)(?:\/|:)([^\s"'<>]+)\/([^\s"'<>]+)(\.git)/gi,
-  endpoint: /(https?:\/\/[^\s"'<>]+(\.[a-z]{2,})?(:\d+)?[^\s"'<>]*)/gi,
 };
 
-const urls = new Set();
-
 function searchFileForPatterns(fileContent, isDockerfile = false) {
+  const urls = new Set();
   const results = [];
 
   if (isDockerfile) {
@@ -27,7 +26,7 @@ function searchFileForPatterns(fileContent, isDockerfile = false) {
 
       if (!urls.has(`docker ${url}`)) {
         urls.add(`docker ${url}`);
-        results.push({ kind: 'docker', url });
+        results.push({ kind: 'Docker', url });
       }
     });
   } else {
@@ -77,12 +76,11 @@ async function findPatternsInRepo(repoPath) {
       '**/*.svg',
       '**/*.ico',
       '**/.git/**',
+      '**/.txt/**',
     ],
   });
-  console.log(filePaths);
-  await fs.writeFileSync('test', JSON.stringify(filePaths, null, 2));
+  
   const allResults = [];
-
   for (const filePath of filePaths) {
     // Ignore directories
     if (fs.statSync(filePath).isDirectory()) {
@@ -91,7 +89,6 @@ async function findPatternsInRepo(repoPath) {
     const fileResults = await processFile(filePath);
     allResults.push(...fileResults);
   }
-
   return allResults;
 }
 
@@ -109,7 +106,7 @@ export class ScanEndpoints extends CheckOnClonedRepoInterface {
       if (patternResults.length === 0) {
         return [];
       }
-
+      
       return patternResults;
     } catch (error) {
       console.error(`Error during pattern scan:`, error.message);

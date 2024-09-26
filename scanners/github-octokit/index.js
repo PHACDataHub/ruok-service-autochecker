@@ -34,7 +34,7 @@ process.on('SIGINT', () => process.exit(0))
     for await (const message of sub) {
       const gitHubEventPayload = await jc.decode(message.data)
 
-      console.log('\n**************************************************************')
+      console.log(`\n****************************** ${new Date()} ********************************`)
       console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(gitHubEventPayload)}`)
       // GitHub urls always follow `github.com/orgName/repoName`, so from this
       // structure we can construct the org name and repo name.

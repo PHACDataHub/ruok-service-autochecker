@@ -1,0 +1,76 @@
+Direction: left 
+k8s{
+    NATS : NATS {
+        EventsUpdate : {
+            shape : queue
+        }
+        EndpointScanner\.githubEndpoints : {
+            shape : queue
+        }
+        EndpointScanner\.webEndpoints : {
+            shape : queue
+        }
+        EndpointScanner\.containerEndpoints : {
+            shape : queue
+        }
+    }
+    CronJob : {
+        shape : image
+        icon : https://icons.terrastruct.com/essentials%2F033-repeat.svg
+    }
+    GraphUpdater : Graph Updater {
+        shape : image
+        icon : https://icons.terrastruct.com/azure%2FManagement%20and%20Governance%20Service%20Color%2FResource%20Graph%20Explorer.svg
+    }
+    API : {
+
+    }
+    ArangoDB : {
+
+    }
+    scanner1 : {}
+    scanner2 : {}
+    scanner3 : {}
+    UI : UI Server {
+        shape : image
+        icon : https://icons.terrastruct.com/dev%2Freact.svg
+    }
+}
+PhacDnsRepo : PHAC DNS Repo {
+    shape : image
+    icon : https://icons.terrastruct.com/dev%2Fgithub.svg
+}
+ServiceRepo: Service Git Repo{
+    shape : image
+    icon : https://icons.terrastruct.com/dev%2Fgithub.svg
+}
+Client Browser {
+    shape : image
+    icon : https://icons.terrastruct.com/tech%2Fbrowser-2.svg
+    # near : bottom-left
+}
+k8s.CronJob <- PhacDnsRepo : scan periodically
+k8s.CronJob -> k8s.NATS.EventsUpdate : pub
+k8s.GraphUpdater <- ServiceRepo : 1. extract referencing endpoints
+k8s.GraphUpdater -> k8s.NATS.EventsUpdate :  sub
+# k8s.GraphUpdater <- k8s.NATS.EventsUpdate :  sub
+k8s.GraphUpdater -> k8s.API : update
+k8s.GraphUpdater -> k8s.NATS.EndpointScanner\.githubEndpoints : pub
+k8s.GraphUpdater -> k8s.NATS.EndpointScanner\.webEndpoints : pub
+k8s.GraphUpdater -> k8s.NATS.EndpointScanner\.containerEndpoints : pub
+k8s.scanner1  -> k8s.NATS.EndpointScanner\.githubEndpoints : sub
+k8s.scanner2  -> k8s.NATS.EndpointScanner\.webEndpoints : sub
+k8s.scanner3  -> k8s.NATS.EndpointScanner\.containerEndpoints : sub
+# k8s.scanner1  <- k8s.NATS.EndpointScanner\.githubEndpoints : sub
+# k8s.scanner2  <- k8s.NATS.EndpointScanner\.webEndpoints : sub
+# k8s.scanner3  <- k8s.NATS.EndpointScanner\.containerEndpoints : sub
+k8s.scanner1 -> k8s.API : update
+k8s.scanner2 -> k8s.API : update
+k8s.scanner3 -> k8s.API : update
+# k8s.Scanners -> k8s.API : update
+k8s.API <- k8s.ArangoDB : Read
+k8s.API -> k8s.ArangoDB : Write
+
+k8s.UI <- k8s.API : Read
+
+Client Browser -> k8s.UI

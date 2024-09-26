@@ -33,7 +33,7 @@ process.on('SIGINT', () => process.exit(0))
             // decode payload 
             const gitHubEventPayload = await jc.decode(message.data)
 
-            console.log('\n**************************************************************')
+            console.log(`\n****************************** ${new Date()} ********************************`)
             console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(gitHubEventPayload)}`)
 
             // GitHub urls always follow `github.com/orgName/repoName`, so from this
