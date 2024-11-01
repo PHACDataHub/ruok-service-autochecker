@@ -57,7 +57,7 @@ process.on('SIGINT', () => process.exit(0))
 
                 console.log("===========================TESTING=======================")
 
-                console.log('Scan Results:',results)
+                // console.log('Scan Results:',results)
 
                 console.log("===========================TESTING 2=======================")
     

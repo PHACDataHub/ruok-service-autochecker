@@ -1,22 +1,22 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- ./arangodeployment-single-server.yaml
-- ./deployment-nats.yaml
-- ./deployment-ruok-api.yaml
-- ./deployment-webhook-server.yaml
-- ./deployment-graph-updater.yaml
-- ./deployment-octokit-scanner.yaml
-- ./deployment-web-endpoint-scanner.yaml
+# - ./arangodeployment-single-server.yaml
+# - ./deployment-nats.yaml
+# - ./deployment-ruok-api.yaml
+# - ./deployment-webhook-server.yaml
+# - ./deployment-graph-updater.yaml
+# - ./deployment-octokit-scanner.yaml
+# - ./deployment-web-endpoint-scanner.yaml
 - ./deployment-cloned-repo-scanner.yaml
-- ./svc-nats.yaml
-- ./svc-ruok-api.yaml
-- ./svc-webhook-server.yaml
-- ./cron-job-dns-scanner.yaml
-- ./ui-revived/deployment-ruok-ui.yaml
-- ./ui-revived/svc-ruok-ui.yaml
-- ./istio/gateway.yaml
-- ./istio/v-svc-ruok-ui.yaml
+# - ./svc-nats.yaml
+# - ./svc-ruok-api.yaml
+# - ./svc-webhook-server.yaml
+# - ./cron-job-dns-scanner.yaml
+# - ./ui-revived/deployment-ruok-ui.yaml
+# - ./ui-revived/svc-ruok-ui.yaml
+# - ./istio/gateway.yaml
+# - ./istio/v-svc-ruok-ui.yaml
 patches:
 - target:
     version: v1
@@ -25,7 +25,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-graphql-api:0.0.10
+      value: northamerica-northeast2-docker.pkg.dev/phx-01h7dnj5j46f52sev8akqd9m7g/dockerimages/graphql-api:0.0.1
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -53,7 +53,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-graph-updater:0.0.3
+      value: northamerica-northeast2-docker.pkg.dev/phx-01h7dnj5j46f52sev8akqd9m7g/dockerimages/ruok-graph-updater:0.0.8
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -68,7 +68,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-cloned-repo-scanner:0.0.4
+      value: northamerica-northeast2-docker.pkg.dev/phx-01h7dnj5j46f52sev8akqd9m7g/dockerimages/ruok-cloned-repo-scanner:0.0.7
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
