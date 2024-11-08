@@ -1,142 +1,142 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-# - ./arangodeployment-single-server.yaml
-# - ./deployment-nats.yaml
-# - ./deployment-ruok-api.yaml
-# - ./deployment-webhook-server.yaml
-# - ./deployment-graph-updater.yaml
-# - ./deployment-octokit-scanner.yaml
-# - ./deployment-web-endpoint-scanner.yaml
-- ./deployment-cloned-repo-scanner.yaml
-# - ./svc-nats.yaml
-# - ./svc-ruok-api.yaml
-# - ./svc-webhook-server.yaml
-# - ./cron-job-dns-scanner.yaml
-# - ./ui-revived/deployment-ruok-ui.yaml
-# - ./ui-revived/svc-ruok-ui.yaml
-# - ./istio/gateway.yaml
-# - ./istio/v-svc-ruok-ui.yaml
+  - ./arangodeployment-single-server.yaml
+  - ./deployment-nats.yaml
+  - ./deployment-ruok-api.yaml
+  - ./deployment-webhook-server.yaml
+  - ./deployment-graph-updater.yaml
+  - ./deployment-octokit-scanner.yaml
+  - ./deployment-web-endpoint-scanner.yaml
+  - ./deployment-cloned-repo-scanner.yaml
+  - ./svc-nats.yaml
+  - ./svc-ruok-api.yaml
+  - ./svc-webhook-server.yaml
+  - ./cron-job-dns-scanner.yaml
+  - ./ui-revived/deployment-ruok-ui.yaml
+  - ./ui-revived/svc-ruok-ui.yaml
+  - ./istio/gateway.yaml
+  - ./istio/v-svc-ruok-ui.yaml
 patches:
-- target:
-    version: v1
-    kind: Deployment
-    name: graphql-api
-  patch: |-
-    - op: replace
-      path: /spec/template/spec/containers/0/image
-      value: northamerica-northeast2-docker.pkg.dev/phx-01h7dnj5j46f52sev8akqd9m7g/dockerimages/graphql-api:0.0.1
-    - op: add
-      path: /spec/template/spec/containers/0/env
-      value:
-        - name: DB_HOST
-          value: http://example-simple-single-ea:8529
-- target:
-    version: v1
-    kind: Deployment
-    name: webhook-server
-  patch: |-
-    - op: replace
-      path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-webhook-server:0.0.1
-    - op: add
-      path: /spec/template/spec/containers/0/env
-      value:
-        - name: NATS_SERVER
-          value: nats:4222
-        - name: NATS_PUB_STREAM
-          value: EventsUpdate
-- target:
-    version: v1
-    kind: Deployment
-    name: graph-updater
-  patch: |-
-    - op: replace
-      path: /spec/template/spec/containers/0/image
-      value: northamerica-northeast2-docker.pkg.dev/phx-01h7dnj5j46f52sev8akqd9m7g/dockerimages/ruok-graph-updater:0.0.8
-    - op: add
-      path: /spec/template/spec/containers/0/env
-      value:
-        - name: NATS_URL
-          value: nats:4222
-        - name: GRAPHQL_URL
-          value: http://graphql-api:4000/graphql
-- target:
-    version: v1
-    kind: Deployment
-    name: cloned-repo-scanner
-  patch: |-
-    - op: replace
-      path: /spec/template/spec/containers/0/image
-      value: northamerica-northeast2-docker.pkg.dev/phx-01h7dnj5j46f52sev8akqd9m7g/dockerimages/ruok-cloned-repo-scanner:0.0.7
-    - op: add
-      path: /spec/template/spec/containers/0/env
-      value:
-        - name: NATS_URL
-          value: nats:4222
-        - name: GRAPHQL_URL
-          value: http://graphql-api:4000/graphql
-- target:
-    version: v1
-    kind: Deployment
-    name: octokit-scanner
-  patch: |-
-    - op: replace
-      path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-octokit-scanner:0.0.2
-    - op: add
-      path: /spec/template/spec/containers/0/env
-      value:
-        - name: NATS_URL
-          value: nats:4222
-        - name: GRAPHQL_URL
-          value: http://graphql-api:4000/graphql
-- target:
-    version: v1
-    kind: Deployment
-    name: web-endpoint-scanner
-  patch: |-
-    - op: replace
-      path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-web-endpoint-scanner:0.0.1
-    - op: add
-      path: /spec/template/spec/containers/0/env
-      value:
-        - name: NATS_URL
-          value: nats:4222
-        - name: GRAPHQL_URL
-          value: http://graphql-api:4000/graphql
-- target:
-    version: v1
-    kind: Deployment
-    name: ruok-ui
-  patch: |-
-    - op: replace
-      path: /spec/template/spec/containers/0/image
-      value: vader404/ruok-ui:0.0.1
-- target:
-    version: v1
-    kind: CronJob
-    name: dns-scanner
-  patch: |-
-    - op: replace
-      path: /spec/jobTemplate/spec/template/spec/containers/0/image
-      value: vader404/ruok-dns-scanner:0.0.8
-    - op: add
-      path: /spec/jobTemplate/spec/template/spec/containers/0/env
-      value:
-        - name: NATS_URL
-          value: nats:4222
-        - name: GRAPHQL_URL
-          value: http://graphql-api:4000/graphql
-        - name: DNS_REPOSITORY
-          value: https://github.com/PHACDataHub/phac-dns.git
-- target:
-    group: networking.istio.io
-    version: v1beta1
-    kind: Gateway
-    name: public-gateway
-  patch: |-
-    - op: add
-      path: /spec/servers/0/tls/httpsRedirect
-      value: false
+  - target:
+      version: v1
+      kind: Deployment
+      name: graphql-api
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: northamerica-northeast2-docker.pkg.dev/phx-01h7dnj5j46f52sev8akqd9m7g/dockerimages/graphql-api:0.0.1
+      - op: add
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: DB_HOST
+            value: http://example-simple-single-ea:8529
+  - target:
+      version: v1
+      kind: Deployment
+      name: webhook-server
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: vader404/ruok-webhook-server:0.0.1
+      - op: add
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: NATS_SERVER
+            value: nats:4222
+          - name: NATS_PUB_STREAM
+            value: EventsUpdate
+  - target:
+      version: v1
+      kind: Deployment
+      name: graph-updater
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: northamerica-northeast2-docker.pkg.dev/phx-01h7dnj5j46f52sev8akqd9m7g/dockerimages/ruok-graph-updater:0.0.1
+      - op: add
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: NATS_URL
+            value: nats:4222
+          - name: GRAPHQL_URL
+            value: http://graphql-api:4000/graphql
+  - target:
+      version: v1
+      kind: Deployment
+      name: cloned-repo-scanner
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: northamerica-northeast2-docker.pkg.dev/phx-01h7dnj5j46f52sev8akqd9m7g/dockerimages/ruok-cloned-repo-scanner:0.0.2
+      - op: add
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: NATS_URL
+            value: nats:4222
+          - name: GRAPHQL_URL
+            value: http://graphql-api:4000/graphql
+  - target:
+      version: v1
+      kind: Deployment
+      name: octokit-scanner
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: vader404/ruok-octokit-scanner:0.0.2
+      - op: add
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: NATS_URL
+            value: nats:4222
+          - name: GRAPHQL_URL
+            value: http://graphql-api:4000/graphql
+  - target:
+      version: v1
+      kind: Deployment
+      name: web-endpoint-scanner
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: vader404/ruok-web-endpoint-scanner:0.0.1
+      - op: add
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: NATS_URL
+            value: nats:4222
+          - name: GRAPHQL_URL
+            value: http://graphql-api:4000/graphql
+  - target:
+      version: v1
+      kind: Deployment
+      name: ruok-ui
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: vader404/ruok-ui:0.0.1
+  - target:
+      version: v1
+      kind: CronJob
+      name: dns-scanner
+    patch: |-
+      - op: replace
+        path: /spec/jobTemplate/spec/template/spec/containers/0/image
+        value: vader404/ruok-dns-scanner:0.0.8
+      - op: add
+        path: /spec/jobTemplate/spec/template/spec/containers/0/env
+        value:
+          - name: NATS_URL
+            value: nats:4222
+          - name: GRAPHQL_URL
+            value: http://graphql-api:4000/graphql
+          - name: DNS_REPOSITORY
+            value: https://github.com/PHACDataHub/phac-dns.git
+  - target:
+      group: networking.istio.io
+      version: v1beta1
+      kind: Gateway
+      name: public-gateway
+    patch: |-
+      - op: add
+        path: /spec/servers/0/tls/httpsRedirect
+        value: false
