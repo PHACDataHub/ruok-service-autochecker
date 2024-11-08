@@ -1,6 +1,15 @@
 import { React, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Flex, Box, Text, Heading, DataList, Spinner, Separator, Select } from '@radix-ui/themes';
+import {
+  Flex,
+  Box,
+  Text,
+  Heading,
+  DataList,
+  Spinner,
+  Separator,
+  Select,
+} from '@radix-ui/themes';
 import { DoubleArrowRightIcon } from '@radix-ui/react-icons';
 import CheckPasses from './CheckPasses';
 import { useQuery, NetworkStatus } from '@apollo/client';
@@ -12,9 +21,9 @@ import {
 
 const Service = () => {
   const { serviceName } = useParams();
-  const [ uptime,setUptime ] = useState([]);
-  const [ responseTimeKind,setResponseTimeKind ] = useState(2);
-  const [ uptimeKind,setUptimeKind ] = useState(2);
+  const [uptime, setUptime] = useState([]);
+  const [responseTimeKind, setResponseTimeKind] = useState(2);
+  const [uptimeKind, setUptimeKind] = useState(2);
   const { data, loading, error, networkStatus } = useQuery(
     FETCH_SERVICE_QUERY,
     {
@@ -36,46 +45,62 @@ const Service = () => {
   const fetchUptime = () => {
     let doc = '';
     let data = [];
-    let respTimeMap = { 0 : "", 1 : "-day", 2 : "-week", 3 : "-month", 4 : "-year"};
-    fetch('/uptime',{mode: "cors",referrerPolicy: "unsafe-url"}).then(function (response) {
+    let respTimeMap = { 0: '', 1: '-day', 2: '-week', 3: '-month', 4: '-year' };
+    fetch('/uptime', { mode: 'cors', referrerPolicy: 'unsafe-url' })
+      .then(function (response) {
         // The API call was successful!
         return response.text();
-      }).then(function (html) {
-
+      })
+      .then(function (html) {
         // Convert the HTML string into a document object
         let parser = new DOMParser();
-        doc =  parser.parseFromString(html, 'text/html');
-        let trs = doc.getElementsByTagName("table")[1].tBodies[0].getElementsByTagName("tr");
+        doc = parser.parseFromString(html, 'text/html');
+        let trs = doc
+          .getElementsByTagName('table')[1]
+          .tBodies[0].getElementsByTagName('tr');
         console.log(trs);
-        Array.prototype.slice.call(trs).forEach(tr => {
-            let statusString = tr.children[1].innerText;
-            let serviceName = tr.children[2].innerText.split(/\.y.*ml/)[0];
-            let responseTimes = [];
-            let upTimes = [];
-            let url = `https://raw.githubusercontent.com/niranjan-ramesh/upptime/master/graphs/${serviceName}/response-time`;
-            for(let idx = 1;idx <= 5;idx++){
-              let responseTime = tr.children[3].getElementsByTagName("a")[idx].firstChild.alt.split(" ").slice(-1)[0]; 
-              responseTimes.push([responseTime,url+respTimeMap[idx-1]+'.png']);
-              let upTime = tr.children[4].getElementsByTagName("a")[idx].firstChild.alt.split(" ").slice(-1)[0]; 
-              upTimes.push(upTime);
-            }
-            // console.table(statusString,serviceName,responseTimes);
-            data.push([statusString,serviceName,responseTimes,upTimes]);
+        Array.prototype.slice.call(trs).forEach((tr) => {
+          let statusString = tr.children[1].innerText;
+          let serviceName = tr.children[2].innerText.split(/\.y.*ml/)[0];
+          let responseTimes = [];
+          let upTimes = [];
+          let url = `https://raw.githubusercontent.com/niranjan-ramesh/upptime/master/graphs/${serviceName}/response-time`;
+          for (let idx = 1; idx <= 5; idx++) {
+            let responseTime = tr.children[3]
+              .getElementsByTagName('a')
+              [idx].firstChild.alt.split(' ')
+              .slice(-1)[0];
+            responseTimes.push([
+              responseTime,
+              url + respTimeMap[idx - 1] + '.png',
+            ]);
+            let upTime = tr.children[4]
+              .getElementsByTagName('a')
+              [idx].firstChild.alt.split(' ')
+              .slice(-1)[0];
+            upTimes.push(upTime);
+          }
+          // console.table(statusString,serviceName,responseTimes);
+          data.push([statusString, serviceName, responseTimes, upTimes]);
         });
-        let uptimeData = data.filter(el => el[1] === serviceName);
-        console.log(uptimeData)
+        let uptimeData = data.filter((el) => el[1] === serviceName);
+        console.log(uptimeData);
         setUptime((prevUptime) => uptimeData);
-      }).catch(function (err) {
+      })
+      .catch(function (err) {
         // There was an error
         console.warn('Something went wrong.', err);
       });
-  }
+  };
 
   useEffect(() => {
-      fetchUptime();
-      const interval = setInterval(() => {
+    fetchUptime();
+    const interval = setInterval(
+      () => {
         fetchUptime();
-      }, 5 * 60 * 1000);
+      },
+      5 * 60 * 1000,
+    );
     return () => clearInterval(interval);
   }, []);
 
@@ -93,7 +118,6 @@ const Service = () => {
   if (!service) {
     return <Text>The service could not be found.</Text>;
   }
-
 
   return (
     <Box style={{ padding: '24px' }}>
@@ -139,8 +163,8 @@ const Service = () => {
                 >
                   {service.webEndpoint.url}
                 </Link>
-                <Separator  orientation="vertical"/>
-                {uptime.length > 0 ? uptime[0][0] : "NA"}
+                <Separator orientation="vertical" />
+                {uptime.length > 0 ? uptime[0][0] : 'NA'}
               </Flex>
             </DataList.Value>
           </DataList.Item>
@@ -195,17 +219,28 @@ const Service = () => {
                   to={`https://niranjan-ramesh.github.io/upptime/history/${serviceName}`}
                   style={{ color: 'blue', textDecoration: 'underline' }}
                 >
-                  <img height="50" src={uptime.length > 0 ? uptime[0][2][responseTimeKind][1] : ""}></img>
+                  <img
+                    height="50"
+                    src={
+                      uptime.length > 0 ? uptime[0][2][responseTimeKind][1] : ''
+                    }
+                  ></img>
                 </Link>
-                <Separator  orientation="vertical"/>
+                <Separator orientation="vertical" />
                 <Link
                   to={`https://niranjan-ramesh.github.io/upptime/history/${serviceName}`}
                   style={{ color: 'blue', textDecoration: 'underline' }}
                 >
-                  {uptime.length > 0 ? uptime[0][2][responseTimeKind][0]+'ms' : "NA"}
+                  {uptime.length > 0
+                    ? uptime[0][2][responseTimeKind][0] + 'ms'
+                    : 'NA'}
                 </Link>
-                <Separator  orientation="vertical"/>
-                <Select.Root size="2" defaultValue="2" onValueChange={(e) => setResponseTimeKind(Number(e))}>
+                <Separator orientation="vertical" />
+                <Select.Root
+                  size="2"
+                  defaultValue="2"
+                  onValueChange={(e) => setResponseTimeKind(Number(e))}
+                >
                   <Select.Trigger />
                   <Select.Content>
                     <Select.Item value="1">Day</Select.Item>
@@ -227,10 +262,14 @@ const Service = () => {
                   to={`https://niranjan-ramesh.github.io/upptime/history/${serviceName}`}
                   style={{ color: 'blue', textDecoration: 'underline' }}
                 >
-                  {uptime.length > 0 ? uptime[0][3][uptimeKind] : "NA"}
+                  {uptime.length > 0 ? uptime[0][3][uptimeKind] : 'NA'}
                 </Link>
-                <Separator  orientation="vertical"/>
-                <Select.Root size="2" defaultValue="2" onValueChange={(e) => setUptimeKind(Number(e))}>
+                <Separator orientation="vertical" />
+                <Select.Root
+                  size="2"
+                  defaultValue="2"
+                  onValueChange={(e) => setUptimeKind(Number(e))}
+                >
                   <Select.Trigger />
                   <Select.Content>
                     <Select.Item value="1">Day</Select.Item>
@@ -270,9 +309,10 @@ const Service = () => {
                       backgroundColor: '#f0f0f0',
                       borderRadius: '8px',
                       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                      wordWrap: 'break-word',
                     }}
                   >
-                    <Text>{endpoint.url}</Text>
+                    <Text style={{ maxWidth: '100%' }}>{endpoint.url}</Text>
                     <DoubleArrowRightIcon />
                   </Flex>
                 </Link>
