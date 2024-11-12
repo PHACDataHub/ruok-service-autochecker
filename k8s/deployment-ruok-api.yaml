@@ -18,17 +18,17 @@ spec:
         app: graphql-api
     spec:
       containers:
-      - name: graphql-api
-        # imagePullPolicy: Never
-        image: vader404/ruok-graphql-api:0.0.6
-        securityContext:
-          allowPrivilegeEscalation: false
-        ports:
-          - containerPort: 4000
-        resources:
-          limits:
-            cpu: 300m
-            memory: 70Mi
-          requests:
-            cpu: 300m
-            memory: 70Mi
+        - name: graphql-api
+          # imagePullPolicy: Never
+          image: vader404/ruok-graphql-api:0.0.6
+          securityContext:
+            allowPrivilegeEscalation: false
+          ports:
+            - containerPort: 4000
+          resources:
+            limits:
+              cpu: 300m
+              memory: 300Mi
+            requests:
+              cpu: 300m
+              memory: 100Mi
