@@ -56,48 +56,59 @@ process.on('SIGINT', () => process.exit(0));
 
     // TODO: refactor this into a testable query builder function
     const mutation = gql`
-        mutation {
-          githubEndpoint(
-            endpoint: {
-              url: "${gitHubEventPayload.endpoint}"
-              kind: "Github"
-              owner: "${orgName}"
-              repo: "${repoName}"
-              description: ${result.GetRepoDetailsStrategy.metadata.description ? JSON.stringify(result.GetRepoDetailsStrategy.metadata.description) : null}
-              visibility: ${JSON.stringify(result.GetRepoDetailsStrategy.metadata.visibility)}
-              license: ${result.GetRepoDetailsStrategy.metadata.license ? JSON.stringify(result.GetRepoDetailsStrategy.metadata.license) : '"null"'}
-              programmingLanguage: ["${Array.from(Object.keys(result.ProgrammingLanguagesStrategy.metadata)).join('", "')}"]
-              automatedSecurityFixes: {
-                checkPasses: ${result.AutomatedSecurityFixesStrategy.checkPasses}
-                metadata: {
-                  enabled: ${result.AutomatedSecurityFixesStrategy.metadata.enabled}
-                  paused: ${result.AutomatedSecurityFixesStrategy.metadata.paused}
-                }
-              },
-              vulnerabilityAlerts: {
-                checkPasses: ${result.VunerabilityAlertsEnabledStrategy.checkPasses}
-                metadata: ${JSON.stringify(result.VunerabilityAlertsEnabledStrategy.metadata)}
-              },
-              branchProtection: {
-                checkPasses: ${result.BranchProtectionStrategy.checkPasses}
-                metadata:  ${JSON.stringify(result.BranchProtectionStrategy.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
-                }
-              }
-          )
-        }
-        `;
+      mutation CreateGithubEndpoint(
+        $url: String!
+        $kind: String!
+        $owner: String!
+        $repo: String!
+        $description: String
+        $visibility: String!
+        $license: String
+        $programmingLanguages: [String!]!
+        $automatedSecurityFixes: CheckPassesInput
+        $vulnerabilityAlerts: CheckPassesInput
+        $branchProtection: CheckPassesInput
+      ) {
+        githubEndpoint(
+          endpoint: {
+            url: $url
+            kind: $kind
+            owner: $owner
+            repo: $repo
+            description: $description
+            visibility: $visibility
+            license: $license
+            programmingLanguage: $programmingLanguages
+            automatedSecurityFixes: $automatedSecurityFixes
+            vulnerabilityAlerts: $vulnerabilityAlerts
+            branchProtection: $branchProtection
+          }
+        )
+      }
+    `;
 
-    console.log(
-      '*************************\n',
-      mutation,
-      '\n*************************\n',
-    );
+    // Define the variables
+    const variables = {
+      url: gitHubEventPayload.endpoint,
+      kind: 'Github',
+      owner: orgName,
+      repo: repoName,
+      description: result.GetRepoDetailsStrategy.metadata.description || null,
+      visibility: result.GetRepoDetailsStrategy.metadata.visibility,
+      license: result.GetRepoDetailsStrategy.metadata.license || 'null',
+      programmingLanguages: Object.keys(
+        result.ProgrammingLanguagesStrategy.metadata,
+      ),
+      automatedSecurityFixes: result.AutomatedSecurityFixesStrategy,
+      vulnerabilityAlerts: result.VulnerabilityAlertsEnabledStrategy,
+      branchProtection: result.BranchProtectionStrategy,
+    };
 
     // New GraphQL client - TODO: remove hard-coded URL
     const graphqlClient = new GraphQLClient(GRAPHQL_URL);
 
     // Write mutation to GraphQL API
-    const mutationResponse = await graphqlClient.request(mutation);
+    const mutationResponse = await graphqlClient.request(mutation, variables);
     console.log('GraphQL mutation submitted', mutationResponse);
   }
 })();

@@ -53,7 +53,7 @@ process.on('SIGINT', () => process.exit(0));
         // Also build a graph with the Service as root and the URLs as its children.
         let payload = endpointEventPayload.endpoint;
 
-        const product = `{url : "${payload.serviceName}", kind : "Service"}`;
+        const product = { url: '${payload.serviceName}', kind: 'Service' };
 
         payload.webEndpoint = payload.webEndpoint.includes('https')
           ? payload.webEndpoint
@@ -62,25 +62,32 @@ process.on('SIGINT', () => process.exit(0));
         payload.webEndpoint = payload.webEndpoint.substring(0, l - 1);
         console.log(payload.webEndpoint);
 
-        let urls = [];
-
-        urls.push(`{url : "${payload.repoEndpoint}", kind : "Github"}`);
-
-        urls.push(`{url : "${payload.webEndpoint}", kind : "Web"}`);
-
-        urls = `[${Array.from(urls).join(',')}]`;
+        const urls = [
+          { url: payload.repoEndpoint, kind: 'Github' },
+          { url: payload.webEndpoint, kind: 'Web' },
+        ];
 
         const mutation = gql`
-            mutation {
-                product(product : ${product},
-                        urls : ${urls})
-            }
-            `;
+          mutation AddProduct(
+            $product: EndpointInput!
+            $urls: [EndpointInput!]!
+          ) {
+            product(product: $product, urls: $urls)
+          }
+        `;
+
+        const addProductVariables = {
+          urls: urls,
+          product: product,
+        };
 
         // New GraphQL client - TODO: remove hard-coded URL
         const graphqlClient = new GraphQLClient(GRAPHQL_URL);
         // Write mutation to GraphQL API
-        const mutationResponse = await graphqlClient.request(mutation);
+        const mutationResponse = await graphqlClient.request(
+          mutation,
+          addProductVariables,
+        );
         console.log(mutationResponse);
 
         // Change the original endpointEventPayload to conform with the code
@@ -103,7 +110,6 @@ process.on('SIGINT', () => process.exit(0));
         // parse the endpointEventPayload object to extract metadata about related endpoints.
 
         // If the kind is github then add the git repo URL to the set for scanning
-        console.log(`NIR LOGS: ${endpointKind}`);
         if (endpointKind == 'github') {
           githubEndpoints.add(endpointEventPayload.endpoint);
         }
@@ -116,17 +122,8 @@ process.on('SIGINT', () => process.exit(0));
 
         //Extract only URLS
         const newEndpoints = Array.from(newEndpointsWithKind).map(
-          (endpoint, idx) => (endpoint.url),
+          (endpoint) => endpoint.url,
         );
-
-        //Stringify each entry in newEndpointsWithKind
-        // newEndpointsWithKind = newEndpointsWithKind.map((endpoint) => {
-        //   return `{url : "${endpoint.url}", kind : "${endpoint.kind}"}`;
-        // });
-
-        // // Create string serialized array of endpoints associated with this endpoint
-        const newEndpointsString = `["${Array.from(newEndpoints).join('", "')}"]`;
-        // const newEndpointsWithKindString = `[${Array.from(newEndpointsWithKind).join(',')}]`;
 
         // Mutation to add a graph for the new endpoints
         const mutation = gql`
@@ -134,14 +131,17 @@ process.on('SIGINT', () => process.exit(0));
             endpoints(urls: $urls)
           }
         `;
-        const variables = {
+        const updateEndpointVariables = {
           urls: newEndpointsWithKind,
         };
         console.log(mutation);
         // New GraphQL client - TODO: remove hard-coded URL
         const graphqlClient = new GraphQLClient(GRAPHQL_URL);
         // Write mutation to GraphQL API
-        const mutationResponse = await graphqlClient.request(mutation, variables);
+        const mutationResponse = await graphqlClient.request(
+          mutation,
+          updateEndpointVariables,
+        );
 
         console.log('graphql mutation complete');
 
@@ -154,17 +154,20 @@ process.on('SIGINT', () => process.exit(0));
         // to pick up EVERYTHING. If the regex matcher does not pick up on an OLD URL, that means
         // that URL is no longer in use and should not be scanned
         const query = gql`
-              query GetEndpoints($urls: [String!]!){
-                endpoints(urls: $urls) {
-                  url
-                }
-              }
-              `;
+          query GetEndpoints($urls: [String!]!) {
+            endpoints(urls: $urls) {
+              url
+            }
+          }
+        `;
 
-        const queryVariables = {
+        const getEndpointVariables = {
           urls: newEndpoints,
         };
-        const queryResponse = await graphqlClient.request(query, queryVariables);
+        const queryResponse = await graphqlClient.request(
+          query,
+          getEndpointVariables,
+        );
 
         const endpointDispatch = {
           githubEndpoint: githubEndpoints,

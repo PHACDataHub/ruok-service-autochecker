@@ -108,7 +108,6 @@ process.on('SIGINT', () => process.exit(0));
         hadolint: results.hadolint,
         trivyRepoVulnerability: results.trivy_repo_vulnerability,
       };
-      //console.log('*************************\n',mutation,'\n*************************\n')
 
       // New GraphQL client - TODO: remove hard-coded URL
       try {

@@ -53,7 +53,7 @@ patches:
     patch: |-
       - op: replace
         path: /spec/template/spec/containers/0/image
-        value: northamerica-northeast2-docker.pkg.dev/phx-01h7dnj5j46f52sev8akqd9m7g/dockerimages/ruok-graph-updater:0.0.1
+        value: northamerica-northeast2-docker.pkg.dev/phx-01h7dnj5j46f52sev8akqd9m7g/dockerimages/ruok-graph-updater:0.0.2
       - op: add
         path: /spec/template/spec/containers/0/env
         value:
@@ -83,7 +83,7 @@ patches:
     patch: |-
       - op: replace
         path: /spec/template/spec/containers/0/image
-        value: vader404/ruok-octokit-scanner:0.0.2
+        value: northamerica-northeast2-docker.pkg.dev/phx-01h7dnj5j46f52sev8akqd9m7g/dockerimages/ruok-octokit-scanner:0.0.1
       - op: add
         path: /spec/template/spec/containers/0/env
         value:
